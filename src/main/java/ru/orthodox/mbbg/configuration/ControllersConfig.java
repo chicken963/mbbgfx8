@@ -5,7 +5,6 @@ import javafx.scene.Parent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.orthodox.mbbg.Application;
-import ru.orthodox.mbbg.controllers.MainController;
 import ru.orthodox.mbbg.controllers.PlayController;
 
 import java.io.IOException;

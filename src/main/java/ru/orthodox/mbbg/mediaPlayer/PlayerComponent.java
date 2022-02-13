@@ -1,93 +1,48 @@
 package ru.orthodox.mbbg.mediaPlayer;
 
-import com.sun.jna.NativeLibrary;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import uk.co.caprica.vlcj.binding.RuntimeUtil;
-import uk.co.caprica.vlcj.player.base.MediaPlayer;
-import uk.co.caprica.vlcj.player.component.AudioPlayerComponent;
+import ru.orthodox.mbbg.model.AudioTrack;
+import ru.orthodox.mbbg.utils.NormalizedPathString;
 
-import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-
-@Component
-@RequiredArgsConstructor
+@Deprecated
 public class PlayerComponent {
 
-    private final AudioPlayerComponent audioPlayerComponent;
-
+    private Media media;
     private MediaPlayer mediaPlayer;
+
     @Getter
     private boolean started;
 
-    @Value("${music.folder}")
-    private String musicLocation;
-
-    private List<File> musicQueue = new LinkedList<>();
-    private ListIterator<File> queueIterator;
-    private String currentFile;
-
-    @PostConstruct
-    private void postConstruct() {
-        NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), "C:\\Program Files\\VideoLAN\\VLC");
-        this.mediaPlayer = audioPlayerComponent.mediaPlayer();
-        Path musicPath = Paths.get(musicLocation);
-        File musicSourcePath = musicPath.toFile();
-        for (final File fileEntry : musicSourcePath.listFiles()) {
-            if (!fileEntry.isDirectory()) {
-                musicQueue.add(fileEntry);
-            }
-        }
-        queueIterator = musicQueue.listIterator();
-        currentFile = fileToString(queueIterator.next());
+    public PlayerComponent(AudioTrack audioTrack) {
+        this.media = new Media(NormalizedPathString.of(audioTrack.getLocalPath()).getExpression());
+        this.mediaPlayer = new MediaPlayer(media);
     }
 
     public void play() {
-        mediaPlayer.media().play(currentFile);
         this.started = true;
+        mediaPlayer.play();
     }
 
     public void pause() {
-        mediaPlayer.controls().pause();
+        mediaPlayer.pause();
     }
 
     public void resume() {
-        mediaPlayer.controls().play();
+        mediaPlayer.play();
     }
 
-    public void next() {
-        if (queueIterator.hasNext()) {
-            String oldState = currentFile;
-            while (currentFile.equals(oldState)) {
-                currentFile = fileToString(queueIterator.next());
-            }
-            mediaPlayer.media().play(currentFile);
-        }
+    public void stop(){
+        mediaPlayer.stop();
     }
 
-    public void previous() {
-        if (queueIterator.hasPrevious()) {
-            String oldState = currentFile;
-            while (currentFile.equals(oldState)) {
-                currentFile = fileToString(queueIterator.previous());
-            }
-            mediaPlayer.media().play(currentFile);
-        }
+
+    public void setVolume(double volume) {
+        mediaPlayer.setVolume(volume);
     }
 
-    private String fileToString(File path) {
-        try {
-            return path.getCanonicalPath();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+    public double getVolume() {
+        return mediaPlayer.getVolume();
     }
-
 }

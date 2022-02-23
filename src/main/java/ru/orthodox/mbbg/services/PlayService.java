@@ -6,9 +6,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.orthodox.mbbg.enums.Direction;
-import ru.orthodox.mbbg.mediaPlayer.PlayerComponent;
 import ru.orthodox.mbbg.model.AudioTrack;
-import ru.orthodox.mbbg.repositories.AudioTrackRepository;
 import ru.orthodox.mbbg.utils.NormalizedPathString;
 
 import javax.annotation.PostConstruct;
@@ -19,9 +17,8 @@ import java.util.ListIterator;
 @Component
 public class PlayService {
 
-
     @Autowired
-    private AudioTrackRepository audioTrackRepository;
+    private FileRecordService fileRecordService;
 
     @Getter
     private List<AudioTrack> queue;
@@ -41,9 +38,17 @@ public class PlayService {
 
     @PostConstruct
     private void postConstruct() {
-        queue = (List<AudioTrack>) audioTrackRepository.findAll();
+        queue = findAllTracks();
         queueIterator = queue.listIterator();
         switchPlayerToTrack(Direction.FORWARD);
+    }
+
+    public List<AudioTrack> findAllTracks(){
+        return fileRecordService.readAudioTracksInfo();
+    }
+
+    public void saveTrack(AudioTrack audioTrack){
+        fileRecordService.write(audioTrack);
     }
 
     public AudioTrack play() {
@@ -60,6 +65,7 @@ public class PlayService {
 
     public void stop() {
         mediaPlayer.stop();
+        this.started = false;
     }
 
     public AudioTrack next() {

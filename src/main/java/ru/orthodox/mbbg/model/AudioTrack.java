@@ -1,31 +1,26 @@
 package ru.orthodox.mbbg.model;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.File;
 import java.util.UUID;
 
-@Entity
-@Table(name = "tracks")
-@Setter
-@Getter
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class AudioTrack {
-    @Id
-    @Column(name = "local_path")
+
+    @Column(name = "localPath")
     private String localPath;
 
-    @Column(name = "song_title")
+    @Column(name = "title")
     private String title;
 
     @Column(name = "artist")
     private String artist;
 
-    @Column(name = "round_id")
+    @Column(name = "roundId")
     private UUID roundId;
 }

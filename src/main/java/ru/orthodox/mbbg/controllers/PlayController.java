@@ -1,9 +1,9 @@
 package ru.orthodox.mbbg.controllers;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -11,8 +11,8 @@ import ru.orthodox.mbbg.model.AudioTrack;
 import ru.orthodox.mbbg.services.PlayService;
 
 import javax.annotation.PostConstruct;
-import java.util.Timer;
-import java.util.TimerTask;
+
+import static ru.orthodox.mbbg.utils.ThreadUtils.runTaskInSeparateThread;
 
 @Configurable
 public class PlayController {
@@ -27,15 +27,17 @@ public class PlayController {
     @FXML
     private TableView<AudioTrack> playlistTable;
     @FXML
+    private TableColumn<AudioTrack, String> numberInPlaylist;
+    @FXML
+    private TableColumn<AudioTrack, String> artistInPlaylist;
+    @FXML
+    private TableColumn<AudioTrack, String> titleInPlaylist;
+    @FXML
     private Button previousButton;
     @FXML
     private Button nextButton;
-    private Timer timer;
-    private TimerTask progressTask;
-    private String currentSongTitle;
     private AudioTrack currentTrack;
-    private double currentTimeInSeconds;
-    private double trackLengthInSeconds;
+    private int currentTrackNumber = 1;
 
     @Autowired
     private PlayService playService;
@@ -43,14 +45,15 @@ public class PlayController {
     @PostConstruct
     public void initialize() {
         startTrackingTitle();
-        if(playService != null){
-            this.songTitle.setText(this.playService.getQueue().get(0).getTitle());
+        if (playService != null) {
+            initializeCurrentSongTitle();
+            fillPlaylistTable();
         }
     }
 
     public void startPlaying() {
         currentTrack = playService.play();
-        updateMediaView();
+        updateVolume(null);
     }
 
     public void pausePlaying() {
@@ -59,13 +62,13 @@ public class PlayController {
 
     public void nextTrack() {
         currentTrack = playService.next();
-        updateMediaView();
+        updateVolume(null);
     }
 
 
     public void previousTrack() {
         currentTrack = playService.previous();
-        updateMediaView();
+        updateVolume(null);
     }
 
     public void switchMute(ActionEvent actionEvent) {
@@ -76,66 +79,40 @@ public class PlayController {
         playService.setVolume(volumeSlider.getValue());
     }
 
-    public void beginTimer() {
-        timer = new Timer();
-        progressTask = new TimerTask() {
-
-            public void run() {
-                currentTimeInSeconds = playService.getCurrentTime();
-                trackLengthInSeconds = playService.getCurrentSongLength();
-                if (currentTimeInSeconds / trackLengthInSeconds == 1) {
-                    try{
-                        currentTrack = playService.next();
-                        playService.setVolume(volumeSlider.getValue());
-                    } finally {
-                        cancelTimer();
-                        currentTimeInSeconds = playService.getCurrentTime();
-                        trackLengthInSeconds = playService.getCurrentSongLength();
-                    }
-                }
-            }
-        };
-        timer.scheduleAtFixedRate(progressTask, 0, 100);
+    private void initializeCurrentSongTitle() {
+        songTitle.setText(this.playService.getQueue().get(0).getTitle());
     }
 
-    private void updateUIElemntsInUIStream() {
+    private void updateQueueProgress() {
         if (currentTrack != null) {
-            this.songTitle.setText(currentTrack.getTitle());
+            songTitle.setText(currentTrack.getTitle());
         }
-        if (playService != null){
-            this.songProgressInSeconds.setText(playService.getSongProgressAsString(currentTimeInSeconds, trackLengthInSeconds));
-            this.previousButton.setDisable(playService.isFirstTrackActive());
-            this.nextButton.setDisable(playService.isLastTrackActive());
+        if (playService != null) {
             double current = playService.getCurrentTime();
             double end = playService.getCurrentSongLength();
+
+            songProgressInSeconds.setText(playService.getSongProgressAsString(current, end));
             songProgressBar.setProgress(current / end);
-        }
-    }
-
-    private void updateMediaView() {
-        if (playService != null) {
-            playService.setVolume(volumeSlider.getValue());
-            songProgressBar.setProgress(0);
-            beginTimer();
-        }
-    }
-
-    private void cancelTimer() {
-        timer.cancel();
-    }
-
-    private void startTrackingTitle(){
-        Thread thread = new Thread(() -> {
-            Runnable updater = this::updateUIElemntsInUIStream;
-            while (true) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException ignored) {
-                }
-                Platform.runLater(updater);
+            if (current / end >= 1) {
+                currentTrack = playService.next();
+                playService.setVolume(volumeSlider.getValue());
             }
-        });
-        thread.setDaemon(true);
-        thread.start();
+            previousButton.setDisable(playService.isFirstTrackActive());
+            nextButton.setDisable(playService.isLastTrackActive());
+        }
+    }
+
+    private void startTrackingTitle() {
+        runTaskInSeparateThread(this::updateQueueProgress);
+    }
+
+    private void fillPlaylistTable() {
+        numberInPlaylist.setCellValueFactory(
+                new PropertyValueFactory<AudioTrack, String>(String.valueOf(++currentTrackNumber)));
+        titleInPlaylist.setCellValueFactory(
+                new PropertyValueFactory<AudioTrack, String>("title"));
+        artistInPlaylist.setCellValueFactory(
+                new PropertyValueFactory<AudioTrack, String>("artist"));
+        playlistTable.getItems().setAll(playService.findAllTracks());
     }
 }

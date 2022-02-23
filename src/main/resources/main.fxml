@@ -18,106 +18,114 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="852.0" prefWidth="990.0" style="-fx-background-color: linear-gradient(to bottom right, #008080, black);" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.PlayController">
-    <VBox alignment="CENTER" layoutX="28.0" layoutY="53.0" prefHeight="233.0" prefWidth="548.0">
-        <Label fx:id="songTitle" alignment="CENTER" contentDisplay="CENTER" text="Hello world!" textFill="ORANGE">
-         <font>
-            <Font size="36.0" />
-         </font>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-         <VBox.margin>
-            <Insets bottom="10.0" />
-         </VBox.margin></Label>
-      <HBox prefHeight="100.0" prefWidth="200.0">
-         <children>
-            <ProgressBar fx:id="songProgressBar" prefHeight="18.0" prefWidth="416.0" progress="0.0" style="-fx-accent: orange;">
+   <HBox AnchorPane.rightAnchor="359.0" HBox.hgrow="ALWAYS">
+      <children>
+          <VBox alignment="CENTER" prefHeight="852.0" HBox.hgrow="ALWAYS">
+              <Label fx:id="songTitle" alignment="CENTER" contentDisplay="CENTER" text="Hello world!" textFill="ORANGE">
+               <font>
+                  <Font size="36.0" />
+               </font>
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
-               <HBox.margin>
-                  <Insets top="28.0" />
-               </HBox.margin>
-            </ProgressBar>
-            <Label fx:id="songProgressInSeconds" prefHeight="32.0" prefWidth="120.0" text="00:00/00:00" textFill="ORANGE">
-               <HBox.margin>
-                  <Insets left="5.0" top="22.0" />
-               </HBox.margin>
-               <font>
-                  <Font size="22.0" />
-               </font>
+               <VBox.margin>
+                  <Insets bottom="10.0" />
+               </VBox.margin>
             </Label>
-         </children>
-      </HBox>
-        <HBox alignment="CENTER" prefHeight="115.0" prefWidth="372.0">
-            <Button fx:id="previousButton" onAction="#previousTrack">
-                <graphic>
-                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                        <image>
-                            <Image url="/mediaplayerIcons/previous.png" />
-                        </image>
-                    </ImageView>
-                </graphic>
-            </Button>
-            <Button onAction="#startPlaying">
-                <graphic>
-                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                        <image>
-                            <Image url="/mediaplayerIcons/play2.png" />
-                        </image>
-                    </ImageView>
-                </graphic>
-            </Button>
-            <Button onAction="#pausePlaying">
-                <graphic>
-                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                        <image>
-                            <Image url="/mediaplayerIcons/pause.png" />
-                        </image>
-                    </ImageView>
-                </graphic>
-            </Button>
-            <Button fx:id="nextButton" onAction="#nextTrack">
-                <graphic>
-                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                        <image>
-                            <Image url="/mediaplayerIcons/next.png" />
-                        </image>
-                    </ImageView>
-                </graphic>
-            </Button>
-            <Button onAction="#switchMute">
-                <graphic>
-                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                        <image>
-                            <Image url="/mediaplayerIcons/mute-button.png" />
-                        </image>
-                    </ImageView>
-                </graphic>
-            </Button>
-         <Slider fx:id="volumeSlider" max="100.0" onMouseReleased="#updateVolume" prefHeight="103.0" prefWidth="118.0" value="100.0">
-            <HBox.margin>
-               <Insets left="20.0" />
-            </HBox.margin>
-         </Slider>
-        </HBox>
-    </VBox>
-   <GridPane layoutX="22.0" layoutY="357.0" prefHeight="416.0" prefWidth="530.0">
-     <columnConstraints>
-       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-     </columnConstraints>
-     <rowConstraints>
-       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-     </rowConstraints>
-   </GridPane>
+            <HBox prefHeight="60.0" prefWidth="572.0">
+               <children>
+                  <ProgressBar fx:id="songProgressBar" prefHeight="18.0" prefWidth="416.0" progress="0.0" style="-fx-accent: orange;">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <HBox.margin>
+                        <Insets top="28.0" />
+                     </HBox.margin>
+                  </ProgressBar>
+                  <Label fx:id="songProgressInSeconds" prefHeight="32.0" prefWidth="120.0" text="00:00/00:00" textFill="ORANGE">
+                     <HBox.margin>
+                        <Insets left="5.0" top="22.0" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets left="30.0" right="30.0" />
+               </VBox.margin>
+            </HBox>
+              <HBox alignment="CENTER" prefHeight="75.0" prefWidth="632.0">
+                  <Button fx:id="previousButton" onAction="#previousTrack">
+                      <graphic>
+                          <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                  <Image url="/mediaplayerIcons/previous.png" />
+                              </image>
+                          </ImageView>
+                      </graphic>
+                  </Button>
+                  <Button onAction="#startPlaying">
+                      <graphic>
+                          <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                  <Image url="/mediaplayerIcons/play2.png" />
+                              </image>
+                          </ImageView>
+                      </graphic>
+                  </Button>
+                  <Button onAction="#pausePlaying">
+                      <graphic>
+                          <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                  <Image url="/mediaplayerIcons/pause.png" />
+                              </image>
+                          </ImageView>
+                      </graphic>
+                  </Button>
+                  <Button fx:id="nextButton" onAction="#nextTrack">
+                      <graphic>
+                          <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                  <Image url="/mediaplayerIcons/next.png" />
+                              </image>
+                          </ImageView>
+                      </graphic>
+                  </Button>
+                  <Button onAction="#switchMute">
+                      <graphic>
+                          <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                              <image>
+                                  <Image url="/mediaplayerIcons/mute-button.png" />
+                              </image>
+                          </ImageView>
+                      </graphic>
+                  </Button>
+               <Slider fx:id="volumeSlider" max="100.0" onMouseReleased="#updateVolume" prefHeight="103.0" prefWidth="118.0" value="100.0">
+                  <HBox.margin>
+                     <Insets left="20.0" />
+                  </HBox.margin>
+               </Slider>
+              </HBox>
+            <GridPane prefHeight="518.0" prefWidth="632.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+          </VBox>
+      </children>
+   </HBox>
    <TableView fx:id="playlistTable" layoutX="630.0" prefHeight="852.0" prefWidth="359.0" style="-fx-background-color: rgba(255, 255, 255, 0.5);">
      <columns>
-       <TableColumn prefWidth="31.0" text="№" />
-       <TableColumn prefWidth="121.0" text="Artist" />
-         <TableColumn prefWidth="206.0" text="Song" />
+       <TableColumn fx:id="numberInPlaylist" prefWidth="31.0" text="№" />
+       <TableColumn fx:id="artistInPlaylist" prefWidth="121.0" text="Artist" />
+         <TableColumn fx:id="titleInPlaylist" prefWidth="206.0" text="Song" />
      </columns>
    </TableView>
 

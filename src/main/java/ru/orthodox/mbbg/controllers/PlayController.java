@@ -5,10 +5,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import ru.orthodox.mbbg.model.AudioTrack;
 import ru.orthodox.mbbg.services.PlayService;
+import ru.orthodox.mbbg.services.ScreenService;
+import ru.orthodox.mbbg.utils.NormalizedPathString;
 
 import javax.annotation.PostConstruct;
 
@@ -40,10 +43,15 @@ public class PlayController {
     private int currentTrackNumber = 1;
 
     @Autowired
+    private ScreenService screenService;
+
+    @Autowired
     private PlayService playService;
 
     @PostConstruct
     public void initialize() {
+        songTitle.setFont(Font.loadFont(NormalizedPathString.of("src\\main\\resources\\fonts\\AntykwaTorunskaMed-Regular.ttf"), 32));
+        songProgressInSeconds.setFont(Font.loadFont(NormalizedPathString.of("src\\main\\resources\\fonts\\AntykwaTorunskaMed-Regular.ttf"), 18));
         startTrackingTitle();
         if (playService != null) {
             initializeCurrentSongTitle();
@@ -53,7 +61,6 @@ public class PlayController {
 
     public void startPlaying() {
         currentTrack = playService.play();
-        updateVolume(null);
     }
 
     public void pausePlaying() {
@@ -62,13 +69,11 @@ public class PlayController {
 
     public void nextTrack() {
         currentTrack = playService.next();
-        updateVolume(null);
     }
 
 
     public void previousTrack() {
         currentTrack = playService.previous();
-        updateVolume(null);
     }
 
     public void switchMute(ActionEvent actionEvent) {
@@ -83,7 +88,7 @@ public class PlayController {
         songTitle.setText(this.playService.getQueue().get(0).getTitle());
     }
 
-    private void updateQueueProgress() {
+    private void updateUIElementsState() {
         if (currentTrack != null) {
             songTitle.setText(currentTrack.getTitle());
         }
@@ -93,17 +98,46 @@ public class PlayController {
 
             songProgressInSeconds.setText(playService.getSongProgressAsString(current, end));
             songProgressBar.setProgress(current / end);
-            if (current / end >= 1) {
-                currentTrack = playService.next();
-                playService.setVolume(volumeSlider.getValue());
-            }
+
             previousButton.setDisable(playService.isFirstTrackActive());
             nextButton.setDisable(playService.isLastTrackActive());
         }
     }
 
+    private void checkAudioTrackSwitching() {
+        if (playService != null) {
+
+            double current = playService.getCurrentTime();
+            double end = playService.getCurrentSongLength();
+
+            if (current / end >= 1) {
+                currentTrack = playService.next();
+                playService.setVolume(volumeSlider.getValue());
+            }
+        }
+    }
+
+    private void updateActiveRowHighlight(){
+        if (playService != null) {
+
+            double current = playService.getCurrentTime();
+            double end = playService.getCurrentSongLength();
+
+            if (current / end >= 1) {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                playlistTable.getRowFactory().call(playlistTable).getStyleClass().add("highlighted");
+            }
+        }
+    }
+
     private void startTrackingTitle() {
-        runTaskInSeparateThread(this::updateQueueProgress);
+        runTaskInSeparateThread(this::updateUIElementsState);
+        runTaskInSeparateThread(this::checkAudioTrackSwitching);
+        runTaskInSeparateThread(this::updateActiveRowHighlight);
     }
 
     private void fillPlaylistTable() {
@@ -114,5 +148,25 @@ public class PlayController {
         artistInPlaylist.setCellValueFactory(
                 new PropertyValueFactory<AudioTrack, String>("artist"));
         playlistTable.getItems().setAll(playService.findAllTracks());
+/*        playlistTable.setRowFactory(new Callback<TableView<AudioTrack>, TableRow<AudioTrack>>() {
+            @Override
+            public TableRow<AudioTrack> call(TableView<AudioTrack> param) {
+                return new TableRow<AudioTrack>() {
+                    @Override
+                    protected void updateItem(AudioTrack item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (getIndex() == playService.getQueue().indexOf(currentTrack)) {
+                            getStyleClass().add("highlighted");
+                        } else {
+                            getStyleClass().remove("highlighted");
+                        }
+                    }
+                };
+            }
+        });*/
+    }
+
+    public void backToMenu(ActionEvent actionEvent) {
+       screenService.activate("startmenu");
     }
 }

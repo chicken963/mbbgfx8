@@ -13,7 +13,7 @@ import java.util.UUID;
 public class AudioTrack {
 
     @Column(name = "localPath")
-    private String localPath;
+    private File localFile;
 
     @Column(name = "title")
     private String title;

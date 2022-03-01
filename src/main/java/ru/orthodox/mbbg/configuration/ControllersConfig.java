@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.orthodox.mbbg.Application;
 import ru.orthodox.mbbg.controllers.PlayController;
+import ru.orthodox.mbbg.controllers.StartMenuController;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,13 +19,19 @@ public class ControllersConfig {
         return loadView("main.fxml");
     }
 
-    /**
-     * Именно благодаря этому методу мы добавили контроллер в контекст спринга,
-     * и заставили его произвести все необходимые инъекции.
-     */
+    @Bean(name = "startMenuView")
+    public View getStartMenuView() throws IOException {
+        return loadView("startmenu.fxml");
+    }
+
     @Bean
     public PlayController getPlayController() throws IOException {
         return (PlayController) getMainView().getController();
+    }
+
+    @Bean
+    public StartMenuController getStartMenuController() throws IOException {
+        return (StartMenuController) getStartMenuView().getController();
     }
 
     /**

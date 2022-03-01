@@ -11,10 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
-public class FileRecordService {
+public class LocalFilesService {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
@@ -50,5 +51,16 @@ public class FileRecordService {
                 e.printStackTrace();
             }
         }
+    }
+
+    public List<AudioTrack> checkInvalidTracks() {
+        List<AudioTrack> tracksInDb = readAudioTracksInfo();
+        List<AudioTrack> invalidTracks = new ArrayList<>();
+        for (AudioTrack audioTrack : tracksInDb) {
+            if (!audioTrack.getLocalFile().exists()) {
+                invalidTracks.add(audioTrack);
+            }
+        }
+        return invalidTracks;
     }
 }

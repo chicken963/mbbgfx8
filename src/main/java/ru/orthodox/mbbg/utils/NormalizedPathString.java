@@ -12,8 +12,8 @@ public class NormalizedPathString {
         this.expression = expression;
     }
 
-    public static NormalizedPathString of(String pathInMusicFolder){
-        return new NormalizedPathString(Paths.get("src/main/resources/music/" + pathInMusicFolder).toUri().toString());
+    public static String of(String pathInMusicFolder){
+        return new NormalizedPathString(Paths.get(pathInMusicFolder).toUri().toString()).getExpression();
     }
 
 }

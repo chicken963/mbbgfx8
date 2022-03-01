@@ -1,0 +1,24 @@
+.table-cell {
+    -fx-background-color: transparent;
+}
+.table-view {
+    -fx-border-width: 0px;
+    -fx-table-cell-border-color: transparent;
+    -fx-border-color: transparent;
+}
+.table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-view .column-header,
+.table-view .column-header .filler,
+.table-view .column-header-background .filler {
+    -fx-background-color: linear-gradient(to bottom, #009090, #008080);
+}
+
+.table-row-cell:highlighted {
+    -fx-text-fill: orange;
+    -fx-background-color: yellow;
+}

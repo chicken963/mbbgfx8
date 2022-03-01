@@ -18,21 +18,26 @@ import java.util.ListIterator;
 public class PlayService {
 
     @Autowired
-    private FileRecordService fileRecordService;
+    private LocalFilesService localFilesService;
 
     @Getter
     private List<AudioTrack> queue;
     ListIterator<AudioTrack> queueIterator;
+
     @Getter
     private AudioTrack currentTrack;
-    private double volumeCache;
-    private boolean isMuted = false;
+
+    private double volumeCacheForSwitching = 1;
+    private double volumeCacheForMute;
+    private boolean muted = false;
+    private Media media;
+    private MediaPlayer mediaPlayer;
+
     @Getter
     private boolean firstTrackActive = true;
     @Getter
     private boolean lastTrackActive = false;
-    private Media media;
-    private MediaPlayer mediaPlayer;
+
     @Getter
     private boolean started;
 
@@ -44,17 +49,14 @@ public class PlayService {
     }
 
     public List<AudioTrack> findAllTracks(){
-        return fileRecordService.readAudioTracksInfo();
+        return localFilesService.readAudioTracksInfo();
     }
 
     public void saveTrack(AudioTrack audioTrack){
-        fileRecordService.write(audioTrack);
+        localFilesService.write(audioTrack);
     }
 
     public AudioTrack play() {
-        if (!started) {
-            this.started = true;
-        }
         mediaPlayer.play();
         return currentTrack;
     }
@@ -65,13 +67,11 @@ public class PlayService {
 
     public void stop() {
         mediaPlayer.stop();
-        this.started = false;
     }
 
     public AudioTrack next() {
         mediaPlayer.stop();
         switchPlayerToTrack(Direction.FORWARD);
-        this.started = true;
         mediaPlayer.play();
         return this.currentTrack;
     }
@@ -79,7 +79,6 @@ public class PlayService {
     public AudioTrack previous() {
         mediaPlayer.stop();
         switchPlayerToTrack(Direction.REVERSED);
-        this.started = true;
         mediaPlayer.play();
         return currentTrack;
     }
@@ -96,18 +95,22 @@ public class PlayService {
         currentTrack = newTrack;
         firstTrackActive = currentTrack == queue.get(0);
         lastTrackActive = currentTrack == queue.get(queue.size() - 1);
-        this.media = new Media(NormalizedPathString.of(currentTrack.getLocalPath()).getExpression());
+        if (mediaPlayer != null) {
+            volumeCacheForSwitching = mediaPlayer.getVolume();
+        }
+        this.media = new Media(NormalizedPathString.of(currentTrack.getLocalFile().toString()));
         this.mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setVolume(volumeCacheForSwitching);
     }
 
     public void switchMute() {
-        if (isMuted) {
-            mediaPlayer.setVolume(volumeCache);
-            this.isMuted = false;
+        if (muted) {
+            mediaPlayer.setVolume(volumeCacheForMute);
+            this.muted = false;
         } else {
-            this.volumeCache = mediaPlayer.getVolume();
+            this.volumeCacheForMute = mediaPlayer.getVolume();
             mediaPlayer.setVolume(0);
-            this.isMuted = true;
+            this.muted = true;
         }
     }
 

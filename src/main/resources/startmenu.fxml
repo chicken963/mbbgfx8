@@ -47,21 +47,30 @@
                         </Lighting>
                     </effect>
                     <children>
-                        <Button fx:id="newGameButton" alignment="CENTER" contentDisplay="CENTER" onAction="#openNewGameForm" prefHeight="110.0" prefWidth="110.0" style="-fx-background-color: rgba(0, 0, 0, 0);" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="45.0" AnchorPane.topAnchor="10.0">
-                            <graphic>
-                                <ImageView fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-                                    <image>
-                                        <Image url="/menuItemsIcons/newGame.png" />
-                                    </image>
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                                </ImageView>
-                            </graphic>
-                     <tooltip>
-                        <Tooltip text="Create new game" />
-                     </tooltip>
-                        </Button>
+                  <VBox alignment="CENTER" layoutX="47.0" layoutY="10.0" prefHeight="118.0" prefWidth="110.0" style="-fx-cursor: hand;" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="45.0">
+                     <children>
+                              <Button fx:id="newGameButton" alignment="CENTER" contentDisplay="CENTER" onAction="#openNewGameForm" prefHeight="90.0" prefWidth="90.0" style="-fx-background-color: rgba(0, 0, 0, 0);">
+                                  <graphic>
+                                      <ImageView fitHeight="77.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+                                          <image>
+                                              <Image url="/menuItemsIcons/newGame.png" />
+                                          </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                      </ImageView>
+                                  </graphic>
+                           <tooltip>
+                              <Tooltip text="Create new game" />
+                           </tooltip>
+                              </Button>
+                        <Label text="New game" textFill="ORANGE">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
                     </children>
                 </AnchorPane>
                 <AnchorPane maxHeight="130.0" maxWidth="200.0" minHeight="130.0" minWidth="200.0" prefHeight="130.0" prefWidth="200.0" style="-fx-border-style: dashed; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0); -fx-border-width: 2px; -fx-border-radius: 15px; -fx-border-color: #ffa500;" GridPane.columnIndex="1" GridPane.halignment="CENTER">

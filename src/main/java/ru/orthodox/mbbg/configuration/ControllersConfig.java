@@ -5,6 +5,7 @@ import javafx.scene.Parent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.orthodox.mbbg.Application;
+import ru.orthodox.mbbg.controllers.NewGameController;
 import ru.orthodox.mbbg.controllers.PlayController;
 import ru.orthodox.mbbg.controllers.StartMenuController;
 
@@ -24,6 +25,11 @@ public class ControllersConfig {
         return loadView("startmenu.fxml");
     }
 
+    @Bean(name = "newGameView")
+    public View getNewGameView() throws IOException {
+        return loadView("newGame.fxml");
+    }
+
     @Bean
     public PlayController getPlayController() throws IOException {
         return (PlayController) getMainView().getController();
@@ -32,6 +38,11 @@ public class ControllersConfig {
     @Bean
     public StartMenuController getStartMenuController() throws IOException {
         return (StartMenuController) getStartMenuView().getController();
+    }
+
+    @Bean
+    public NewGameController getNewGameController() throws IOException {
+        return (NewGameController) getNewGameView().getController();
     }
 
     /**

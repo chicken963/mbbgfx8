@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.orthodox.mbbg.enums.Direction;
 import ru.orthodox.mbbg.model.AudioTrack;
+import ru.orthodox.mbbg.services.model.AudioTrackService;
 import ru.orthodox.mbbg.utils.NormalizedPathString;
 
 import javax.annotation.PostConstruct;
@@ -18,7 +19,7 @@ import java.util.ListIterator;
 public class PlayService {
 
     @Autowired
-    private LocalFilesService localFilesService;
+    private AudioTrackService audioTrackService;
 
     @Getter
     private List<AudioTrack> queue;
@@ -49,11 +50,11 @@ public class PlayService {
     }
 
     public List<AudioTrack> findAllTracks(){
-        return localFilesService.readAudioTracksInfo();
+        return audioTrackService.findAllAudioTracks();
     }
 
     public void saveTrack(AudioTrack audioTrack){
-        localFilesService.write(audioTrack);
+        audioTrackService.save(audioTrack);
     }
 
     public AudioTrack play() {
@@ -98,7 +99,7 @@ public class PlayService {
         if (mediaPlayer != null) {
             volumeCacheForSwitching = mediaPlayer.getVolume();
         }
-        this.media = new Media(NormalizedPathString.of(currentTrack.getLocalFile().toString()));
+        this.media = new Media(NormalizedPathString.of(currentTrack.getLocalPath()));
         this.mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setVolume(volumeCacheForSwitching);
     }

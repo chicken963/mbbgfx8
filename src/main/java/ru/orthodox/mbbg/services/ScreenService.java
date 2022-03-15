@@ -32,15 +32,17 @@ public class ScreenService {
     @Qualifier("startMenuView")
     private ControllersConfig.View startMenuView;
 
+    @Autowired
+    @Qualifier("newGameView")
+    private ControllersConfig.View newGameView;
+
     @PostConstruct
     public void addScenesToTray() {
         main = new Scene(startMenuView.getView());
 
         this.addScreen("startmenu", startMenuView);
         this.addScreen("main", mainView);
-/*            screenController.addScreen("create", FXMLLoader.load(getClass().getResource( "create.fxml" )));
-            screenController.addScreen("edit", FXMLLoader.load(getClass().getResource( "edit.fxml" )));*/
-
+        this.addScreen("newgame", newGameView);
     }
 
     private void addScreen(String name, ControllersConfig.View pane) {

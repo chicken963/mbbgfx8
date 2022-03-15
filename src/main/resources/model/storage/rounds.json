@@ -1,0 +1,15 @@
+[
+  {
+    "id": "266bc2a6-31b2-42f6-9bc3-43cbe8902d63",
+    "name": "Разминочка",
+    "tracksIds": [
+      "81f33557-633c-466e-a7a8-6a8fe2f369a4",
+      "117c4996-9913-41cc-9c58-1fab81400902"
+    ],
+    "width": 4,
+    "height": 5,
+    "firstStrikeCondition": "ONE_LINE_STRIKE",
+    "secondStrikeCondition": "THREE_LINES_STRIKE",
+    "thirdStrikeCondition": null
+  }
+]

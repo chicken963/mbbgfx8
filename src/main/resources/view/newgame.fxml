@@ -9,21 +9,35 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: linear-gradient(to bottom right, #008080, black);" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.StartMenuController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: linear-gradient(to bottom right, #008080, black);" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.NewGameController">
     <children>
-        <Label fx:id="greetingLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="189.0" layoutY="61.0" prefHeight="57.0" prefWidth="956.0" text="New game" textFill="#ffa100">
+        <Label fx:id="newGameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="189.0" layoutY="61.0" prefHeight="57.0" prefWidth="956.0" text="New game" textFill="#ffa100">
             <font>
                 <Font size="36.0" />
             </font>
         </Label>
       <VBox layoutX="48.0" layoutY="118.0" prefHeight="542.0" prefWidth="1177.0">
          <children>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Label fx:id="enterNewGameNameLabel" text="Enter new game name:" textFill="#ffa100">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="newGameName" prefHeight="25.0" prefWidth="475.0">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin></TextField>
+               </children>
+            </HBox>
             <TabPane prefHeight="535.0" prefWidth="1127.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab text="Round 1">
@@ -34,15 +48,24 @@
                                  <children>
                                     <VBox alignment="TOP_CENTER" layoutX="41.0" layoutY="52.0" prefHeight="373.0" prefWidth="364.0" AnchorPane.leftAnchor="41.0">
                                        <children>
+                                          <HBox prefHeight="30.0" prefWidth="364.0">
+                                             <children>
+                                                <Label prefHeight="65.0" prefWidth="125.0" text="Enter new round name:" />
+                                                <TextField fx:id="newRoundName" prefHeight="69.0" prefWidth="240.0" />
+                                             </children>
+                                             <VBox.margin>
+                                                <Insets top="20.0" />
+                                             </VBox.margin></HBox>
                                           <HBox prefHeight="31.0" prefWidth="288.0">
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="51.0" prefWidth="88.0" text="Blank size" />
-                                                <ChoiceBox prefHeight="40.0" prefWidth="75.0" />
-                                                <Label alignment="CENTER" prefHeight="61.0" prefWidth="18.0" text="X" />
-                                                <ChoiceBox prefHeight="40.0" prefWidth="79.0" />
+                                                <ChoiceBox fx:id="rowsNumber" prefHeight="40.0" prefWidth="75.0" />
+                                                <Label alignment="CENTER" prefHeight="61.0" prefWidth="58.0" text="rows      X" />
+                                                <ChoiceBox fx:id="columnsNumber" prefHeight="40.0" prefWidth="79.0" />
+                                                <Label alignment="CENTER" prefHeight="61.0" prefWidth="48.0" text="columns" />
                                              </children>
                                              <VBox.margin>
-                                                <Insets top="50.0" />
+                                                <Insets top="20.0" />
                                              </VBox.margin>
                                           </HBox>
                                           <HBox prefHeight="50.0" prefWidth="262.0">
@@ -52,7 +75,7 @@
                                                       <Insets right="30.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <ChoiceBox prefHeight="25.0" prefWidth="200.0" />
+                                                <ChoiceBox fx:id="firstPrizeCondition" prefHeight="25.0" prefWidth="200.0" />
                                              </children>
                                              <opaqueInsets>
                                                 <Insets />
@@ -68,7 +91,7 @@
                                                       <Insets right="30.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <ChoiceBox prefHeight="25.0" prefWidth="200.0" />
+                                                <ChoiceBox fx:id="secondPrizeCondition" prefHeight="25.0" prefWidth="200.0" />
                                              </children>
                                           </HBox>
                                           <HBox prefHeight="50.0" prefWidth="262.0">
@@ -78,14 +101,19 @@
                                                       <Insets right="30.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <ChoiceBox prefHeight="25.0" prefWidth="200.0" />
+                                                <ChoiceBox fx:id="thirdPrizeCondition" prefHeight="25.0" prefWidth="200.0" />
                                              </children>
                                           </HBox>
                                           <HBox prefHeight="44.0" prefWidth="364.0">
                                              <children>
-                                                <Button mnemonicParsing="false" prefHeight="36.0" prefWidth="136.0" text="Add music tracks...">
+                                                <Button fx:id="addTracksButton" mnemonicParsing="false" onAction="#openExplorerMenu" prefHeight="36.0" prefWidth="136.0" text="Add music tracks...">
                                                    <HBox.margin>
                                                       <Insets />
+                                                   </HBox.margin>
+                                                </Button>
+                                                <Button fx:id="deleteRound" mnemonicParsing="false" prefHeight="36.0" prefWidth="136.0" text="Delete round" textFill="#ff0d00d6">
+                                                   <HBox.margin>
+                                                      <Insets left="85.0" />
                                                    </HBox.margin>
                                                 </Button>
                                              </children>
@@ -102,7 +130,7 @@
                                              <children>
                                                 <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="63.0" prefWidth="731.0" />
                                              </children></HBox>
-                                          <HBox prefHeight="40.0" prefWidth="725.0" />
+                                          <HBox fx:id="sliderContainer" prefHeight="40.0" prefWidth="725.0" />
                                           <HBox alignment="CENTER" maxWidth="200.0" prefHeight="30.0" prefWidth="689.0">
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="27.0" prefWidth="59.0" text="Start:" />
@@ -112,13 +140,14 @@
                                              </children></HBox>
                                        </children>
                                     </VBox>
-                                    <TableView layoutX="38.0" prefHeight="431.0" prefWidth="334.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+                                    <TableView fx:id="tracksTable" layoutX="38.0" prefHeight="431.0" prefWidth="705.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
                                       <columns>
-                                        <TableColumn prefWidth="259.0" text="Artist" />
-                                        <TableColumn prefWidth="346.0" text="Title" />
-                                          <TableColumn prefWidth="41.0" />
-                                          <TableColumn prefWidth="39.0" />
-                                          <TableColumn prefWidth="39.0" />
+                                        <TableColumn fx:id="artist" prefWidth="259.0" text="Artist" />
+                                        <TableColumn fx:id="title" prefWidth="346.0" text="Title" />
+                                          <TableColumn fx:id="play" prefWidth="25.0" style="-fx-alignment: CENTER-LEFT;" />
+                                          <TableColumn fx:id="pause" prefWidth="25.0" />
+                                          <TableColumn fx:id="stop" prefWidth="25.0" />
+                                          <TableColumn fx:id="remove" prefWidth="25.0" />
                                       </columns>
                                     </TableView>
                                  </children>
@@ -132,12 +161,12 @@
             </TabPane>
             <HBox prefHeight="56.0" prefWidth="1177.0">
                <children>
-                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="Save">
+                  <Button fx:id="saveGame" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#saveNewGame" text="Save">
                      <HBox.margin>
                         <Insets right="10.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" text="Cancel" />
+                  <Button fx:id="cancelCreation" mnemonicParsing="false" onAction="#cancelCreation" text="Cancel" />
                </children>
                <VBox.margin>
                   <Insets top="10.0" />

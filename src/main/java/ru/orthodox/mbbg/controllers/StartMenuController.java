@@ -33,7 +33,7 @@ public class StartMenuController {
     }
 
     public void openNewGameForm(ActionEvent actionEvent) {
-
+        screenService.activate("newgame");
     }
 
     public void openPlayGameForm(ActionEvent actionEvent) {

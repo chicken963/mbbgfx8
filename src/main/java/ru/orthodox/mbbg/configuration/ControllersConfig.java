@@ -17,17 +17,17 @@ public class ControllersConfig {
 
     @Bean(name = "mainView")
     public View getMainView() throws IOException {
-        return loadView("main.fxml");
+        return loadView("view/main.fxml");
     }
 
     @Bean(name = "startMenuView")
     public View getStartMenuView() throws IOException {
-        return loadView("startmenu.fxml");
+        return loadView("view/startmenu.fxml");
     }
 
     @Bean(name = "newGameView")
     public View getNewGameView() throws IOException {
-        return loadView("newGame.fxml");
+        return loadView("view/newgame.fxml");
     }
 
     @Bean
@@ -45,11 +45,6 @@ public class ControllersConfig {
         return (NewGameController) getNewGameView().getController();
     }
 
-    /**
-     * Самый обыкновенный способ использовать FXML загрузчик.
-     * Как раз-таки на этом этапе будет создан объект-контроллер,
-     * произведены все FXML инъекции и вызван метод инициализации контроллера.
-     */
     protected View loadView(String url) throws IOException {
         InputStream fxmlStream = null;
         try {
@@ -64,10 +59,6 @@ public class ControllersConfig {
         }
     }
 
-    /**
-     * Класс - оболочка: контроллер мы обязаны указать в качестве бина,
-     * а view - представление, нам предстоит использовать в точке входа {@link Application}.
-     */
     public class View {
         private Parent view;
         private Object controller;

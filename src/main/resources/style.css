@@ -18,7 +18,15 @@
     -fx-background-color: linear-gradient(to bottom, #009090, #008080);
 }
 
-.table-row-cell:highlighted {
+.table-row:highlighted {
     -fx-text-fill: orange;
     -fx-background-color: yellow;
+}
+
+.highlighted {
+    -fx-background-color: rgba(255, 90, 0, 0.5);
+}
+
+.hovered {
+    -fx-background-color: rgba(255, 90, 0, 0.2);
 }

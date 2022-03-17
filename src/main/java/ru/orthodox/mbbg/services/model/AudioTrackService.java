@@ -2,12 +2,13 @@ package ru.orthodox.mbbg.services.model;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.model.AudioTrack;
+
 import ru.orthodox.mbbg.services.LocalFilesService;
+import ru.orthodox.mbbg.utils.AudioUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -76,12 +77,15 @@ public class AudioTrackService {
     }
 
     public AudioTrack generateFromFile(String absolutePath) {
-        return AudioTrack.builder()
+        AudioTrack audioTrack = AudioTrack.builder()
                 .id(UUID.randomUUID())
                 .localPath(absolutePath)
                 .artist(extractArtist(absolutePath))
                 .title(extractSongName(absolutePath))
+                .startInSeconds(0)
                 .build();
+        AudioUtils.setAudioTrackLength(audioTrack);
+        return audioTrack;
     }
 
     private boolean isUnique(AudioTrack audioTrack) {
@@ -95,10 +99,10 @@ public class AudioTrackService {
         for (String separator : SEPARATORS) {
             List<String> splittedSegments = Arrays.asList(filename.split(separator));
             int numberOfDigitSegments = 0;
-            while (digitPattern.matcher(splittedSegments.get(0).trim()).matches()) {
+            while (digitPattern.matcher(splittedSegments.get(numberOfDigitSegments).trim()).matches()) {
                 numberOfDigitSegments++;
             }
-            splittedSegments.subList(numberOfDigitSegments, splittedSegments.size() - 1);
+            splittedSegments = splittedSegments.subList(numberOfDigitSegments, splittedSegments.size());
             if (splittedSegments.size() == 2) {
                 return splittedSegments.get(0).trim();
             }
@@ -110,9 +114,11 @@ public class AudioTrackService {
         filename = filename.substring(filename.lastIndexOf(System.getProperty("file.separator")) + 1);
         for (String separator : SEPARATORS) {
             List<String> splittedSegments = Arrays.asList(filename.split(separator));
-            while (digitPattern.matcher(splittedSegments.get(0).trim()).matches()) {
-                splittedSegments.remove(0);
+            int numberOfDigitSegments = 0;
+            while (digitPattern.matcher(splittedSegments.get(numberOfDigitSegments).trim()).matches()) {
+                numberOfDigitSegments++;
             }
+            splittedSegments = splittedSegments.subList(numberOfDigitSegments, splittedSegments.size());
             if (splittedSegments.size() == 2) {
                 return splittedSegments.get(1).split("\\.[A-z0-9]+$").length != 0
                         ? splittedSegments.get(1).split("\\.[A-z0-9]+$")[0].trim()

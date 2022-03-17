@@ -126,28 +126,28 @@
                                  <children>
                                     <VBox alignment="CENTER" prefHeight="100.0" prefWidth="706.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <HBox prefHeight="40.0" prefWidth="725.0">
+                                          <HBox alignment="CENTER" prefHeight="37.0" prefWidth="647.0">
                                              <children>
-                                                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="63.0" prefWidth="731.0" />
+                                                <Label fx:id="currentTrackInfo" alignment="CENTER" contentDisplay="CENTER" prefHeight="63.0" prefWidth="700.0" />
                                              </children></HBox>
-                                          <HBox fx:id="sliderContainer" prefHeight="40.0" prefWidth="725.0" />
+                                          <HBox fx:id="sliderContainer" alignment="CENTER" prefHeight="40.0" prefWidth="725.0" />
                                           <HBox alignment="CENTER" maxWidth="200.0" prefHeight="30.0" prefWidth="689.0">
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="27.0" prefWidth="59.0" text="Start:" />
-                                                <Label prefHeight="35.0" prefWidth="63.0" text="0:00" />
+                                                <Label fx:id="currentTrackStartLabel" prefHeight="35.0" prefWidth="63.0" text="0:00" />
                                                 <Label prefHeight="27.0" prefWidth="50.0" text="End" />
-                                                <Label prefHeight="27.0" prefWidth="56.0" />
+                                                <Label fx:id="currentTrackEndLabel" prefHeight="27.0" prefWidth="56.0" />
                                              </children></HBox>
                                        </children>
                                     </VBox>
-                                    <TableView fx:id="tracksTable" layoutX="38.0" prefHeight="431.0" prefWidth="705.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+                                    <TableView fx:id="tracksTable" editable="true" layoutX="38.0" prefHeight="431.0" prefWidth="705.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
                                       <columns>
-                                        <TableColumn fx:id="artist" prefWidth="259.0" text="Artist" />
-                                        <TableColumn fx:id="title" prefWidth="346.0" text="Title" />
+                                        <TableColumn fx:id="artist" prefWidth="259.0" style="-fx-alignment: CENTER-LEFT;" text="Artist" />
+                                        <TableColumn fx:id="title" prefWidth="346.0" style="-fx-alignment: CENTER-LEFT;" text="Title" />
                                           <TableColumn fx:id="play" prefWidth="25.0" style="-fx-alignment: CENTER-LEFT;" />
-                                          <TableColumn fx:id="pause" prefWidth="25.0" />
-                                          <TableColumn fx:id="stop" prefWidth="25.0" />
-                                          <TableColumn fx:id="remove" prefWidth="25.0" />
+                                          <TableColumn fx:id="pause" prefWidth="25.0" style="-fx-alignment: CENTER-LEFT;" />
+                                          <TableColumn fx:id="stop" prefWidth="25.0" style="-fx-alignment: CENTER-LEFT;" />
+                                          <TableColumn fx:id="remove" prefWidth="25.0" style="-fx-alignment: CENTER-LEFT;" />
                                       </columns>
                                     </TableView>
                                  </children>

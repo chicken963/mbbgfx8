@@ -3,132 +3,81 @@
     "id": "31daa4f9-c069-418b-8c42-c8baa6941906",
     "localPath": "F:\\myDocs\\Моя музыка\\B4MV\\the poison\\Suffocating Under Words of Sorrow.mp3",
     "title": "Suffocating Under Words of Sorrow",
-    "artist": "Bullet for my valentine"
+    "artist": "Bullet for my valentine",
+    "startInSeconds": 25,
+    "finishInSeconds": 56.6,
+    "lengthInSeconds": 235
   },
   {
     "id": "31daa4f9-c029-418b-8c42-c8baa6941906",
     "localPath": "F:\\myDocs\\Моя музыка\\виноградный день\\Дети!Учим алфавит!Буква О.mp3",
     "title": "Дети!Учим алфавит!Буква О",
-    "artist": "Виноградный день"
+    "artist": "Виноградный день",
+    "startInSeconds": 0,
+    "finishInSeconds": 6,
+    "lengthInSeconds": 13
   },
   {
     "id": "31daa4f9-c039-418b-8c42-c8baa6941906",
     "localPath": "F:\\myDocs\\Моя музыка\\виноградный день\\Дети!Учим алфавит!Буква И.mp3",
     "title": "Дети!Учим алфавит!Буква И",
-    "artist": "Виноградный день"
+    "artist": "Виноградный день",
+    "startInSeconds": 0,
+    "finishInSeconds": 6,
+    "lengthInSeconds": 13
   },
   {
     "id": "31daa4f9-c049-418b-8c42-c8baa6941906",
     "localPath": "F:\\myDocs\\Моя музыка\\виноградный день\\Дети!Учим алфавит!Буква А.mp3",
     "title": "Дети!Учим алфавит!Буква А",
-    "artist": "Виноградный день"
+    "artist": "Виноградный день",
+    "startInSeconds": 0,
+    "finishInSeconds": 6,
+    "lengthInSeconds": 13
   },
   {
     "id": "31daa4f9-c059-418b-8c42-c8baa6941906",
     "localPath": "F:\\myDocs\\Моя музыка\\All The Right Moves (2009).mp3",
     "title": "All The Right Moves",
-    "artist": "One Republic"
+    "artist": "One Republic",
+    "startInSeconds": 25,
+    "finishInSeconds": 56.6,
+    "lengthInSeconds": 246
   },
   {
     "id": "31daa4f9-c019-418b-8c42-c8baa6941906",
     "localPath": "F:\\myDocs\\Моя музыка\\armin van buuren falling.mp3",
     "title": "falling",
-    "artist": "Armin Van Buuren"
+    "artist": "Armin Van Buuren",
+    "startInSeconds": 25,
+    "finishInSeconds": 56.6,
+    "lengthInSeconds": 305
   },
   {
     "id": "31daa4f9-c009-418b-8c42-c8baa6941906",
     "localPath": "F:\\myDocs\\Моя музыка\\Black_Sabbath_-_Paranoid.mp3",
     "title": "Paranoid",
-    "artist": "Black_Sabbath"
+    "artist": "Black_Sabbath",
+    "startInSeconds": 25,
+    "finishInSeconds": 56.6,
+    "lengthInSeconds": 180
   },
   {
     "id": "31daa4f9-c089-418b-8c42-c8baa6941906",
     "localPath": "F:\\myDocs\\Моя музыка\\Bomfunk MС's - Freestyler.mp3",
     "title": "Freestyler",
-    "artist": "Bomfunk MС"
+    "artist": "Bomfunk MС",
+    "startInSeconds": 25,
+    "finishInSeconds": 56.6,
+    "lengthInSeconds": 190
   },
   {
     "id": "0393fc74-9a72-498f-bd03-c98edf980af7",
     "localPath": "F:\\myDocs\\Моя музыка\\05 - Snatch - Golden Brown.mp3",
     "title": "05 - Snatch - Golden Brown.mp3",
-    "artist": ""
-  },
-  {
-    "id": "1fed52d9-aea5-4afd-8ce5-88afbf3f40c8",
-    "localPath": "F:\\myDocs\\Моя музыка\\06-Scooter-Ramp! (The Logical Song).mp3",
-    "title": "06-Scooter-Ramp! (The Logical Song).mp3",
-    "artist": ""
-  },
-  {
-    "id": "3484aac1-0153-4eec-81b8-604b1fd7231a",
-    "localPath": "F:\\myDocs\\Моя музыка\\007 kit-i - после дождя.mp3",
-    "title": "007 kit-i - после дождя.mp3",
-    "artist": ""
-  },
-  {
-    "id": "c0bee2ba-550f-4ba9-b0c1-f9e8bb90dee9",
-    "localPath": "F:\\myDocs\\Моя музыка\\7б - Молодые Ветра.mp3",
-    "title": "Молодые Ветра.mp3",
-    "artist": "7б"
-  },
-  {
-    "id": "c9f0a95a-a897-4e0c-9ed6-c8f646f16983",
-    "localPath": "F:\\myDocs\\Моя музыка\\09 - All About Us.mp3",
-    "title": "All About Us.mp3",
-    "artist": "09"
-  },
-  {
-    "id": "358e2636-1aaa-47c3-8648-78f7f3ed6821",
-    "localPath": "F:\\myDocs\\Моя музыка\\10 - Snatch - Disco Science.mp3",
-    "title": "10 - Snatch - Disco Science.mp3",
-    "artist": ""
-  },
-  {
-    "id": "9edd4d4d-12ae-4509-9c7d-b093e41f946d",
-    "localPath": "F:\\myDocs\\Моя музыка\\12 oz Mouse - Main Theme.mp3",
-    "title": "Main Theme.mp3",
-    "artist": "12 oz Mouse"
-  },
-  {
-    "id": "3cf63a58-3cd7-4c6c-b8ad-5e70c43914a0",
-    "localPath": "F:\\myDocs\\Моя музыка\\15 вопрос.mp3",
-    "title": "15 вопрос.mp3",
-    "artist": ""
-  },
-  {
-    "id": "b5360524-ee55-4c1b-a737-7ef28433a009",
-    "localPath": "F:\\myDocs\\Моя музыка\\Queen_-_Don't stop me now.mp3",
-    "title": "_Don't stop me now.mp3",
-    "artist": "Queen_"
-  },
-  {
-    "id": "bf15952d-5b71-4ddd-bfda-cc7a77eca15a",
-    "localPath": "F:\\myDocs\\Моя музыка\\Queen_-_We_Will_Rock_You.mp3",
-    "title": "_We_Will_Rock_You.mp3",
-    "artist": "Queen_"
-  },
-  {
-    "id": "9230d250-4e7e-4da3-877e-4f24f070703d",
-    "localPath": "F:\\myDocs\\Моя музыка\\radical_face_-_welcome_home_.mp3",
-    "title": "_welcome_home_.mp3",
-    "artist": "radical_face_"
-  },
-  {
-    "id": "72885fcf-9480-47b5-bede-1e0366d04e9a",
-    "localPath": "F:\\myDocs\\Моя музыка\\Radiohead_-_Creep.mp3",
-    "title": "_Creep.mp3",
-    "artist": "Radiohead_"
-  },
-  {
-    "id": "81f33557-633c-466e-a7a8-6a8fe2f369a4",
-    "localPath": "F:\\myDocs\\Моя музыка\\Linkin Park - Until It's Gone.mp3",
-    "title": "Until It's Gone.mp3",
-    "artist": "Linkin Park"
-  },
-  {
-    "id": "117c4996-9913-41cc-9c58-1fab81400902",
-    "localPath": "F:\\myDocs\\Моя музыка\\lumen - дух времени.mp3",
-    "title": "дух времени.mp3",
-    "artist": "lumen"
+    "artist": "",
+    "startInSeconds": 25,
+    "finishInSeconds": 86.6,
+    "lengthInSeconds": 155
   }
 ]

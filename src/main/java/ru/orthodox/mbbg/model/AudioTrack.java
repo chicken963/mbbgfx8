@@ -27,4 +27,13 @@ public class AudioTrack {
     @Column(name = "artist")
     private String artist;
 
+    @Column(name = "startInSeconds")
+    private double startInSeconds;
+
+    @Column(name = "finishInSeconds")
+    private double finishInSeconds;
+
+    @Column(name = "lengthInSeconds")
+    private double lengthInSeconds;
+
 }

@@ -2,7 +2,9 @@ package ru.orthodox.mbbg.services;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.orthodox.mbbg.enums.Direction;
@@ -17,9 +19,6 @@ import java.util.ListIterator;
 
 @Component
 public class PlayService {
-
-    @Autowired
-    private AudioTrackService audioTrackService;
 
     @Getter
     private List<AudioTrack> queue;
@@ -39,24 +38,6 @@ public class PlayService {
     @Getter
     private boolean lastTrackActive = false;
 
-    @Getter
-    private boolean started;
-
-    @PostConstruct
-    private void postConstruct() {
-        queue = findAllTracks();
-        queueIterator = queue.listIterator();
-        switchPlayerToTrack(Direction.FORWARD);
-    }
-
-    public List<AudioTrack> findAllTracks(){
-        return audioTrackService.findAllAudioTracks();
-    }
-
-    public void saveTrack(AudioTrack audioTrack){
-        audioTrackService.save(audioTrack);
-    }
-
     public AudioTrack play() {
         mediaPlayer.play();
         return currentTrack;
@@ -67,7 +48,9 @@ public class PlayService {
     }
 
     public void stop() {
-        mediaPlayer.stop();
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+        }
     }
 
     public AudioTrack next() {
@@ -86,10 +69,10 @@ public class PlayService {
 
     private void switchPlayerToTrack(Direction direction) {
         AudioTrack newTrack = currentTrack;
-        while (newTrack == currentTrack && (queueIterator.hasNext() || queueIterator.hasPrevious())) {
-            if (Direction.FORWARD.equals(direction)) {
+        while (newTrack == currentTrack) {
+            if (Direction.FORWARD.equals(direction) && queueIterator.hasNext()) {
                 newTrack = queueIterator.next();
-            } else {
+            } else if (queueIterator.hasPrevious()) {
                 newTrack = queueIterator.previous();
             }
         }
@@ -101,6 +84,8 @@ public class PlayService {
         }
         this.media = new Media(NormalizedPathString.of(currentTrack.getLocalPath()));
         this.mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setStartTime(Duration.seconds(currentTrack.getStartInSeconds()));
+        mediaPlayer.setStopTime(Duration.seconds(currentTrack.getFinishInSeconds()));
         mediaPlayer.setVolume(volumeCacheForSwitching);
     }
 
@@ -120,30 +105,23 @@ public class PlayService {
     }
 
     public double getCurrentTime() {
-        return mediaPlayer.getCurrentTime().toSeconds();
+        if (mediaPlayer != null) {
+            return mediaPlayer.getCurrentTime().toSeconds();
+        }
+        return 0;
     }
 
     public double getCurrentSongLength() {
-        return media.getDuration().toSeconds();
+        if (media != null) {
+            return media.getDuration().toSeconds();
+        }
+        return 0;
     }
 
-    public String getSongProgressAsString(double current, double maximum) {
-        int currentMinutes = (int) Math.floor(current / 60);
-        int currentSeconds = (int) (Math.floor(current % 60));
-        int minutesInCurrentTrack = (int) Math.floor(maximum / 60);
-        int secondsInCurrentTrack = (int) Math.floor(maximum % 60);
-        StringBuilder sb = new StringBuilder()
-                .append(formatTimeSegment(currentMinutes))
-                .append(":")
-                .append(formatTimeSegment(currentSeconds))
-                .append("/")
-                .append(formatTimeSegment(minutesInCurrentTrack))
-                .append(":")
-                .append(formatTimeSegment(secondsInCurrentTrack));
-        return sb.toString();
-    }
-
-    private String formatTimeSegment(int value) {
-        return String.format("%02d", value);
+    public void resetQueue(List<AudioTrack> audioTracks) {
+        stop();
+        this.queue = audioTracks;
+        this.queueIterator = queue.listIterator();
+        switchPlayerToTrack(Direction.FORWARD);
     }
 }

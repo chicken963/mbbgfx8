@@ -8,14 +8,17 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import ru.orthodox.mbbg.enums.Direction;
 import ru.orthodox.mbbg.model.AudioTrack;
 import ru.orthodox.mbbg.services.PlayService;
 import ru.orthodox.mbbg.services.ScreenService;
+import ru.orthodox.mbbg.services.model.AudioTrackService;
 import ru.orthodox.mbbg.utils.NormalizedPathString;
 
 import javax.annotation.PostConstruct;
 
 import static ru.orthodox.mbbg.utils.ThreadUtils.runTaskInSeparateThread;
+import static ru.orthodox.mbbg.utils.TimeRepresentationConverter.getSongProgressAsString;
 
 @Configurable
 public class PlayController {
@@ -44,6 +47,8 @@ public class PlayController {
 
     @Autowired
     private ScreenService screenService;
+    @Autowired
+    private AudioTrackService audioTrackService;
 
     @Autowired
     private PlayService playService;
@@ -54,6 +59,7 @@ public class PlayController {
         songProgressInSeconds.setFont(Font.loadFont(NormalizedPathString.of("src\\main\\resources\\fonts\\AntykwaTorunskaMed-Regular.ttf"), 18));
         startTrackingTitle();
         if (playService != null) {
+            playService.resetQueue(audioTrackService.findAllAudioTracks());
             initializeCurrentSongTitle();
             fillPlaylistTable();
         }
@@ -96,7 +102,7 @@ public class PlayController {
             double current = playService.getCurrentTime();
             double end = playService.getCurrentSongLength();
 
-            songProgressInSeconds.setText(playService.getSongProgressAsString(current, end));
+            songProgressInSeconds.setText(getSongProgressAsString(current, end));
             songProgressBar.setProgress(current / end);
 
             previousButton.setDisable(playService.isFirstTrackActive());
@@ -129,7 +135,7 @@ public class PlayController {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                playlistTable.getRowFactory().call(playlistTable).getStyleClass().add("highlighted");
+//                playlistTable.getRowFactory().call(playlistTable).getStyleClass().add("highlighted");
             }
         }
     }
@@ -147,7 +153,7 @@ public class PlayController {
                 new PropertyValueFactory<AudioTrack, String>("title"));
         artistInPlaylist.setCellValueFactory(
                 new PropertyValueFactory<AudioTrack, String>("artist"));
-        playlistTable.getItems().setAll(playService.findAllTracks());
+        playlistTable.getItems().setAll(playService.getQueue());
 /*        playlistTable.setRowFactory(new Callback<TableView<AudioTrack>, TableRow<AudioTrack>>() {
             @Override
             public TableRow<AudioTrack> call(TableView<AudioTrack> param) {

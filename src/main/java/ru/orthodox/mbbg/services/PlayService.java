@@ -4,70 +4,83 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import lombok.Getter;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import ru.orthodox.mbbg.enums.Direction;
 import ru.orthodox.mbbg.model.AudioTrack;
-import ru.orthodox.mbbg.services.model.AudioTrackService;
 import ru.orthodox.mbbg.utils.NormalizedPathString;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.ListIterator;
 
 
-@Component
 public class PlayService {
 
     @Getter
     private List<AudioTrack> queue;
-    ListIterator<AudioTrack> queueIterator;
+    private ListIterator<AudioTrack> queueIterator;
 
     @Getter
     private AudioTrack currentTrack;
 
-    private double volumeCacheForSwitching = 1;
-    private double volumeCacheForMute;
+    private double volumeCache = 1;
     private boolean muted = false;
+    @Getter
+    private boolean isPaused = false;
+    @Getter
+    private boolean isStopped = true;
     private Media media;
+    @Getter
     private MediaPlayer mediaPlayer;
 
-    @Getter
-    private boolean firstTrackActive = true;
-    @Getter
-    private boolean lastTrackActive = false;
+
+    public PlayService(List<AudioTrack> queue) {
+        this.queue = queue;
+        this.queueIterator = queue.listIterator();
+        if (queueIterator.hasNext()) {
+            this.currentTrack = queueIterator.next();
+            generateMediaPlayer(currentTrack);
+        }
+    }
 
     public AudioTrack play() {
+        if (!isPaused) {
+            this.setCurrentTrackStartRate();
+        }
         mediaPlayer.play();
+        isPaused = false;
+        isStopped = false;
         return currentTrack;
     }
 
     public void pause() {
         mediaPlayer.pause();
+        isPaused = true;
     }
 
     public void stop() {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
+            isPaused = false;
+            isStopped = true;
         }
     }
 
     public AudioTrack next() {
         mediaPlayer.stop();
-        switchPlayerToTrack(Direction.FORWARD);
+        shiftActiveTrack(Direction.FORWARD);
+        generateMediaPlayer(currentTrack);
         mediaPlayer.play();
         return this.currentTrack;
     }
 
     public AudioTrack previous() {
         mediaPlayer.stop();
-        switchPlayerToTrack(Direction.REVERSED);
+        shiftActiveTrack(Direction.REVERSED);
+        generateMediaPlayer(currentTrack);
         mediaPlayer.play();
         return currentTrack;
     }
 
-    private void switchPlayerToTrack(Direction direction) {
+    private void shiftActiveTrack(Direction direction) {
         AudioTrack newTrack = currentTrack;
         while (newTrack == currentTrack) {
             if (Direction.FORWARD.equals(direction) && queueIterator.hasNext()) {
@@ -77,27 +90,16 @@ public class PlayService {
             }
         }
         currentTrack = newTrack;
-        firstTrackActive = currentTrack == queue.get(0);
-        lastTrackActive = currentTrack == queue.get(queue.size() - 1);
-        if (mediaPlayer != null) {
-            volumeCacheForSwitching = mediaPlayer.getVolume();
-        }
-        this.media = new Media(NormalizedPathString.of(currentTrack.getLocalPath()));
-        this.mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setStartTime(Duration.seconds(currentTrack.getStartInSeconds()));
-        mediaPlayer.setStopTime(Duration.seconds(currentTrack.getFinishInSeconds()));
-        mediaPlayer.setVolume(volumeCacheForSwitching);
     }
 
     public void switchMute() {
         if (muted) {
-            mediaPlayer.setVolume(volumeCacheForMute);
             this.muted = false;
         } else {
-            this.volumeCacheForMute = mediaPlayer.getVolume();
-            mediaPlayer.setVolume(0);
+            this.volumeCache = 0;
             this.muted = true;
         }
+        mediaPlayer.setVolume(volumeCache);
     }
 
     public void setVolume(double volume) {
@@ -118,10 +120,26 @@ public class PlayService {
         return 0;
     }
 
-    public void resetQueue(List<AudioTrack> audioTracks) {
-        stop();
-        this.queue = audioTracks;
-        this.queueIterator = queue.listIterator();
-        switchPlayerToTrack(Direction.FORWARD);
+    public void setCurrentTrackStartRate(){
+        mediaPlayer.setStartTime(Duration.seconds(currentTrack.getStartInSeconds()));
+    }
+
+    public boolean isFirstTrackActive() {
+        return !queueIterator.hasPrevious();
+    }
+
+    public boolean isLastTrackActive() {
+        return !queueIterator.hasNext();
+    }
+
+    private void generateMediaPlayer(AudioTrack audioTrack) {
+        if (mediaPlayer != null) {
+            volumeCache = mediaPlayer.getVolume();
+        }
+        this.media = new Media(NormalizedPathString.of(audioTrack.getLocalPath()));
+        this.mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setStartTime(Duration.seconds(audioTrack.getStartInSeconds()));
+        mediaPlayer.setStopTime(Duration.seconds(audioTrack.getFinishInSeconds()));
+        mediaPlayer.setVolume(muted ? 0 : volumeCache);
     }
 }

@@ -50,7 +50,6 @@ public class PlayController {
     @Autowired
     private AudioTrackService audioTrackService;
 
-    @Autowired
     private PlayService playService;
 
     @PostConstruct
@@ -58,8 +57,8 @@ public class PlayController {
         songTitle.setFont(Font.loadFont(NormalizedPathString.of("src\\main\\resources\\fonts\\AntykwaTorunskaMed-Regular.ttf"), 32));
         songProgressInSeconds.setFont(Font.loadFont(NormalizedPathString.of("src\\main\\resources\\fonts\\AntykwaTorunskaMed-Regular.ttf"), 18));
         startTrackingTitle();
-        if (playService != null) {
-            playService.resetQueue(audioTrackService.findAllAudioTracks());
+        if (audioTrackService != null) {
+            this.playService = new PlayService(audioTrackService.findAllAudioTracks());
             initializeCurrentSongTitle();
             fillPlaylistTable();
         }
@@ -111,10 +110,10 @@ public class PlayController {
     }
 
     private void checkAudioTrackSwitching() {
-        if (playService != null) {
+        if (playService != null && currentTrack != null) {
 
             double current = playService.getCurrentTime();
-            double end = playService.getCurrentSongLength();
+            double end = currentTrack.getFinishInSeconds();
 
             if (current / end >= 1) {
                 currentTrack = playService.next();
@@ -123,7 +122,7 @@ public class PlayController {
         }
     }
 
-    private void updateActiveRowHighlight(){
+    private void updateActiveRowHighlight() {
         if (playService != null) {
 
             double current = playService.getCurrentTime();
@@ -173,6 +172,6 @@ public class PlayController {
     }
 
     public void backToMenu(ActionEvent actionEvent) {
-       screenService.activate("startmenu");
+        screenService.activate("startmenu");
     }
 }

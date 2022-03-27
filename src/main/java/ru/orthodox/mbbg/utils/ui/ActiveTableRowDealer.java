@@ -8,6 +8,7 @@ import ru.orthodox.mbbg.model.AudioTrack;
 public class ActiveTableRowDealer {
     private TableRow<AudioTrack> activeRow;
     private TableRow<AudioTrack> hoveredRow;
+
     public void updateActiveRow(TableRow<AudioTrack> row) {
         if (!row.isEmpty()) {
             if (activeRow != null) {
@@ -25,5 +26,10 @@ public class ActiveTableRowDealer {
             }
             hoveredRow = row;
         }
+    }
+
+    public void deactivateHoveredRow(TableRow<AudioTrack> row) {
+        row.getStyleClass().remove("hovered");
+
     }
 }

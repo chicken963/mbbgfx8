@@ -1,18 +1,15 @@
 package ru.orthodox.mbbg.services;
 
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.configuration.ControllersConfig;
+import ru.orthodox.mbbg.enums.OpenSceneMode;
 
 import javax.annotation.PostConstruct;
-import java.io.IOException;
 import java.util.HashMap;
 
 @Component
@@ -38,7 +35,7 @@ public class ScreenService {
 
     @PostConstruct
     public void addScenesToTray() {
-        main = new Scene(startMenuView.getView());
+        main = new Scene(startMenuView.getParentNode());
 
         this.addScreen("startmenu", startMenuView);
         this.addScreen("main", mainView);
@@ -54,7 +51,7 @@ public class ScreenService {
     }
 
     public Scene activate(String name) {
-        main.setRoot(screenMap.get(name).getView());
+        main.setRoot(screenMap.get(name).getParentNode());
         return main;
     }
 }

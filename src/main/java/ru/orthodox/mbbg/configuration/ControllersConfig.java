@@ -4,7 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.orthodox.mbbg.Application;
+import org.springframework.context.annotation.Scope;
 import ru.orthodox.mbbg.controllers.NewGameController;
 import ru.orthodox.mbbg.controllers.PlayController;
 import ru.orthodox.mbbg.controllers.StartMenuController;
@@ -26,6 +26,7 @@ public class ControllersConfig {
     }
 
     @Bean(name = "newGameView")
+    //@Scope("prototype")
     public View getNewGameView() throws IOException {
         return loadView("view/newgame.fxml");
     }
@@ -60,20 +61,20 @@ public class ControllersConfig {
     }
 
     public class View {
-        private Parent view;
+        private Parent parentNode;
         private Object controller;
 
-        public View(Parent view, Object controller) {
-            this.view = view;
+        public View(Parent parent, Object controller) {
+            this.parentNode = parent;
             this.controller = controller;
         }
 
-        public Parent getView() {
-            return view;
+        public Parent getParentNode() {
+            return parentNode;
         }
 
-        public void setView(Parent view) {
-            this.view = view;
+        public void setParentNode(Parent parent) {
+            this.parentNode = parent;
         }
 
         public Object getController() {

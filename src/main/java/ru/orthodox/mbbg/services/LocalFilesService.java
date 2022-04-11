@@ -1,16 +1,16 @@
 package ru.orthodox.mbbg.services;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.model.AudioTrack;
+import ru.orthodox.mbbg.model.MarkedWithId;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -35,14 +35,19 @@ public class LocalFilesService {
         return entities;
     }
 
-    public <T> void write(T entity, File entitiesListFile) {
+    public <T extends MarkedWithId> void write(T entity, File entitiesListFile) {
         List<T> availableEntities = new ArrayList<>();
         try {
             availableEntities = mapper.readValue(entitiesListFile, t.constructCollectionType(ArrayList.class, entity.getClass()));
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        List<T> availableEntities = this.readEntityListFromFile(entitiesListFile, T.class);
+        Optional<T> entityWithTheSameId =  availableEntities.stream()
+                .filter(existingEntity -> existingEntity.getId().equals(entity.getId()))
+                .findFirst();
+        if (entityWithTheSameId.isPresent()) {
+            availableEntities.remove(entityWithTheSameId.get());
+        }
         availableEntities.add(entity);
         try {
             mapper.writeValue(entitiesListFile, availableEntities);

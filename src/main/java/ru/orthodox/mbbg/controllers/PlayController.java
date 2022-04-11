@@ -6,16 +6,25 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.enums.Direction;
 import ru.orthodox.mbbg.model.AudioTrack;
+import ru.orthodox.mbbg.model.Game;
+import ru.orthodox.mbbg.model.Round;
 import ru.orthodox.mbbg.services.PlayService;
 import ru.orthodox.mbbg.services.ScreenService;
 import ru.orthodox.mbbg.services.model.AudioTrackService;
+import ru.orthodox.mbbg.services.model.GamesService;
+import ru.orthodox.mbbg.services.model.RoundService;
 import ru.orthodox.mbbg.utils.NormalizedPathString;
 
 import javax.annotation.PostConstruct;
+
+import java.util.List;
 
 import static ru.orthodox.mbbg.utils.ThreadUtils.runTaskInSeparateThread;
 import static ru.orthodox.mbbg.utils.TimeRepresentationConverter.getSongProgressAsString;
@@ -49,16 +58,29 @@ public class PlayController {
     private ScreenService screenService;
     @Autowired
     private AudioTrackService audioTrackService;
+    @Autowired
+    private GamesService gameService;
+    @Autowired
+    private RoundService roundService;
 
     private PlayService playService;
 
+    @Setter
+    private Game game;
+    
     @PostConstruct
     public void initialize() {
         songTitle.setFont(Font.loadFont(NormalizedPathString.of("src\\main\\resources\\fonts\\AntykwaTorunskaMed-Regular.ttf"), 32));
         songProgressInSeconds.setFont(Font.loadFont(NormalizedPathString.of("src\\main\\resources\\fonts\\AntykwaTorunskaMed-Regular.ttf"), 18));
+
+    }
+
+    public void render(){
         startTrackingTitle();
-        if (audioTrackService != null) {
-            this.playService = new PlayService(audioTrackService.findAllAudioTracks());
+        if (audioTrackService != null && game != null) {
+            List<Round> rounds = gameService.findRoundsByGame(game);
+            List<AudioTrack> firstRoundQueue = roundService.findAudioTracksByRound(rounds.get(0));
+            this.playService = new PlayService(firstRoundQueue);
             initializeCurrentSongTitle();
             fillPlaylistTable();
         }

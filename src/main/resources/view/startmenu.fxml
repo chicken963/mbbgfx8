@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.effect.DisplacementMap?>
+<?import javafx.scene.effect.FloatMap?>
 <?import javafx.scene.effect.Lighting?>
 <?import javafx.scene.effect.Shadow?>
 <?import javafx.scene.image.Image?>
@@ -17,15 +19,28 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: linear-gradient(to bottom right, #008080, black);" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.StartMenuController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: linear-gradient(to bottom right, #008080, black);" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.StartMenuController">
     <children>
         <Label fx:id="greetingLabel" layoutX="189.0" layoutY="61.0" prefHeight="57.0" prefWidth="956.0" text="Ну что, дружочек-пирожочек, what we gonna do?" textFill="#ffa100">
             <font>
                 <Font size="36.0" />
             </font>
         </Label>
-        <Pagination layoutX="60.0" layoutY="609.0" maxPageIndicatorCount="8" prefHeight="38.0" prefWidth="1145.0" />
-        <GridPane layoutX="112.0" layoutY="141.0" prefHeight="432.0" prefWidth="1053.0">
+        <fx:define>
+        <Pagination fx:id="templatePagination" layoutX="436.0" layoutY="609.0" maxPageIndicatorCount="8" prefHeight="58.0" prefWidth="383.0">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <effect>
+            <DisplacementMap>
+               <mapData>
+                  <FloatMap />
+               </mapData>
+            </DisplacementMap>
+         </effect>
+        </Pagination>
+        </fx:define>
+        <GridPane fx:id="gamesField" layoutX="112.0" layoutY="141.0" prefHeight="432.0" prefWidth="1053.0">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -38,7 +53,8 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <AnchorPane maxHeight="130.0" maxWidth="200.0" minHeight="130.0" minWidth="200.0" prefHeight="130.0" prefWidth="200.0" style="-fx-border-radius: 15px; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0); -fx-border-width: 2px; -fx-border-style: dashed; -fx-border-color: #ffa500;" GridPane.halignment="CENTER">
+                <fx:define>
+                <AnchorPane fx:id="newGameAnchorPane" maxHeight="130.0" maxWidth="200.0" minHeight="130.0" minWidth="200.0" prefHeight="130.0" prefWidth="200.0" style="-fx-border-radius: 15px; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0); -fx-border-width: 2px; -fx-border-style: dashed; -fx-border-color: #ffa500;" GridPane.halignment="CENTER">
                     <effect>
                         <Lighting>
                             <bumpInput>
@@ -47,7 +63,7 @@
                         </Lighting>
                     </effect>
                     <children>
-                  <VBox alignment="CENTER" layoutX="47.0" layoutY="10.0" prefHeight="118.0" prefWidth="110.0" style="-fx-cursor: hand;" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="45.0">
+                  <VBox alignment="CENTER" layoutX="6.0" layoutY="10.0" prefHeight="118.0" prefWidth="193.0" style="-fx-cursor: hand;" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="3.0">
                      <children>
                               <Button fx:id="newGameButton" alignment="CENTER" contentDisplay="CENTER" onAction="#openNewGameForm" prefHeight="90.0" prefWidth="90.0" style="-fx-background-color: rgba(0, 0, 0, 0);">
                                   <graphic>
@@ -64,16 +80,18 @@
                               <Tooltip text="Create new game" />
                            </tooltip>
                               </Button>
-                        <Label text="New game" textFill="ORANGE">
+                        <Label alignment="CENTER" prefHeight="25.0" prefWidth="188.0" text="New game" textFill="ORANGE">
                            <font>
-                              <Font size="22.0" />
+                              <Font size="16.0" />
                            </font>
                         </Label>
                      </children>
                   </VBox>
                     </children>
                 </AnchorPane>
-                <AnchorPane maxHeight="130.0" maxWidth="200.0" minHeight="130.0" minWidth="200.0" prefHeight="130.0" prefWidth="200.0" style="-fx-border-style: dashed; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0); -fx-border-width: 2px; -fx-border-radius: 15px; -fx-border-color: #ffa500;" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+                </fx:define>
+                <fx:define>
+                <AnchorPane fx:id="templateGameAnchorPane" maxHeight="130.0" maxWidth="200.0" minHeight="130.0" minWidth="200.0" prefHeight="130.0" prefWidth="200.0" style="-fx-border-style: dashed; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0); -fx-border-width: 2px; -fx-border-radius: 15px; -fx-border-color: #ffa500;" GridPane.columnIndex="1" GridPane.halignment="CENTER">
                     <effect>
                         <Lighting>
                             <bumpInput>
@@ -82,7 +100,7 @@
                         </Lighting>
                     </effect>
                     <children>
-                        <VBox alignment="CENTER" prefHeight="130.0" prefWidth="82.0" style="-fx-cursor: hand;" AnchorPane.leftAnchor="59.0" AnchorPane.rightAnchor="59.0">
+                        <VBox alignment="CENTER" layoutX="4.0" onMouseEntered="#whiteTextColor" onMouseExited="#defaultTextColor" prefHeight="130.0" prefWidth="200.0" style="-fx-cursor: hand;" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="-2.0">
                             <Button fx:id="openGameButton" onAction="#openPlayGameForm" style="-fx-background-color: rgba(0, 0, 0, 0);">
                                 <graphic>
                                     <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
@@ -95,14 +113,15 @@
                            <Tooltip text="Play a game" />
                         </tooltip>
                             </Button>
-                            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="100.0" prefHeight="32.0" prefWidth="82.0" text="Game 1" textFill="ORANGE">
+                            <Label fx:id="gameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="100.0" prefHeight="32.0" prefWidth="192.0" text="Game 1" textFill="ORANGE">
                                 <font>
-                                    <Font size="22.0" />
+                                    <Font size="16.0" />
                                 </font>
                             </Label>
                         </VBox>
                     </children>
                 </AnchorPane>
+                </fx:define>
             </children>
         </GridPane>
     </children>

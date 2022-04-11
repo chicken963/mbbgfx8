@@ -1,15 +1,29 @@
 [
   {
-    "id": "266bc2a6-31b2-42f6-9bc3-43cbe8902d63",
-    "name": "Разминочка",
+    "id": "9f92df87-9974-4f78-917d-96901c0ea377",
+    "name": "round first",
     "tracksIds": [
-      "81f33557-633c-466e-a7a8-6a8fe2f369a4",
-      "117c4996-9913-41cc-9c58-1fab81400902"
+      "80bafc98-ba91-45dd-88b5-2cae061ed5ac",
+      "01ad9b6d-35b1-440e-952b-5bc794d414fa"
     ],
     "width": 4,
+    "height": 6,
+    "firstStrikeCondition": "ONE_LINE_STRIKE",
+    "secondStrikeCondition": "TWO_LINES_STRIKE",
+    "thirdStrikeCondition": "THREE_LINES_STRIKE"
+  },
+  {
+    "id": "8384ffbb-371c-481e-ac53-ee07537082bf",
+    "name": "second",
+    "tracksIds": [
+      "10bf913a-cf76-427d-accf-755833722a65",
+      "b063657e-03cd-496a-9df0-fa594672bfe3",
+      "96e337ee-8e74-4bf5-9e15-18f7bc9307e9"
+    ],
+    "width": 5,
     "height": 5,
     "firstStrikeCondition": "ONE_LINE_STRIKE",
     "secondStrikeCondition": "THREE_LINES_STRIKE",
-    "thirdStrikeCondition": null
+    "thirdStrikeCondition": "WHOLE_FIELD_STRIKE"
   }
 ]

@@ -1,9 +1,6 @@
 package ru.orthodox.mbbg.utils.ui;
 
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
@@ -14,26 +11,23 @@ import ru.orthodox.mbbg.model.AudioTrack;
 import ru.orthodox.mbbg.services.PlayService;
 import ru.orthodox.mbbg.utils.SpringUtils;
 import ru.orthodox.mbbg.utils.ThreadUtils;
+import ru.orthodox.mbbg.utils.ui.newGameScene.ElementFinder;
 
 import java.util.Collections;
 import java.util.List;
 
-@Builder
+import static ru.orthodox.mbbg.utils.ui.newGameScene.ElementFinder.findTracksTableColumnByNumber;
+
 public class EditTracksWorkspaceDealer {
 
-    private TableView<AudioTrack> tracksTable;
-    private TableColumn<AudioTrack, String> artist;
-    private TableColumn<AudioTrack, String> title;
-    private TableColumn<AudioTrack, String> play;
-    private TableColumn<AudioTrack, String> pause;
-    private TableColumn<AudioTrack, String> stop;
-    private TableColumn<AudioTrack, String> remove;
-    private HBox sliderContainer;
     private Label currentTrackInfo;
     private Label currentTrackStartLabel;
     private Label currentTrackEndLabel;
     private Label currentSnippetRate;
     private Label currentSnippetLength;
+    private HBox sliderContainer;
+    private Tab tab;
+    private TableView<AudioTrack> audioTracksTable;
 
     private PlayService playService;
     private List<AudioTrack> audioTracks;
@@ -44,18 +38,30 @@ public class EditTracksWorkspaceDealer {
 
     private RangeSliderDealer rangeSliderDealer;
 
-    public void defineWorkspaceLogic() {
+    public EditTracksWorkspaceDealer(Tab tab, List<AudioTrack> audioTracks) {
+        this.tab = tab;
+        this.audioTracks = audioTracks;
+
         activeTableRowDealer = SpringUtils.getBean(ActiveTableRowDealer.class);
         imageButtonCellFactoryProvider = SpringUtils.getBean(ImageButtonCellFactoryProvider.class);
 
+        currentTrackInfo = ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentTrackInfo");
+        currentTrackStartLabel = ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentTrackStartLabel");
+        currentTrackEndLabel = ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentTrackEndLabel");
+        currentSnippetRate = ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentSnippetRate");
+        currentSnippetLength = ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentSnippetLength");
+
+        sliderContainer = ElementFinder.<HBox>findTabElementByTypeAndStyleclass(tab, "sliderContainer");
+        audioTracksTable = ElementFinder.<TableView<AudioTrack>>findTabElementByTypeAndStyleclass(tab, "tracksTable");
         rangeSliderDealer = buildRangeSliderDealer();
-        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderDealer.updateRangeSlider(), "newGamePlayInfo");
-        defineRowsLogic();
-        defineColumnsLogic();
+
+        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderDealer.updateRangeSlider(), "newGamePlayInfo" + tab.getTabPane().getTabs().indexOf(tab));
+        defineRowsLogic(audioTracksTable);
+        defineColumnsLogic(audioTracksTable);
     }
 
-    private void defineRowsLogic() {
-        tracksTable.setRowFactory(tv -> {
+    private void defineRowsLogic(TableView<AudioTrack> audioTracksTable) {
+        audioTracksTable.setRowFactory(tv -> {
             TableRow<AudioTrack> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 this.updateCurrentTrackLayout(row);
@@ -67,43 +73,54 @@ public class EditTracksWorkspaceDealer {
         });
     }
 
-    private void defineColumnsLogic() {
-        defineEditableColumnsLogic();
-        defineButtonedColumnsLogic();
+    private void defineColumnsLogic(TableView<AudioTrack> audioTracksTable) {
+        TableColumn<AudioTrack, String> artistColumn = findTracksTableColumnByNumber(audioTracksTable, 0);
+        TableColumn<AudioTrack, String> titleColumn = findTracksTableColumnByNumber(audioTracksTable, 1);
+        defineEditableColumnsLogic(artistColumn, titleColumn);
+
+        TableColumn<AudioTrack, String> playColumn = findTracksTableColumnByNumber(audioTracksTable, 2);
+        TableColumn<AudioTrack, String> pauseColumn = findTracksTableColumnByNumber(audioTracksTable, 3);
+        TableColumn<AudioTrack, String> stopColumn = findTracksTableColumnByNumber(audioTracksTable, 4);
+        TableColumn<AudioTrack, String> deleteColumn = findTracksTableColumnByNumber(audioTracksTable, 5);
+        defineButtonedColumnsLogic(playColumn, pauseColumn, stopColumn, deleteColumn);
     }
 
-    private void defineEditableColumnsLogic() {
-        artist.setCellValueFactory(new PropertyValueFactory<>("artist"));
-        artist.setCellFactory(TextFieldTableCell.forTableColumn());
-        artist.setOnEditCommit(
+    private void defineEditableColumnsLogic(TableColumn<AudioTrack, String> artistColumn,
+                                            TableColumn<AudioTrack, String> titleColumn) {
+        artistColumn.setCellValueFactory(new PropertyValueFactory<>("artist"));
+        artistColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        artistColumn.setOnEditCommit(
                 (TableColumn.CellEditEvent<AudioTrack, String> t) ->
                         (t.getTableView().getItems().get(t.getTablePosition().getRow())).setArtist(t.getNewValue()));
 
-        title.setCellValueFactory(new PropertyValueFactory<>("title"));
-        title.setCellFactory(TextFieldTableCell.forTableColumn());
-        title.setOnEditCommit(
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        titleColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        titleColumn.setOnEditCommit(
                 (TableColumn.CellEditEvent<AudioTrack, String> t) ->
                         (t.getTableView().getItems().get(t.getTablePosition().getRow())).setTitle(t.getNewValue()));
 
     }
 
-    private void defineButtonedColumnsLogic() {
-        play.setCellFactory(imageButtonCellFactoryProvider.provide(
+    private void defineButtonedColumnsLogic(TableColumn<AudioTrack, String> playColumn,
+                                            TableColumn<AudioTrack, String> pauseColumn,
+                                            TableColumn<AudioTrack, String> stopColumn,
+                                            TableColumn<AudioTrack, String> deleteColumn) {
+        playColumn.setCellFactory(imageButtonCellFactoryProvider.provide(
                 "/mediaplayerIcons/play-small.png",
                 this::activateTrackAndPlay,
                 ButtonType.PLAY));
 
-        pause.setCellFactory(imageButtonCellFactoryProvider.provide(
+        pauseColumn.setCellFactory(imageButtonCellFactoryProvider.provide(
                 "/mediaplayerIcons/pause-small.png",
                 this::pause,
                 ButtonType.PAUSE));
 
-        stop.setCellFactory(imageButtonCellFactoryProvider.provide(
+        stopColumn.setCellFactory(imageButtonCellFactoryProvider.provide(
                 "/mediaplayerIcons/stop-small.png",
                 this::stop,
                 ButtonType.STOP));
 
-        remove.setCellFactory(imageButtonCellFactoryProvider.provide(
+        deleteColumn.setCellFactory(imageButtonCellFactoryProvider.provide(
                 "/mediaplayerIcons/delete2.png",
                 this::removeFromTable,
                 ButtonType.DELETE));
@@ -136,7 +153,7 @@ public class EditTracksWorkspaceDealer {
 
     private void removeFromTable(AudioTrack audioTrack) {
         audioTracks.remove(audioTrack);
-        tracksTable.getItems().setAll(audioTracks);
+        audioTracksTable.getItems().setAll(audioTracks);
     }
 
     private void updateCurrentTrackInfoUIElements(PlayService playService) {

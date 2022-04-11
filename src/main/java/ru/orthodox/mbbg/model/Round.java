@@ -18,7 +18,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Round {
+public class Round implements MarkedWithId {
 
     @Id
     @Column(name = "id")
@@ -31,10 +31,10 @@ public class Round {
     private List<UUID> tracksIds;
 
     @Column(name = "width")
-    private int width;
+    private Integer width;
 
     @Column(name = "height")
-    private int height;
+    private Integer height;
 
     @Column(name = "firstStrikeCondition")
     private WinCondition firstStrikeCondition;

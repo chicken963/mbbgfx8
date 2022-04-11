@@ -11,7 +11,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AudioTrack {
+public class AudioTrack implements MarkedWithId {
 
     @Id
     @Column(name = "id")

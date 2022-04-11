@@ -3,38 +3,39 @@ package ru.orthodox.mbbg.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import org.controlsfx.control.RangeSlider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import ru.orthodox.mbbg.enums.ButtonType;
+import org.springframework.context.ApplicationContext;
 import ru.orthodox.mbbg.enums.WinCondition;
 import ru.orthodox.mbbg.model.AudioTrack;
+import ru.orthodox.mbbg.model.Game;
 import ru.orthodox.mbbg.model.Round;
-import ru.orthodox.mbbg.services.PlayService;
-import ru.orthodox.mbbg.services.model.AudioTrackService;
 import ru.orthodox.mbbg.services.NewGameService;
 import ru.orthodox.mbbg.services.ScreenService;
+import ru.orthodox.mbbg.services.model.AudioTrackService;
+import ru.orthodox.mbbg.services.model.GamesService;
 import ru.orthodox.mbbg.services.model.RoundService;
-import ru.orthodox.mbbg.utils.ThreadUtils;
-import ru.orthodox.mbbg.utils.ui.ActiveTableRowDealer;
 import ru.orthodox.mbbg.utils.ui.EditTracksWorkspaceDealer;
-import ru.orthodox.mbbg.utils.ui.ImageButtonCellFactoryProvider;
-import ru.orthodox.mbbg.utils.ui.RangeSliderDealer;
+import ru.orthodox.mbbg.utils.ui.newGameScene.ElementFinder;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static ru.orthodox.mbbg.utils.ThreadUtils.runTaskInSeparateThread;
-import static ru.orthodox.mbbg.utils.TimeRepresentationConverter.toDoubleFormat;
-import static ru.orthodox.mbbg.utils.TimeRepresentationConverter.toStringFormat;
 import static ru.orthodox.mbbg.utils.ui.CustomFontDealer.setDefaultFont;
+import static ru.orthodox.mbbg.utils.ui.HierarchyUtils.findParentTab;
+import static ru.orthodox.mbbg.utils.ui.HierarchyUtils.findRecursivelyByStyleClass;
+import static ru.orthodox.mbbg.utils.ui.NodeDeepCopyProvider.createDeepCopy;
+import static ru.orthodox.mbbg.utils.ui.newGameScene.ElementFinder.*;
 
 @Configurable
 public class NewGameController {
@@ -46,31 +47,21 @@ public class NewGameController {
     @FXML
     private TextField newGameName;
     @FXML
-    private TextField newRoundName;
-    @FXML
-    private ChoiceBox<String> rowsNumber;
-    @FXML
-    private ChoiceBox<String> columnsNumber;
-    @FXML
-    private ChoiceBox<String> firstPrizeCondition;
-    @FXML
-    private ChoiceBox<String> secondPrizeCondition;
-    @FXML
-    private ChoiceBox<String> thirdPrizeCondition;
-    @FXML
     private Button addTracksButton;
     @FXML
     private Button deleteRound;
+    @FXML
+    private Button addNextRound;
     @FXML
     private Button saveGame;
     @FXML
     private Button cancelCreation;
     @FXML
-    private TableView<AudioTrack> tracksTable;
-    @FXML
     private Tab tabSample;
     @FXML
     private TabPane tabPane;
+    @Autowired
+    private ApplicationContext applicationContext;
     @Autowired
     private NewGameService newGameService;
     @Autowired
@@ -79,6 +70,8 @@ public class NewGameController {
     private AudioTrackService audioTrackService;
     @Autowired
     private RoundService roundService;
+    @Autowired
+    private GamesService gamesService;
     @FXML
     private TableColumn<AudioTrack, String> artist;
     @FXML
@@ -91,8 +84,6 @@ public class NewGameController {
     private TableColumn<AudioTrack, String> stop;
     @FXML
     private TableColumn<AudioTrack, String> remove;
-    @FXML
-    private HBox sliderContainer;
     @FXML
     private Label currentTrackInfo;
     @FXML
@@ -123,8 +114,12 @@ public class NewGameController {
                 saveGame,
                 cancelCreation);
 
-        preconfigureRoundDimensions();
-        preconfigureWinConditions();
+        Tab firstTab = createDeepCopy(tabSample);
+        bindRoundNameToTabName(firstTab);
+        configureCheckBoxes(firstTab);
+        disableDeleteRoundButton(firstTab);
+        tabPane.getTabs().add(firstTab);
+        setTabNames(tabPane);
     }
 
     @FXML
@@ -132,46 +127,93 @@ public class NewGameController {
         FileChooser fileChooser = preconfigureFileChooser();
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(((Node) e.getSource()).getScene().getWindow());
         audioTracks = mapFilesToAudioTracks(selectedFiles);
-//        currentTrack = audioTracks.get(0);
-        tracksTable.getItems().setAll(audioTracks);
-        this.editTracksWorkspaceDealer = EditTracksWorkspaceDealer.builder()
-                .tracksTable(tracksTable)
-                .artist(artist)
-                .title(title)
-                .play(play)
-                .pause(pause)
-                .stop(stop)
-                .remove(remove)
-                .sliderContainer(sliderContainer)
-                .currentTrackInfo(currentTrackInfo)
-                .currentTrackStartLabel(currentTrackStartLabel)
-                .currentTrackEndLabel(currentTrackEndLabel)
-                .currentSnippetRate(currentSnippetRate)
-                .currentSnippetLength(currentSnippetLength)
-                .audioTracks(audioTracks)
-                .build();
-        editTracksWorkspaceDealer.defineWorkspaceLogic();
+        Tab currentTab = findParentTab((Node) e.getSource(), tabPane);
+        TableView<AudioTrack> roundTable = ElementFinder.<TableView<AudioTrack>>findTabElementByTypeAndStyleclass(currentTab, "tracksTable");
+        roundTable.getItems().setAll(audioTracks);
+        this.editTracksWorkspaceDealer = new EditTracksWorkspaceDealer(currentTab, audioTracks);
     }
 
     @FXML
-    private void saveNewGame() {
-        Round round = Round.builder()
-                .id(UUID.randomUUID())
-                .name(newRoundName.getText())
-                .firstStrikeCondition(WinCondition.findByMessage(firstPrizeCondition.getValue()))
-                .secondStrikeCondition(WinCondition.findByMessage(secondPrizeCondition.getValue()))
-                .thirdStrikeCondition(WinCondition.findByMessage(thirdPrizeCondition.getValue()))
-                .width(Integer.parseInt(rowsNumber.getValue()))
-                .height(Integer.parseInt(columnsNumber.getValue()))
-                .tracksIds(audioTracks.stream().map(AudioTrack::getId).collect(Collectors.toList()))
-                .build();
+    private void saveNewGame(ActionEvent e) {
         audioTrackService.save(audioTracks);
-        roundService.save(round);
+        List<Round> rounds = new ArrayList<>();
+        for (Tab tab: tabPane.getTabs()) {
+
+            ChoiceBox firstPrizeCondition = ElementFinder.<ChoiceBox>findTabElementByTypeAndStyleclass(tab, "firstPrizeCondition");
+            ChoiceBox secondPrizeCondition = ElementFinder.<ChoiceBox>findTabElementByTypeAndStyleclass(tab, "secondPrizeCondition");
+            ChoiceBox thirdPrizeCondition = ElementFinder.<ChoiceBox>findTabElementByTypeAndStyleclass(tab, "thirdPrizeCondition");
+
+            TextField newRoundName = ElementFinder.<TextField>findTabElementByTypeAndStyleclass(tab, "newRoundName");
+
+            ChoiceBox<Integer> rowsNumber = ElementFinder.<ChoiceBox<Integer>>findTabElementByTypeAndStyleclass(tab, "rowsNumber");
+            ChoiceBox<Integer> columnsNumber = ElementFinder.<ChoiceBox<Integer>>findTabElementByTypeAndStyleclass(tab, "columnsNumber");
+
+            TableView<AudioTrack> roundTracksTable = ElementFinder.<TableView<AudioTrack>>findTabElementByTypeAndStyleclass(tab, "tracksTable");
+            List<AudioTrack> roundAudioTracks = roundTracksTable.getItems();
+
+            Round round = Round.builder()
+                    .id(UUID.randomUUID())
+                    .name(newRoundName.getText())
+                    .firstStrikeCondition(WinCondition.findByMessage(firstPrizeCondition.getValue().toString()))
+                    .secondStrikeCondition(WinCondition.findByMessage(secondPrizeCondition.getValue().toString()))
+                    .thirdStrikeCondition(WinCondition.findByMessage(thirdPrizeCondition.getValue().toString()))
+                    .width(rowsNumber.getValue())
+                    .height(columnsNumber.getValue())
+                    .tracksIds(roundAudioTracks.stream().map(AudioTrack::getId).collect(Collectors.toList()))
+                    .build();
+            rounds.add(round);
+            roundService.save(round);
+        }
+
+        Button saveButton = (Button) e.getSource();
+        saveButton.setDisable(true);
+        Game game = new Game();
+        game.setId(UUID.randomUUID());
+        game.setName(newGameName.getText());
+        game.setRoundIds(rounds.stream()
+                .map(Round::getId)
+                .collect(Collectors.toList()));
+        gamesService.save(game);
     }
 
     @FXML
     private void cancelCreation() {
+        StartMenuController startMenuController = applicationContext.getBean(StartMenuController.class);
+        startMenuController.fillGridWithAllGames();
         screenService.activate("startmenu");
+    }
+
+
+    @FXML
+    private void deleteRound(ActionEvent actionEvent) {
+        Node eventTarget = (Node) actionEvent.getSource();
+        while (!(eventTarget instanceof SplitPane)) {
+            eventTarget = eventTarget.getParent();
+        }
+        SplitPane mainContentLevel = (SplitPane) eventTarget;
+        Tab tabToDelete = tabPane.getTabs()
+                .stream()
+                .filter(tab -> tab.getContent().equals(mainContentLevel))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Not found tab to delete"));
+        tabPane.getTabs().remove(tabToDelete);
+        setTabNames(tabPane);
+        if (tabPane.getTabs().size() == 1) {
+            disableDeleteRoundButton(tabPane.getTabs().get(0));
+        }
+    }
+
+    @FXML
+    private void addRound(){
+        Tab newTab = createDeepCopy(tabSample);
+        newTab.setText("Round 2");
+        configureCheckBoxes(newTab);
+        tabPane.getTabs().add(newTab);
+        bindRoundNameToTabName(newTab);
+        setTabNames(tabPane);
+        for (Tab tab : tabPane.getTabs()) {
+            enableDeleteRoundButton(tab);
+        }
     }
 
     private FileChooser preconfigureFileChooser() {
@@ -193,15 +235,46 @@ public class NewGameController {
                 .collect(Collectors.toList());
     }
 
-    private void preconfigureRoundDimensions() {
-        rowsNumber.getItems().addAll("4", "5", "6", "7", "8");
-        columnsNumber.getItems().addAll("4", "5", "6", "7", "8", "9", "10", "11", "12");
+    private void preconfigureRoundDimensions(ChoiceBox rowsNumber, ChoiceBox columnsNumber) {
+        rowsNumber.getItems().addAll(4, 5, 6, 7, 8);
+        columnsNumber.getItems().addAll(4, 5, 6, 7, 8, 9, 10, 11, 12);
     }
 
-    private void preconfigureWinConditions() {
-        firstPrizeCondition.getItems().addAll(prizeConditions);
-        secondPrizeCondition.getItems().addAll(prizeConditions);
-        thirdPrizeCondition.getItems().addAll(prizeConditions);
+
+    private void preconfigureWinConditions(List<ChoiceBox> conditionContainers) {
+        conditionContainers.forEach(container -> container.getItems().addAll(prizeConditions));
+    }
+
+    private void disableDeleteRoundButton(Tab tab) {
+        findRecursivelyByStyleClass((Parent) tab.getContent(), "deleteRound").stream()
+                .map(item -> (Button) item)
+                .forEach(button -> button.setDisable(true));
+    }
+
+    private void enableDeleteRoundButton(Tab tab) {
+        findRecursivelyByStyleClass((Parent) tab.getContent(), "deleteRound").stream()
+                .map(item -> (Button) item)
+                .forEach(button -> button.setDisable(false));
+    }
+
+    private void configureCheckBoxes(Tab tab) {
+        ChoiceBox firstPrizeCondition = ElementFinder.<ChoiceBox>findTabElementByTypeAndStyleclass(tab, "firstPrizeCondition");
+        ChoiceBox secondPrizeCondition = ElementFinder.<ChoiceBox>findTabElementByTypeAndStyleclass(tab, "secondPrizeCondition");
+        ChoiceBox thirdPrizeCondition = ElementFinder.<ChoiceBox>findTabElementByTypeAndStyleclass(tab, "thirdPrizeCondition");
+        preconfigureWinConditions(Arrays.asList(firstPrizeCondition, secondPrizeCondition, thirdPrizeCondition));
+        ChoiceBox rowsNumber = ElementFinder.<ChoiceBox<Integer>>findTabElementByTypeAndStyleclass(tab, "rowsNumber");
+        ChoiceBox columnsNumber = ElementFinder.<ChoiceBox<Integer>>findTabElementByTypeAndStyleclass(tab, "columnsNumber");
+        preconfigureRoundDimensions(rowsNumber, columnsNumber);
+    }
+
+    private void setTabNames(TabPane tabPane) {
+        tabPane.getTabs().stream()
+                .filter(tab -> ElementFinder.<TextField>findTabElementByTypeAndStyleclass(tab, "newRoundName").getText().isEmpty())
+                .forEach(tab -> tab.setText("Round " + (tabPane.getTabs().indexOf(tab) + 1)));
+    }
+
+    private void bindRoundNameToTabName(Tab tab){
+        TextField roundName = ElementFinder.<TextField>findTabElementByTypeAndStyleclass(tab, "newRoundName");
+        roundName.setOnKeyPressed((event) -> tab.setText(roundName.getText()));
     }
 }
-

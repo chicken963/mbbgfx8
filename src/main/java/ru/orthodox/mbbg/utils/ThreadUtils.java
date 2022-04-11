@@ -38,7 +38,9 @@ public class ThreadUtils {
             }
         }));
         thread.setName(threadName);
-        thread.setDaemon(true);
+        if (!thread.isDaemon()) {
+            thread.setDaemon(true);
+        }
         thread.start();
     }
 

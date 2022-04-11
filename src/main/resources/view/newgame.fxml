@@ -32,7 +32,7 @@
                         <Font size="22.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="newGameName" prefHeight="25.0" prefWidth="475.0">
+                  <TextField style="newGameName" fx:id="newGameName" prefHeight="25.0" prefWidth="475.0">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin></TextField>
@@ -40,6 +40,7 @@
             </HBox>
             <TabPane fx:id="tabPane" prefHeight="535.0" prefWidth="1127.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
+              <fx:define>
                 <Tab fx:id="tabSample" text="Round 1">
                      <content>
                         <SplitPane dividerPositions="0.3814" prefHeight="160.0" prefWidth="200.0">
@@ -50,13 +51,13 @@
                                        <children>
                                           <HBox prefHeight="28.0" prefWidth="364.0">
                                              <children>
-                                                <Button id="addNextRound" mnemonicParsing="false" text="Add next round" />
+                                                <Button fx:id="addNextRound" onAction="#addRound" mnemonicParsing="false" text="Add next round" />
                                              </children>
                                           </HBox>
                                           <HBox prefHeight="30.0" prefWidth="364.0">
                                              <children>
                                                 <Label prefHeight="65.0" prefWidth="125.0" text="Enter new round name:" />
-                                                <TextField fx:id="newRoundName" prefHeight="69.0" prefWidth="240.0" />
+                                                <TextField style="newRoundName" prefHeight="69.0" prefWidth="240.0" />
                                              </children>
                                              <VBox.margin>
                                                 <Insets top="20.0" />
@@ -64,9 +65,9 @@
                                           <HBox prefHeight="31.0" prefWidth="288.0">
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="51.0" prefWidth="88.0" text="Blank size" />
-                                                <ChoiceBox fx:id="rowsNumber" prefHeight="40.0" prefWidth="75.0" />
+                                                <ChoiceBox style="rowsNumber" prefHeight="40.0" prefWidth="75.0" />
                                                 <Label alignment="CENTER" prefHeight="61.0" prefWidth="58.0" text="rows      X" />
-                                                <ChoiceBox fx:id="columnsNumber" prefHeight="40.0" prefWidth="79.0" />
+                                                <ChoiceBox style="columnsNumber" prefHeight="40.0" prefWidth="79.0" />
                                                 <Label alignment="CENTER" prefHeight="61.0" prefWidth="48.0" text="columns" />
                                              </children>
                                              <VBox.margin>
@@ -80,7 +81,7 @@
                                                       <Insets right="30.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <ChoiceBox fx:id="firstPrizeCondition" prefHeight="25.0" prefWidth="200.0" />
+                                                <ChoiceBox style="firstPrizeCondition" prefHeight="25.0" prefWidth="200.0" />
                                              </children>
                                              <opaqueInsets>
                                                 <Insets />
@@ -96,7 +97,7 @@
                                                       <Insets right="30.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <ChoiceBox fx:id="secondPrizeCondition" prefHeight="25.0" prefWidth="200.0" />
+                                                <ChoiceBox style="secondPrizeCondition" prefHeight="25.0" prefWidth="200.0" />
                                              </children>
                                           </HBox>
                                           <HBox prefHeight="50.0" prefWidth="262.0">
@@ -106,7 +107,7 @@
                                                       <Insets right="30.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <ChoiceBox fx:id="thirdPrizeCondition" prefHeight="25.0" prefWidth="200.0" />
+                                                <ChoiceBox style="thirdPrizeCondition" prefHeight="25.0" prefWidth="200.0" />
                                              </children>
                                           </HBox>
                                           <HBox prefHeight="44.0" prefWidth="364.0">
@@ -116,7 +117,7 @@
                                                       <Insets />
                                                    </HBox.margin>
                                                 </Button>
-                                                <Button fx:id="deleteRound" mnemonicParsing="false" prefHeight="36.0" prefWidth="136.0" text="Delete round" textFill="#ff0d00d6">
+                                                <Button fx:id="deleteRound" style="deleteRound" onAction="#deleteRound" mnemonicParsing="false" prefHeight="36.0" prefWidth="136.0" text="Delete round" textFill="#ff0d00d6">
                                                    <HBox.margin>
                                                       <Insets left="85.0" />
                                                    </HBox.margin>
@@ -133,26 +134,26 @@
                                        <children>
                                           <HBox alignment="CENTER" prefHeight="37.0" prefWidth="647.0">
                                              <children>
-                                                <Label fx:id="currentTrackInfo" alignment="CENTER" contentDisplay="CENTER" prefHeight="63.0" prefWidth="700.0" text="Please select track from table to configure bounds..." />
+                                                <Label style="currentTrackInfo" fx:id="currentTrackInfo" alignment="CENTER" contentDisplay="CENTER" prefHeight="63.0" prefWidth="700.0" text="Please select track from table to configure bounds..." />
                                              </children></HBox>
-                                          <HBox fx:id="sliderContainer" alignment="CENTER" prefHeight="40.0" prefWidth="725.0" />
+                                          <HBox style="sliderContainer" alignment="CENTER" prefHeight="40.0" prefWidth="725.0" />
                                           <HBox alignment="CENTER" maxWidth="738.0" prefHeight="17.0" prefWidth="738.0">
                                              <children>
                                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                                    <children>
                                                       <Label alignment="CENTER" prefHeight="27.0" prefWidth="59.0" text="Start:" />
-                                                      <Label fx:id="currentTrackStartLabel" prefHeight="35.0" prefWidth="63.0" text="00:00" />
+                                                      <Label style="currentTrackStartLabel" fx:id="currentTrackStartLabel" prefHeight="35.0" prefWidth="63.0" text="00:00" />
                                                       <Label prefHeight="27.0" prefWidth="50.0" text="End" />
-                                                      <Label fx:id="currentTrackEndLabel" prefHeight="27.0" prefWidth="56.0" text="00:00" />
+                                                      <Label style="currentTrackEndLabel" fx:id="currentTrackEndLabel" prefHeight="27.0" prefWidth="56.0" text="00:00" />
                                                    </children>
                                                 </HBox>
                                                 <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
                                                    <children>
                                                       <HBox alignment="TOP_RIGHT" prefHeight="17.0" prefWidth="117.0">
                                                          <children>
-                                                            <Label fx:id="currentSnippetRate" prefHeight="17.0" prefWidth="29.0" text="00:00" />
+                                                            <Label style="currentSnippetRate" fx:id="currentSnippetRate" prefHeight="17.0" prefWidth="29.0" text="00:00" />
                                                             <Label text="/" />
-                                                            <Label fx:id="currentSnippetLength" text="00:00" />
+                                                            <Label style="currentSnippetLength" fx:id="currentSnippetLength" text="00:00" />
                                                          </children>
                                                       </HBox>
                                                    </children>
@@ -160,7 +161,7 @@
                                              </children></HBox>
                                        </children>
                                     </VBox>
-                                    <TableView fx:id="tracksTable" editable="true" layoutX="38.0" prefHeight="431.0" prefWidth="705.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+                                    <TableView style="tracksTable" editable="true" layoutX="38.0" prefHeight="431.0" prefWidth="705.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
                                       <columns>
                                         <TableColumn fx:id="artist" prefWidth="259.0" style="-fx-alignment: CENTER-LEFT;" text="Artist" />
                                         <TableColumn fx:id="title" prefWidth="346.0" style="-fx-alignment: CENTER-LEFT;" text="Title" />
@@ -176,6 +177,7 @@
                         </SplitPane>
                      </content>
                   </Tab>
+              </fx:define>
               </tabs>
             </TabPane>
             <HBox prefHeight="56.0" prefWidth="1177.0">

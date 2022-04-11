@@ -1,83 +1,218 @@
 [
   {
-    "id": "31daa4f9-c069-418b-8c42-c8baa6941906",
-    "localPath": "F:\\myDocs\\Моя музыка\\B4MV\\the poison\\Suffocating Under Words of Sorrow.mp3",
-    "title": "Suffocating Under Words of Sorrow",
-    "artist": "Bullet for my valentine",
-    "startInSeconds": 25,
-    "finishInSeconds": 56.6,
-    "lengthInSeconds": 235
+    "id": "650088e6-2ba8-45ce-99d4-45db3909303b",
+    "localPath": "F:\\myDocs\\Моя музыка\\2015 - That's the spirit\\Bring Me The Horizon - Follow You.mp3",
+    "title": "Follow You",
+    "artist": "Bring Me The Horizon",
+    "startInSeconds": 0.0,
+    "finishInSeconds": 231.15755102,
+    "lengthInSeconds": 231.15755102
   },
   {
-    "id": "31daa4f9-c029-418b-8c42-c8baa6941906",
-    "localPath": "F:\\myDocs\\Моя музыка\\виноградный день\\Дети!Учим алфавит!Буква О.mp3",
-    "title": "Дети!Учим алфавит!Буква О",
-    "artist": "Виноградный день",
-    "startInSeconds": 0,
-    "finishInSeconds": 6,
-    "lengthInSeconds": 13
+    "id": "932d38ef-5737-4ef0-819a-f9db925553af",
+    "localPath": "F:\\myDocs\\Моя музыка\\2015 - That's the spirit\\Bring Me The Horizon - Happy Song.mp3",
+    "title": "Happy Song",
+    "artist": "Bring Me The Horizon",
+    "startInSeconds": 0.0,
+    "finishInSeconds": 239.438367346,
+    "lengthInSeconds": 239.438367346
   },
   {
-    "id": "31daa4f9-c039-418b-8c42-c8baa6941906",
-    "localPath": "F:\\myDocs\\Моя музыка\\виноградный день\\Дети!Учим алфавит!Буква И.mp3",
-    "title": "Дети!Учим алфавит!Буква И",
-    "artist": "Виноградный день",
-    "startInSeconds": 0,
-    "finishInSeconds": 6,
-    "lengthInSeconds": 13
+    "id": "d9783c1c-ec57-4e00-a0da-19586b0b7f19",
+    "localPath": "F:\\myDocs\\Моя музыка\\2015 - That's the spirit\\Bring Me The Horizon - Oh No.mp3",
+    "title": "Oh No",
+    "artist": "Bring Me The Horizon",
+    "startInSeconds": 135.96294490482936,
+    "finishInSeconds": 208.43605551440683,
+    "lengthInSeconds": 301.061224489
   },
   {
-    "id": "31daa4f9-c049-418b-8c42-c8baa6941906",
-    "localPath": "F:\\myDocs\\Моя музыка\\виноградный день\\Дети!Учим алфавит!Буква А.mp3",
-    "title": "Дети!Учим алфавит!Буква А",
-    "artist": "Виноградный день",
-    "startInSeconds": 0,
-    "finishInSeconds": 6,
-    "lengthInSeconds": 13
+    "id": "bad4d183-ffe4-4a49-a89a-0640afc213b6",
+    "localPath": "F:\\myDocs\\Моя музыка\\2015 - That's the spirit\\Bring Me The Horizon - Run.mp3",
+    "title": "Run",
+    "artist": "Bring Me The Horizon",
+    "startInSeconds": 0.0,
+    "finishInSeconds": 222.824489795,
+    "lengthInSeconds": 222.824489795
   },
   {
-    "id": "31daa4f9-c059-418b-8c42-c8baa6941906",
-    "localPath": "F:\\myDocs\\Моя музыка\\All The Right Moves (2009).mp3",
-    "title": "All The Right Moves",
-    "artist": "One Republic",
-    "startInSeconds": 25,
-    "finishInSeconds": 56.6,
-    "lengthInSeconds": 246
+    "id": "1bd36522-9fe2-45b3-bcf7-be203207eb1f",
+    "localPath": "F:\\myDocs\\Моя музыка\\2015 - That's the spirit\\Bring Me The Horizon - Throne.mp3",
+    "title": "Throne",
+    "artist": "Bring Me The Horizon",
+    "startInSeconds": 0.0,
+    "finishInSeconds": 190.72,
+    "lengthInSeconds": 190.72
   },
   {
-    "id": "31daa4f9-c019-418b-8c42-c8baa6941906",
-    "localPath": "F:\\myDocs\\Моя музыка\\armin van buuren falling.mp3",
-    "title": "falling",
-    "artist": "Armin Van Buuren",
-    "startInSeconds": 25,
-    "finishInSeconds": 56.6,
-    "lengthInSeconds": 305
+    "id": "2a7fd3c4-db68-4812-aa35-225cdd2055ab",
+    "localPath": "F:\\myDocs\\Моя музыка\\2010\\23.10.2010\\eminem_feat._rihanna_-_love_the_way_you_lie.mp3",
+    "title": "love_the_way_you_lie",
+    "artist": "eminem_feat._rihanna",
+    "startInSeconds": 111.13055930903924,
+    "finishInSeconds": 263.653877551,
+    "lengthInSeconds": 263.653877551
   },
   {
-    "id": "31daa4f9-c009-418b-8c42-c8baa6941906",
-    "localPath": "F:\\myDocs\\Моя музыка\\Black_Sabbath_-_Paranoid.mp3",
-    "title": "Paranoid",
-    "artist": "Black_Sabbath",
-    "startInSeconds": 25,
-    "finishInSeconds": 56.6,
-    "lengthInSeconds": 180
+    "id": "98183d01-c8db-4b3d-beb6-34e52d68cb9b",
+    "localPath": "F:\\myDocs\\Моя музыка\\2010\\23.10.2010\\Face2Face - Давай Приколемся.mp3",
+    "title": "Давай Приколемся",
+    "artist": "Face2Face & Noize MC",
+    "startInSeconds": 0.0,
+    "finishInSeconds": 223.713,
+    "lengthInSeconds": 223.713
   },
   {
-    "id": "31daa4f9-c089-418b-8c42-c8baa6941906",
-    "localPath": "F:\\myDocs\\Моя музыка\\Bomfunk MС's - Freestyler.mp3",
-    "title": "Freestyler",
-    "artist": "Bomfunk MС",
-    "startInSeconds": 25,
-    "finishInSeconds": 56.6,
-    "lengthInSeconds": 190
+    "id": "ca9100ae-eb58-44e1-9f59-e96cf55a1ba4",
+    "localPath": "F:\\myDocs\\Моя музыка\\2010\\23.10.2010\\K Maro - Lets Go.mp3",
+    "title": "Let's Go",
+    "artist": "K Maro",
+    "startInSeconds": 0.0,
+    "finishInSeconds": 204.418,
+    "lengthInSeconds": 204.418
   },
   {
-    "id": "0393fc74-9a72-498f-bd03-c98edf980af7",
-    "localPath": "F:\\myDocs\\Моя музыка\\05 - Snatch - Golden Brown.mp3",
-    "title": "05 - Snatch - Golden Brown.mp3",
-    "artist": "",
-    "startInSeconds": 25,
-    "finishInSeconds": 86.6,
-    "lengthInSeconds": 155
+    "id": "15ec588b-f565-4cf0-9c5f-52c8e65179d1",
+    "localPath": "F:\\myDocs\\Моя музыка\\2010\\23.10.2010\\Lady Gaga - Bad romance.mp3",
+    "title": "Bad romance",
+    "artist": "Lady Gaga",
+    "startInSeconds": 0.0,
+    "finishInSeconds": 262.347755102,
+    "lengthInSeconds": 262.347755102
+  },
+  {
+    "id": "1e5ca6cf-32a3-4893-9d51-a1eba7999357",
+    "localPath": "F:\\myDocs\\Моя музыка\\2015 - That's the spirit\\Bring Me The Horizon - Avalanche.mp3",
+    "title": "Avalanches",
+    "artist": "Bring Me The Horizon",
+    "startInSeconds": 87.20440203376279,
+    "finishInSeconds": 148.2943188084544,
+    "lengthInSeconds": 262.060408163
+  },
+  {
+    "id": "0be7da4d-82bc-4010-aff6-2b0579afbfef",
+    "localPath": "F:\\myDocs\\Моя музыка\\2015 - That's the spirit\\Bring Me The Horizon - Blasphemy.mp3",
+    "title": "Blasphemy",
+    "artist": "Bring Me The Horizon",
+    "startInSeconds": 147.8615309604522,
+    "finishInSeconds": 275.069387755,
+    "lengthInSeconds": 275.069387755
+  },
+  {
+    "id": "46b86c88-d58c-499e-b910-3c4b8b064557",
+    "localPath": "F:\\myDocs\\Моя музыка\\2015 - That's the spirit\\Bring Me The Horizon - Doomed.mp3",
+    "title": "Doomed",
+    "artist": "Bring Me The Horizon",
+    "startInSeconds": 118.8430563484744,
+    "finishInSeconds": 198.6887589624679,
+    "lengthInSeconds": 274.181224489
+  },
+  {
+    "id": "9a6bde23-d598-430e-90db-8fa1d615fbca",
+    "localPath": "F:\\myDocs\\Моя музыка\\2015 - That's the spirit\\Bring Me The Horizon - Drown.mp3",
+    "title": "Drown",
+    "artist": "Bring Me The Horizon",
+    "startInSeconds": 69.37302221898634,
+    "finishInSeconds": 93.81136238260135,
+    "lengthInSeconds": 222.145306122
+  },
+  {
+    "id": "4da919b9-2eab-4477-a879-6795d85c39aa",
+    "localPath": "F:\\myDocs\\Моя музыка\\ACDC\\[1978] Powerage\\03. AC-DC - Gimme A Bullet.mp3",
+    "title": "Give me A Bullet",
+    "artist": "03. AC-DC",
+    "startInSeconds": 66.06503754266211,
+    "finishInSeconds": 118.86987162162161,
+    "lengthInSeconds": 201.636
+  },
+  {
+    "id": "dcb23561-8b93-480d-8def-8f6e5c008e84",
+    "localPath": "F:\\myDocs\\Моя музыка\\ACDC\\[1978] Powerage\\04. AC-DC - Riff Raff.mp3",
+    "title": "Riff Raff",
+    "artist": "04. AC-DC",
+    "startInSeconds": 77.20433447098976,
+    "finishInSeconds": 193.9534054054054,
+    "lengthInSeconds": 312.012
+  },
+  {
+    "id": "63ca5c00-e968-4e00-bf4a-9a9438fb6cda",
+    "localPath": "F:\\myDocs\\Моя музыка\\ACDC\\[1978] Powerage\\05. AC-DC - Sin City.mp3",
+    "title": "Sin City",
+    "artist": "05. AC-DC",
+    "startInSeconds": 31.63356805554309,
+    "finishInSeconds": 229.63559535929738,
+    "lengthInSeconds": 285.084
+  },
+  {
+    "id": "6c42f5ad-a336-4499-b530-c24195b02115",
+    "localPath": "F:\\myDocs\\Моя музыка\\ACDC\\[1978] Powerage\\06. AC-DC - What's Next To The Moon.mp3",
+    "title": "What's Next To The Moon",
+    "artist": "06. AC-DC",
+    "startInSeconds": 14.470070822083096,
+    "finishInSeconds": 192.34570222140056,
+    "lengthInSeconds": 211.86
+  },
+  {
+    "id": "d5f6d7c7-c00a-4e9e-9545-edbc89715aba",
+    "localPath": "F:\\myDocs\\Моя музыка\\2013\\из загрузок\\Brother Dege (aka Dege Legg) - Too Old to Die Young (OST Django Unchained).mp3",
+    "title": "Too Old to Die Young (OST Django Unchained)",
+    "artist": "Brother Dege (aka Dege Legg)",
+    "startInSeconds": 65.14412760308703,
+    "finishInSeconds": 223.242448979,
+    "lengthInSeconds": 223.242448979
+  },
+  {
+    "id": "ac46d710-73f5-4f30-b69e-048d6be9158f",
+    "localPath": "F:\\myDocs\\Моя музыка\\2013\\из загрузок\\Chase And Status - No problem.mp3",
+    "title": "No problem",
+    "artist": "Chase And Status",
+    "startInSeconds": 83.00394789993857,
+    "finishInSeconds": 250.723265306,
+    "lengthInSeconds": 250.723265306
+  },
+  {
+    "id": "30346470-e688-4706-a1dd-92e6121425b5",
+    "localPath": "F:\\myDocs\\Моя музыка\\2013\\из загрузок\\Coldplay - Paradise.mp3",
+    "title": "Paradise",
+    "artist": "Cold play",
+    "startInSeconds": 31.776686006825937,
+    "finishInSeconds": 66.30975,
+    "lengthInSeconds": 251.637
+  },
+  {
+    "id": "16ffd437-c6e3-408f-aa44-685a67056a2e",
+    "localPath": "F:\\myDocs\\Моя музыка\\2013\\из загрузок\\Darth & Vader - Return Of The Jedi (I.Y.F.F.E Remix).mp3",
+    "title": "Return Of The Jedi",
+    "artist": "Darth  Vader",
+    "startInSeconds": 182.29607849829353,
+    "finishInSeconds": 253.141,
+    "lengthInSeconds": 253.141
+  },
+  {
+    "id": "10bf913a-cf76-427d-accf-755833722a65",
+    "localPath": "F:\\myDocs\\Моя музыка\\Amatory\\06 - Обернуться назад.mp3",
+    "title": "06 - Обернуться назад",
+    "artist": "Amatory",
+    "startInSeconds": 0.0,
+    "finishInSeconds": 273.791,
+    "lengthInSeconds": 273.791
+  },
+  {
+    "id": "b063657e-03cd-496a-9df0-fa594672bfe3",
+    "localPath": "F:\\myDocs\\Моя музыка\\Amatory\\08 - Преступление против времени.mp3",
+    "title": "Преступление против времени",
+    "artist": "Amatory",
+    "startInSeconds": 0.0,
+    "finishInSeconds": 287.195,
+    "lengthInSeconds": 287.195
+  },
+  {
+    "id": "96e337ee-8e74-4bf5-9e15-18f7bc9307e9",
+    "localPath": "F:\\myDocs\\Моя музыка\\Amatory\\08-Amatory-Глубоко_Внутри-fst.mp3",
+    "title": "Внутри-fst",
+    "artist": "08-Amatory",
+    "startInSeconds": 0.0,
+    "finishInSeconds": 197.516,
+    "lengthInSeconds": 197.516
   }
 ]

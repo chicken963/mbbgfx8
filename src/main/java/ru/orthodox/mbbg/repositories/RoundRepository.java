@@ -1,4 +1,4 @@
-package ru.orthodox.mbbg.services.model;
+package ru.orthodox.mbbg.repositories;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,19 +11,18 @@ import ru.orthodox.mbbg.services.LocalFilesService;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class RoundService {
+public class RoundRepository {
 
     @Autowired
     private LocalFilesService localFilesService;
 
     @Autowired
-    private AudioTrackService audioTrackService;
+    private AudioTrackRepository audioTrackRepository;
 
     @Value("${rounds.json.filepath}")
     private String roundsInfoFilePath;
@@ -53,17 +52,20 @@ public class RoundService {
     }
 
     public void save(Round round) {
+        round.setTracksIds(round.getAudioTracks().stream()
+                .map(AudioTrack::getId)
+                .collect(Collectors.toList()));
         localFilesService.write(round, roundsFile);
     }
 
     public List<AudioTrack> findAudioTracksByRoundId(UUID roundId) {
         Round round = this.findById(roundId);
         return round != null
-                ? audioTrackService.findByIds(round.getTracksIds())
+                ? audioTrackRepository.findByIds(round.getTracksIds())
                 : null;
     }
 
     public List<AudioTrack> findAudioTracksByRound(Round round) {
-        return audioTrackService.findByIds(round.getTracksIds());
+        return audioTrackRepository.findByIds(round.getTracksIds());
     }
 }

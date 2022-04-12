@@ -6,20 +6,17 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
-import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.enums.Direction;
 import ru.orthodox.mbbg.model.AudioTrack;
 import ru.orthodox.mbbg.model.Game;
 import ru.orthodox.mbbg.model.Round;
 import ru.orthodox.mbbg.services.PlayService;
 import ru.orthodox.mbbg.services.ScreenService;
-import ru.orthodox.mbbg.services.model.AudioTrackService;
-import ru.orthodox.mbbg.services.model.GamesService;
-import ru.orthodox.mbbg.services.model.RoundService;
+import ru.orthodox.mbbg.repositories.AudioTrackRepository;
+import ru.orthodox.mbbg.repositories.GamesRepository;
+import ru.orthodox.mbbg.repositories.RoundRepository;
 import ru.orthodox.mbbg.utils.NormalizedPathString;
 
 import javax.annotation.PostConstruct;
@@ -57,11 +54,11 @@ public class PlayController {
     @Autowired
     private ScreenService screenService;
     @Autowired
-    private AudioTrackService audioTrackService;
+    private AudioTrackRepository audioTrackRepository;
     @Autowired
-    private GamesService gameService;
+    private GamesRepository gameService;
     @Autowired
-    private RoundService roundService;
+    private RoundRepository roundRepository;
 
     private PlayService playService;
 
@@ -77,9 +74,9 @@ public class PlayController {
 
     public void render(){
         startTrackingTitle();
-        if (audioTrackService != null && game != null) {
+        if (audioTrackRepository != null && game != null) {
             List<Round> rounds = gameService.findRoundsByGame(game);
-            List<AudioTrack> firstRoundQueue = roundService.findAudioTracksByRound(rounds.get(0));
+            List<AudioTrack> firstRoundQueue = roundRepository.findAudioTracksByRound(rounds.get(0));
             this.playService = new PlayService(firstRoundQueue);
             initializeCurrentSongTitle();
             fillPlaylistTable();

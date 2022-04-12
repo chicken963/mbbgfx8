@@ -1,79 +1,29 @@
-package ru.orthodox.mbbg.services.model;
+package ru.orthodox.mbbg.services;
 
-
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.model.AudioTrack;
-
-import ru.orthodox.mbbg.services.LocalFilesService;
+import ru.orthodox.mbbg.repositories.AudioTrackRepository;
 import ru.orthodox.mbbg.utils.AudioUtils;
 
-import javax.annotation.PostConstruct;
-import java.io.File;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 public class AudioTrackService {
 
     @Autowired
-    private LocalFilesService localFilesService;
-
-    @Value("${audiotracks.json.filepath}")
-    private String audioTracksInfoFilePath;
-
-    private File audioTracksFile;
+    private AudioTrackRepository audioTrackRepository;
 
     private static final String[] SEPARATORS = {"_-_", " - ", "-", "_"};
     Pattern digitPattern = Pattern.compile("\\d+");
 
-    @PostConstruct
-    private void init() {
-        this.audioTracksFile = new File(audioTracksInfoFilePath);
-    }
-
-    public List<AudioTrack> findAllAudioTracks() {
-        return localFilesService.readEntityListFromFile(audioTracksFile, AudioTrack.class);
-    }
-
-    public Optional<AudioTrack> findById(UUID id) {
-        return findAllAudioTracks().stream()
-                .filter(audioTrack -> audioTrack.getId().equals(id))
-                .findFirst();
-    }
-
-    public List<AudioTrack> findByIds(List<UUID> ids) {
-        return findAllAudioTracks().stream()
-                .filter(audioTrack -> ids.contains(audioTrack.getId()))
-                .collect(Collectors.toList());
-    }
-
     public void save(AudioTrack audioTrack) {
-        if (isUnique(audioTrack)) {
-            localFilesService.write(audioTrack, audioTracksFile);
-        }
-    }
-
-    public void save(List<AudioTrack> audioTracks) {
-        for (AudioTrack audioTrack : audioTracks) {
-            save(audioTrack);
-        }
-    }
-
-    public List<AudioTrack> checkInvalidTracks() {
-        List<AudioTrack> tracksInDb = findAllAudioTracks();
-        List<AudioTrack> invalidTracks = new ArrayList<>();
-        for (AudioTrack audioTrack : tracksInDb) {
-            if (!Paths.get(audioTrack.getLocalPath()).toFile().exists()) {
-                invalidTracks.add(audioTrack);
-            }
-        }
-        return invalidTracks;
+        audioTrackRepository.save(audioTrack);
     }
 
     public AudioTrack generateFromFile(String absolutePath) {
@@ -86,12 +36,6 @@ public class AudioTrackService {
                 .build();
         AudioUtils.setAudioTrackLength(audioTrack);
         return audioTrack;
-    }
-
-    private boolean isUnique(AudioTrack audioTrack) {
-        List<AudioTrack> allAudioTracks = findAllAudioTracks();
-        return allAudioTracks.stream()
-                .noneMatch(at -> at.equals(audioTrack));
     }
 
     private String extractArtist(String filename) {
@@ -126,5 +70,16 @@ public class AudioTrackService {
             }
         }
         return filename.split("\\.[A-z0-9]+$")[0].trim();
+    }
+
+    public List<AudioTrack> checkInvalidTracks() {
+        List<AudioTrack> tracksInDb = audioTrackRepository.findAllAudioTracks();
+        List<AudioTrack> invalidTracks = new ArrayList<>();
+        for (AudioTrack audioTrack : tracksInDb) {
+            if (!Paths.get(audioTrack.getLocalPath()).toFile().exists()) {
+                invalidTracks.add(audioTrack);
+            }
+        }
+        return invalidTracks;
     }
 }

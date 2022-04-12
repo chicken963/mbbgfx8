@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
 import javax.persistence.Column;
+import javax.persistence.Transient;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,5 +27,8 @@ public class Game implements MarkedWithId {
 
     @Column(name = "roundIds")
     private List<UUID> roundIds;
+
+    @Transient
+    private List<Round> rounds = new ArrayList<>();
 
 }

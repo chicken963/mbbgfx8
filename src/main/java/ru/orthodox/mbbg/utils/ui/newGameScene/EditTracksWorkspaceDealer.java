@@ -1,22 +1,21 @@
-package ru.orthodox.mbbg.utils.ui;
+package ru.orthodox.mbbg.utils.ui.newGameScene;
 
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
-import lombok.Builder;
+import javafx.util.Callback;
 import org.controlsfx.control.RangeSlider;
 import ru.orthodox.mbbg.enums.ButtonType;
 import ru.orthodox.mbbg.model.AudioTrack;
 import ru.orthodox.mbbg.services.PlayService;
 import ru.orthodox.mbbg.utils.SpringUtils;
 import ru.orthodox.mbbg.utils.ThreadUtils;
-import ru.orthodox.mbbg.utils.ui.newGameScene.ElementFinder;
+import ru.orthodox.mbbg.utils.ui.ActiveTableRowDealer;
+import ru.orthodox.mbbg.utils.ui.ImageButtonCellFactoryProvider;
 
 import java.util.Collections;
 import java.util.List;
-
-import static ru.orthodox.mbbg.utils.ui.newGameScene.ElementFinder.findTracksTableColumnByNumber;
 
 public class EditTracksWorkspaceDealer {
 
@@ -26,8 +25,8 @@ public class EditTracksWorkspaceDealer {
     private Label currentSnippetRate;
     private Label currentSnippetLength;
     private HBox sliderContainer;
-    private Tab tab;
-    private TableView<AudioTrack> audioTracksTable;
+    private RoundTab tab;
+    private AudioTracksTable audioTracksTable;
 
     private PlayService playService;
     private List<AudioTrack> audioTracks;
@@ -38,30 +37,32 @@ public class EditTracksWorkspaceDealer {
 
     private RangeSliderDealer rangeSliderDealer;
 
-    public EditTracksWorkspaceDealer(Tab tab, List<AudioTrack> audioTracks) {
+    public EditTracksWorkspaceDealer(RoundTab tab, List<AudioTrack> audioTracks) {
         this.tab = tab;
         this.audioTracks = audioTracks;
 
         activeTableRowDealer = SpringUtils.getBean(ActiveTableRowDealer.class);
         imageButtonCellFactoryProvider = SpringUtils.getBean(ImageButtonCellFactoryProvider.class);
 
-        currentTrackInfo = ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentTrackInfo");
-        currentTrackStartLabel = ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentTrackStartLabel");
-        currentTrackEndLabel = ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentTrackEndLabel");
-        currentSnippetRate = ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentSnippetRate");
-        currentSnippetLength = ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentSnippetLength");
+        currentTrackInfo = tab.getCurrentTrackInfoLabel();
+        currentTrackStartLabel =  tab.getCurrentTrackStartLabel();
+        currentTrackEndLabel = tab.getCurrentTrackEndLabel();
+        currentSnippetRate = tab.getCurrentSnippetRate();
+        currentSnippetLength = tab.getCurrentSnippetLength();
 
-        sliderContainer = ElementFinder.<HBox>findTabElementByTypeAndStyleclass(tab, "sliderContainer");
-        audioTracksTable = ElementFinder.<TableView<AudioTrack>>findTabElementByTypeAndStyleclass(tab, "tracksTable");
+        sliderContainer = tab.getSliderContainer();
+        audioTracksTable = tab.getAudioTracksTable();
+
         rangeSliderDealer = buildRangeSliderDealer();
 
-        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderDealer.updateRangeSlider(), "newGamePlayInfo" + tab.getTabPane().getTabs().indexOf(tab));
+        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderDealer.updateRangeSlider(), "newGamePlayInfo" + tab.getIndex());
         defineRowsLogic(audioTracksTable);
         defineColumnsLogic(audioTracksTable);
     }
 
-    private void defineRowsLogic(TableView<AudioTrack> audioTracksTable) {
-        audioTracksTable.setRowFactory(tv -> {
+    private void defineRowsLogic(AudioTracksTable audioTracksTable) {
+
+        Callback<TableView<AudioTrack>, TableRow<AudioTrack>> rowFactory = tv -> {
             TableRow<AudioTrack> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 this.updateCurrentTrackLayout(row);
@@ -70,18 +71,22 @@ public class EditTracksWorkspaceDealer {
             row.setOnMouseEntered(event -> activeTableRowDealer.updateHoveredRow(row));
             row.setOnMouseExited(event -> activeTableRowDealer.deactivateHoveredRow(row));
             return row;
-        });
+        };
+
+        audioTracksTable.setRowFactory(rowFactory);
     }
 
-    private void defineColumnsLogic(TableView<AudioTrack> audioTracksTable) {
-        TableColumn<AudioTrack, String> artistColumn = findTracksTableColumnByNumber(audioTracksTable, 0);
-        TableColumn<AudioTrack, String> titleColumn = findTracksTableColumnByNumber(audioTracksTable, 1);
+    private void defineColumnsLogic(AudioTracksTable audioTracksTable) {
+        TableColumn<AudioTrack, String> artistColumn = audioTracksTable.findArtistColumn();
+        TableColumn<AudioTrack, String> titleColumn = audioTracksTable.findTitleColumn();
+
         defineEditableColumnsLogic(artistColumn, titleColumn);
 
-        TableColumn<AudioTrack, String> playColumn = findTracksTableColumnByNumber(audioTracksTable, 2);
-        TableColumn<AudioTrack, String> pauseColumn = findTracksTableColumnByNumber(audioTracksTable, 3);
-        TableColumn<AudioTrack, String> stopColumn = findTracksTableColumnByNumber(audioTracksTable, 4);
-        TableColumn<AudioTrack, String> deleteColumn = findTracksTableColumnByNumber(audioTracksTable, 5);
+        TableColumn<AudioTrack, String> playColumn = audioTracksTable.findPlayColumn();
+        TableColumn<AudioTrack, String> pauseColumn = audioTracksTable.findPauseColumn();
+        TableColumn<AudioTrack, String> stopColumn = audioTracksTable.findStopColumn();
+        TableColumn<AudioTrack, String> deleteColumn = audioTracksTable.findDeleteColumn();
+
         defineButtonedColumnsLogic(playColumn, pauseColumn, stopColumn, deleteColumn);
     }
 
@@ -153,7 +158,7 @@ public class EditTracksWorkspaceDealer {
 
     private void removeFromTable(AudioTrack audioTrack) {
         audioTracks.remove(audioTrack);
-        audioTracksTable.getItems().setAll(audioTracks);
+        audioTracksTable.setAudioTracks(audioTracks);
     }
 
     private void updateCurrentTrackInfoUIElements(PlayService playService) {

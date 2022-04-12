@@ -1,4 +1,4 @@
-package ru.orthodox.mbbg.utils.ui;
+package ru.orthodox.mbbg.utils.ui.newGameScene;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;

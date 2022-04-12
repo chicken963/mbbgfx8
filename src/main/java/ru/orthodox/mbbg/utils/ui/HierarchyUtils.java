@@ -24,13 +24,6 @@ public class HierarchyUtils {
                 .collect(Collectors.toList());
     }
 
-    public static Tab findParentTab(Node startNode, TabPane tabPane) {
-        return tabPane.getTabs().stream()
-                .filter(tab -> containsNode(startNode, tab))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Parent tab for table not found"));
-    }
-
     private static List<Node> flattenStructure(Parent parent) {
         List<Node> nodes = new ArrayList<>();
         addAllDescendents(parent, nodes);
@@ -52,7 +45,7 @@ public class HierarchyUtils {
         }
     }
 
-    private static boolean containsNode (Node childNode, Tab tab) {
+    public static boolean containsNode (Node childNode, Tab tab) {
         return flattenStructure((Parent) tab.getContent()).contains(childNode);
     }
 

@@ -1,4 +1,4 @@
-package ru.orthodox.mbbg.services.model;
+package ru.orthodox.mbbg.repositories;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,19 +11,18 @@ import ru.orthodox.mbbg.services.LocalFilesService;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-public class GamesService {
+public class GamesRepository {
 
     @Autowired
     private LocalFilesService localFilesService;
 
     @Autowired
-    private RoundService roundService;
+    private RoundRepository roundRepository;
 
     @Value("${games.json.filepath}")
     private String gamesInfoFilePath;
@@ -53,18 +52,22 @@ public class GamesService {
     }
 
     public void save(Game game) {
+        game.setRoundIds(game.getRounds().stream()
+                .map(Round::getId)
+                .collect(Collectors.toList()));
+
         localFilesService.write(game, gamesFile);
     }
 
     public List<Round> findRoundsByGameId(UUID gameId) {
         Game game = this.findById(gameId);
         return game != null
-                ? roundService.findByIds(game.getRoundIds())
+                ? roundRepository.findByIds(game.getRoundIds())
                 : null;
     }
 
     public List<Round> findRoundsByGame(Game game) {
-        return roundService.findByIds(game.getRoundIds());
+        return roundRepository.findByIds(game.getRoundIds());
     }
 
 }

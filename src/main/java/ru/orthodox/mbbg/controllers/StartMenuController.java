@@ -2,7 +2,6 @@ package ru.orthodox.mbbg.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
@@ -11,15 +10,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.util.Callback;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
-import ru.orthodox.mbbg.enums.OpenSceneMode;
 import ru.orthodox.mbbg.model.Game;
 import ru.orthodox.mbbg.services.ScreenService;
-import ru.orthodox.mbbg.services.model.GamesService;
+import ru.orthodox.mbbg.repositories.GamesRepository;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -52,7 +49,7 @@ public class StartMenuController {
     private ScreenService screenService;
 
     @Autowired
-    private GamesService gamesService;
+    private GamesRepository gamesRepository;
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -73,6 +70,8 @@ public class StartMenuController {
     }
 
     public void openNewGameForm(ActionEvent actionEvent) {
+        NewGameController controller = applicationContext.getBean(NewGameController.class);
+        controller.render();
         screenService.activate("newgame");
     }
 
@@ -122,7 +121,7 @@ public class StartMenuController {
     }
 
     public void fillGridWithAllGames() {
-        existingGames = gamesService.findAllGames();
+        existingGames = gamesRepository.findAllGames();
         columnsNumber = gamesField.getColumnConstraints().size();
         rowsNumber = gamesField.getRowConstraints().size();
         int pageSize = rowsNumber * columnsNumber;

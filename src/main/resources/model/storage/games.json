@@ -1,10 +1,49 @@
 [
   {
-    "id": "eed44076-db11-46d1-8d4f-d8f77a41d153",
+    "id": "236d8c73-6afb-4c81-b901-eb3dee1bc090",
     "name": "",
     "roundIds": [
-      "9f92df87-9974-4f78-917d-96901c0ea377",
-      "8384ffbb-371c-481e-ac53-ee07537082bf"
+      "66678276-51f2-4e47-b900-04c981c57067",
+      "0ea1be69-4b25-480d-ba8d-168671a5023e"
+    ],
+    "rounds": null
+  },
+  {
+    "id": "8e4b724b-2e33-44ff-972b-fc1291ad632a",
+    "name": "",
+    "roundIds": [
+      "4d3ec40a-02af-444e-8620-ab15ba2c4a59"
+    ],
+    "rounds": null
+  },
+  {
+    "id": "14731b08-a01c-4953-8f1b-fdfdeff396ca",
+    "name": "",
+    "roundIds": [
+      "7e4c3050-5e3f-4f89-a959-ffc6732393c1"
+    ],
+    "rounds": [
+      {
+        "id": "7e4c3050-5e3f-4f89-a959-ffc6732393c1",
+        "name": "hgfh",
+        "tracksIds": null,
+        "width": 4,
+        "height": 4,
+        "firstStrikeCondition": "TWO_LINES_STRIKE",
+        "secondStrikeCondition": "FIVE_LINES_STRIKE",
+        "thirdStrikeCondition": "WHOLE_FIELD_STRIKE",
+        "audioTracks": [
+          {
+            "id": "4e679cc3-3f2c-408c-aab4-d72956ef35a3",
+            "localPath": "F:\\myDocs\\Моя музыка\\Avril Lavigne\\Avril Lavigne - Daydream.mp3",
+            "title": "Daydream",
+            "artist": "Avril Lavigne",
+            "startInSeconds": 54.038283276450514,
+            "finishInSeconds": 117.12596452702705,
+            "lengthInSeconds": 181.991
+          }
+        ]
+      }
     ]
   }
 ]

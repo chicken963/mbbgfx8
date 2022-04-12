@@ -1,29 +1,66 @@
 [
   {
-    "id": "9f92df87-9974-4f78-917d-96901c0ea377",
-    "name": "round first",
+    "id": "66678276-51f2-4e47-b900-04c981c57067",
+    "name": "First",
     "tracksIds": [
-      "80bafc98-ba91-45dd-88b5-2cae061ed5ac",
-      "01ad9b6d-35b1-440e-952b-5bc794d414fa"
+      "2d9910d9-fa98-4f6a-ad1e-890fb3a62f57"
     ],
     "width": 4,
-    "height": 6,
+    "height": 4,
     "firstStrikeCondition": "ONE_LINE_STRIKE",
-    "secondStrikeCondition": "TWO_LINES_STRIKE",
-    "thirdStrikeCondition": "THREE_LINES_STRIKE"
+    "secondStrikeCondition": "THREE_LINES_STRIKE",
+    "thirdStrikeCondition": "THREE_LINES_STRIKE",
+    "audioTracks": []
   },
   {
-    "id": "8384ffbb-371c-481e-ac53-ee07537082bf",
-    "name": "second",
+    "id": "0ea1be69-4b25-480d-ba8d-168671a5023e",
+    "name": "Second",
     "tracksIds": [
-      "10bf913a-cf76-427d-accf-755833722a65",
-      "b063657e-03cd-496a-9df0-fa594672bfe3",
-      "96e337ee-8e74-4bf5-9e15-18f7bc9307e9"
+      "eede2fd4-c895-4831-832a-b9fd9127d0e7",
+      "79bad5b5-c56a-45b4-a472-206bd4d89c6c",
+      "129e2f4b-2233-46dc-bac0-a18d342e81ab"
     ],
     "width": 5,
     "height": 5,
     "firstStrikeCondition": "ONE_LINE_STRIKE",
-    "secondStrikeCondition": "THREE_LINES_STRIKE",
-    "thirdStrikeCondition": "WHOLE_FIELD_STRIKE"
+    "secondStrikeCondition": "FOUR_LINES_STRIKE",
+    "thirdStrikeCondition": "WHOLE_FIELD_STRIKE",
+    "audioTracks": []
+  },
+  {
+    "id": "4d3ec40a-02af-444e-8620-ab15ba2c4a59",
+    "name": "fbcvbvcbcv",
+    "tracksIds": [
+      "4484516f-554f-4a82-949d-41e2337979bd"
+    ],
+    "width": 4,
+    "height": 4,
+    "firstStrikeCondition": "TWO_LINES_STRIKE",
+    "secondStrikeCondition": "TWO_LINES_STRIKE",
+    "thirdStrikeCondition": "TWO_LINES_STRIKE",
+    "audioTracks": []
+  },
+  {
+    "id": "7e4c3050-5e3f-4f89-a959-ffc6732393c1",
+    "name": "hgfh",
+    "tracksIds": [
+      "4e679cc3-3f2c-408c-aab4-d72956ef35a3"
+    ],
+    "width": 4,
+    "height": 4,
+    "firstStrikeCondition": "TWO_LINES_STRIKE",
+    "secondStrikeCondition": "FIVE_LINES_STRIKE",
+    "thirdStrikeCondition": "WHOLE_FIELD_STRIKE",
+    "audioTracks": [
+      {
+        "id": "4e679cc3-3f2c-408c-aab4-d72956ef35a3",
+        "localPath": "F:\\myDocs\\Моя музыка\\Avril Lavigne\\Avril Lavigne - Daydream.mp3",
+        "title": "Daydream",
+        "artist": "Avril Lavigne",
+        "startInSeconds": 54.038283276450514,
+        "finishInSeconds": 117.12596452702705,
+        "lengthInSeconds": 181.991
+      }
+    ]
   }
 ]

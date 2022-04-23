@@ -26,9 +26,9 @@ public class RoundTab {
 
     private final int index;
 
-    private ChoiceBox firstPrizeCondition;
-    private ChoiceBox secondPrizeCondition;
-    private ChoiceBox thirdPrizeCondition;
+    private ChoiceBox<WinCondition> firstPrizeCondition;
+    private ChoiceBox<WinCondition> secondPrizeCondition;
+    private ChoiceBox<WinCondition> thirdPrizeCondition;
 
     private ChoiceBox<Integer> rowsNumber;
     private ChoiceBox<Integer> columnsNumber;
@@ -90,16 +90,16 @@ public class RoundTab {
         return ElementFinder.<HBox>findTabElementByTypeAndStyleclass(tab, "sliderContainer");
     }
 
-    public ChoiceBox getThirdPrizeCondition() {
-        return ElementFinder.<ChoiceBox>findTabElementByTypeAndStyleclass(tab, "thirdPrizeCondition");
+    public ChoiceBox<WinCondition> getThirdPrizeCondition() {
+        return ElementFinder.<ChoiceBox<WinCondition>>findTabElementByTypeAndStyleclass(tab, "thirdPrizeCondition");
     }
 
-    public ChoiceBox getSecondPrizeCondition() {
-        return ElementFinder.<ChoiceBox>findTabElementByTypeAndStyleclass(tab, "secondPrizeCondition");
+    public ChoiceBox<WinCondition> getSecondPrizeCondition() {
+        return ElementFinder.<ChoiceBox<WinCondition>>findTabElementByTypeAndStyleclass(tab, "secondPrizeCondition");
     }
 
-    public ChoiceBox getFirstPrizeCondition() {
-        return ElementFinder.<ChoiceBox>findTabElementByTypeAndStyleclass(tab, "firstPrizeCondition");
+    public ChoiceBox<WinCondition> getFirstPrizeCondition() {
+        return ElementFinder.<ChoiceBox<WinCondition>>findTabElementByTypeAndStyleclass(tab, "firstPrizeCondition");
     }
 
     public TextField getNewRoundNameTextField() {
@@ -112,6 +112,26 @@ public class RoundTab {
 
     public ChoiceBox<Integer> getColumnsNumber() {
         return ElementFinder.<ChoiceBox<Integer>>findTabElementByTypeAndStyleclass(tab, "columnsNumber");
+    }
+
+    public Label getFirstPrizeConditionWarning() {
+        return ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "firstConditionWarning");
+    }
+
+    public Label getSecondPrizeConditionWarning() {
+        return ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "secondConditionWarning");
+    }
+
+    public Label getThirdPrizeConditionWarning() {
+        return ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "thirdConditionWarning");
+    }
+
+    public Label getRowsWarning() {
+        return ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "rowsWarning");
+    }
+
+    public Label getColumnsWarning() {
+        return ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "columnsWarning");
     }
 
     private Button findDeleteRoundButton() {
@@ -133,5 +153,24 @@ public class RoundTab {
 
     public void enableDeleteRoundButton() {
         findDeleteRoundButton().setDisable(false);
+    }
+
+    public void validateConditions(int sourceConditionNumber) {
+        switch (sourceConditionNumber) {
+            case 1:
+                prizeConditionsDealer.validateThatEasier(firstPrizeCondition, secondPrizeCondition);
+                prizeConditionsDealer.validateThatEasier(firstPrizeCondition, thirdPrizeCondition);
+                break;
+            case 2:
+                prizeConditionsDealer.validateThatHarder(secondPrizeCondition, firstPrizeCondition);
+                prizeConditionsDealer.validateThatEasier(secondPrizeCondition, thirdPrizeCondition);
+                break;
+            case 3:
+                prizeConditionsDealer.validateThatHarder(thirdPrizeCondition, firstPrizeCondition);
+                prizeConditionsDealer.validateThatHarder(thirdPrizeCondition, secondPrizeCondition);
+                break;
+            default:
+                break;
+        }
     }
 }

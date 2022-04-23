@@ -1,5 +1,6 @@
 package ru.orthodox.mbbg.utils.ui.newGameScene;
 
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -50,5 +51,13 @@ public class AudioTracksTable {
 
     public TableColumn<AudioTrack, String> findDeleteColumn(){
         return findTracksTableColumnByNumber(table, 5);
+    }
+
+    public Label getPlaceholder() {
+        return (Label) table.getPlaceholder();
+    }
+
+    public boolean isEmpty() {
+        return table.getItems().isEmpty();
     }
 }

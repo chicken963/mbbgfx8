@@ -32,7 +32,7 @@
                         <Font size="22.0" />
                      </font>
                   </Label>
-                  <TextField style="newGameName" fx:id="newGameName" prefHeight="25.0" prefWidth="475.0">
+                  <TextField fx:id="newGameName" prefHeight="25.0" prefWidth="475.0" style="newGameName">
                      <HBox.margin>
                         <Insets left="10.0" />
                      </HBox.margin></TextField>
@@ -47,17 +47,22 @@
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="431.0" prefWidth="422.0">
                                  <children>
-                                    <VBox alignment="TOP_CENTER" layoutX="41.0" layoutY="52.0" prefHeight="373.0" prefWidth="364.0" AnchorPane.leftAnchor="41.0">
+                                    <VBox alignment="TOP_CENTER" layoutX="41.0" layoutY="5.0" prefHeight="420.0" prefWidth="364.0" AnchorPane.leftAnchor="41.0">
                                        <children>
-                                          <HBox prefHeight="28.0" prefWidth="364.0">
+                                          <HBox prefHeight="72.0" prefWidth="364.0">
                                              <children>
-                                                <Button fx:id="addNextRound" onAction="#addRound" mnemonicParsing="false" text="Add next round" />
+                                                <Button fx:id="addNextRound" mnemonicParsing="false" onAction="#addRound" prefHeight="25.0" prefWidth="136.0" text="Add next round" />
+                                                <Button fx:id="deleteRound" mnemonicParsing="false" onAction="#deleteRound" prefHeight="25.0" prefWidth="136.0" style="deleteRound" text="Delete round" textFill="#ff0d00d6">
+                                                   <HBox.margin>
+                                                      <Insets left="20.0" />
+                                                   </HBox.margin>
+                                                </Button>
                                              </children>
                                           </HBox>
                                           <HBox prefHeight="30.0" prefWidth="364.0">
                                              <children>
                                                 <Label prefHeight="65.0" prefWidth="125.0" text="Enter new round name:" />
-                                                <TextField style="newRoundName" prefHeight="69.0" prefWidth="240.0" />
+                                                <TextField prefHeight="69.0" prefWidth="240.0" style="newRoundName" />
                                              </children>
                                              <VBox.margin>
                                                 <Insets top="20.0" />
@@ -65,61 +70,107 @@
                                           <HBox prefHeight="31.0" prefWidth="288.0">
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="51.0" prefWidth="88.0" text="Blank size" />
-                                                <ChoiceBox style="rowsNumber" prefHeight="40.0" prefWidth="75.0" />
+                                                <ChoiceBox prefHeight="40.0" prefWidth="75.0" style="rowsNumber" />
                                                 <Label alignment="CENTER" prefHeight="61.0" prefWidth="58.0" text="rows      X" />
-                                                <ChoiceBox style="columnsNumber" prefHeight="40.0" prefWidth="79.0" />
+                                                <ChoiceBox prefHeight="40.0" prefWidth="79.0" style="columnsNumber" />
                                                 <Label alignment="CENTER" prefHeight="61.0" prefWidth="48.0" text="columns" />
                                              </children>
                                              <VBox.margin>
                                                 <Insets top="20.0" />
                                              </VBox.margin>
                                           </HBox>
-                                          <HBox prefHeight="50.0" prefWidth="262.0">
+                                          <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="364.0">
                                              <children>
-                                                <Label prefHeight="30.0" prefWidth="127.0" text="First prize condition:">
+                                                <Label style="rowsWarning" prefHeight="40.0" prefWidth="127.0" text="Please fill number of rows in tickets for this round" textFill="#ff004d" wrapText="true" visible="false">
+                                                   <font>
+                                                      <Font name="System Italic" size="11.0" />
+                                                   </font>
+                                                   <HBox.margin>
+                                                      <Insets right="13.0" />
+                                                   </HBox.margin>
+                                                </Label>
+                                                <Label style="columnsWarning" prefHeight="40.0" prefWidth="144.0" text="Please fill number of columns in tickets for this round" textFill="#ff004d" wrapText="true" visible="false">
+                                                   <HBox.margin>
+                                                      <Insets right="12.0" />
+                                                   </HBox.margin>
+                                                   <font>
+                                                      <Font name="System Italic" size="11.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox prefHeight="25.0" prefWidth="262.0">
+                                             <children>
+                                                <Label prefHeight="30.0" prefWidth="127.0" text="First win condition:">
                                                    <HBox.margin>
                                                       <Insets right="30.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <ChoiceBox style="firstPrizeCondition" prefHeight="25.0" prefWidth="200.0" />
+                                                <ChoiceBox onAction="#onFirstConditionChosen" prefHeight="25.0" prefWidth="200.0" style="firstPrizeCondition" />
                                              </children>
                                              <opaqueInsets>
                                                 <Insets />
                                              </opaqueInsets>
                                              <VBox.margin>
-                                                <Insets top="50.0" />
+                                                <Insets top="10.0" />
                                              </VBox.margin>
                                           </HBox>
-                                          <HBox prefHeight="50.0" prefWidth="262.0">
+                                          <HBox alignment="TOP_RIGHT" prefHeight="25.0" prefWidth="200.0">
                                              <children>
-                                                <Label prefHeight="32.0" prefWidth="127.0" text="Second prize condition:">
+                                                <Label style="firstConditionWarning" prefHeight="17.0" prefWidth="208.0" text="Please fill first win condition" textFill="#ff004d" visible="false">
+                                                   <font>
+                                                      <Font name="System Italic" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox prefHeight="25.0" prefWidth="262.0">
+                                             <children>
+                                                <Label prefHeight="32.0" prefWidth="127.0" text="Second win condition:">
                                                    <HBox.margin>
                                                       <Insets right="30.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <ChoiceBox style="secondPrizeCondition" prefHeight="25.0" prefWidth="200.0" />
+                                                <ChoiceBox onAction="#onSecondConditionChosen" prefHeight="25.0" prefWidth="200.0" style="secondPrizeCondition" />
                                              </children>
                                           </HBox>
-                                          <HBox prefHeight="50.0" prefWidth="262.0">
+                                          <HBox alignment="TOP_RIGHT" prefHeight="25.0" prefWidth="200.0">
                                              <children>
-                                                <Label prefHeight="33.0" prefWidth="127.0" text="Third prize condition:">
+                                                <Label style="secondConditionWarning" prefHeight="17.0" prefWidth="208.0" text="Please fill second win condition" textFill="#ff004d" visible="false">
+                                                   <font>
+                                                      <Font name="System Italic" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children></HBox>
+                                          <HBox prefHeight="25.0" prefWidth="262.0">
+                                             <children>
+                                                <Label prefHeight="33.0" prefWidth="127.0" text="Third win condition:">
                                                    <HBox.margin>
                                                       <Insets right="30.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <ChoiceBox style="thirdPrizeCondition" prefHeight="25.0" prefWidth="200.0" />
+                                                <ChoiceBox onAction="#onThirdConditionChosen" prefHeight="25.0" prefWidth="200.0" style="thirdPrizeCondition" />
                                              </children>
                                           </HBox>
-                                          <HBox prefHeight="44.0" prefWidth="364.0">
+                                          <HBox alignment="TOP_RIGHT" prefHeight="25.0" prefWidth="200.0">
                                              <children>
-                                                <Button fx:id="addTracksButton" mnemonicParsing="false" onAction="#openExplorerMenu" prefHeight="36.0" prefWidth="136.0" text="Add music tracks...">
+                                                <Label style="thirdConditionWarning" prefHeight="17.0" prefWidth="208.0" text="Please fill third win condition" textFill="#ff004d" visible="false">
+                                                   <font>
+                                                      <Font name="System Italic" size="12.0" />
+                                                   </font>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="BOTTOM_LEFT" prefHeight="44.0" prefWidth="364.0">
+                                             <children>
+                                                <Button fx:id="addTracksButton" mnemonicParsing="false" onAction="#openExplorerMenu" prefHeight="25.0" prefWidth="136.0" text="Add music tracks...">
                                                    <HBox.margin>
                                                       <Insets />
                                                    </HBox.margin>
                                                 </Button>
-                                                <Button fx:id="deleteRound" style="deleteRound" onAction="#deleteRound" mnemonicParsing="false" prefHeight="36.0" prefWidth="136.0" text="Delete round" textFill="#ff0d00d6">
+                                                <Button fx:id="importTracksButton" mnemonicParsing="false" onAction="#openExplorerMenu" prefHeight="25.0" prefWidth="136.0" text="Import from library...">
                                                    <HBox.margin>
-                                                      <Insets left="85.0" />
+                                                      <Insets left="20.0" />
                                                    </HBox.margin>
                                                 </Button>
                                              </children>
@@ -134,26 +185,26 @@
                                        <children>
                                           <HBox alignment="CENTER" prefHeight="37.0" prefWidth="647.0">
                                              <children>
-                                                <Label style="currentTrackInfo" fx:id="currentTrackInfo" alignment="CENTER" contentDisplay="CENTER" prefHeight="63.0" prefWidth="700.0" text="Please select track from table to configure bounds..." />
+                                                <Label fx:id="currentTrackInfo" alignment="CENTER" contentDisplay="CENTER" prefHeight="63.0" prefWidth="700.0" style="currentTrackInfo" text="Please select track from table to configure bounds..." />
                                              </children></HBox>
-                                          <HBox style="sliderContainer" alignment="CENTER" prefHeight="40.0" prefWidth="725.0" />
+                                          <HBox alignment="CENTER" prefHeight="40.0" prefWidth="725.0" style="sliderContainer" />
                                           <HBox alignment="CENTER" maxWidth="738.0" prefHeight="17.0" prefWidth="738.0">
                                              <children>
                                                 <HBox prefHeight="100.0" prefWidth="200.0">
                                                    <children>
                                                       <Label alignment="CENTER" prefHeight="27.0" prefWidth="59.0" text="Start:" />
-                                                      <Label style="currentTrackStartLabel" fx:id="currentTrackStartLabel" prefHeight="35.0" prefWidth="63.0" text="00:00" />
+                                                      <Label fx:id="currentTrackStartLabel" prefHeight="35.0" prefWidth="63.0" style="currentTrackStartLabel" text="00:00" />
                                                       <Label prefHeight="27.0" prefWidth="50.0" text="End" />
-                                                      <Label style="currentTrackEndLabel" fx:id="currentTrackEndLabel" prefHeight="27.0" prefWidth="56.0" text="00:00" />
+                                                      <Label fx:id="currentTrackEndLabel" prefHeight="27.0" prefWidth="56.0" style="currentTrackEndLabel" text="00:00" />
                                                    </children>
                                                 </HBox>
                                                 <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0">
                                                    <children>
                                                       <HBox alignment="TOP_RIGHT" prefHeight="17.0" prefWidth="117.0">
                                                          <children>
-                                                            <Label style="currentSnippetRate" fx:id="currentSnippetRate" prefHeight="17.0" prefWidth="29.0" text="00:00" />
+                                                            <Label fx:id="currentSnippetRate" prefHeight="17.0" prefWidth="29.0" style="currentSnippetRate" text="00:00" />
                                                             <Label text="/" />
-                                                            <Label style="currentSnippetLength" fx:id="currentSnippetLength" text="00:00" />
+                                                            <Label fx:id="currentSnippetLength" style="currentSnippetLength" text="00:00" />
                                                          </children>
                                                       </HBox>
                                                    </children>
@@ -161,8 +212,15 @@
                                              </children></HBox>
                                        </children>
                                     </VBox>
-                                    <TableView style="tracksTable" editable="true" layoutX="38.0" prefHeight="431.0" prefWidth="705.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
-                                      <columns>
+                                    <TableView editable="true" layoutX="38.0" prefHeight="431.0" prefWidth="705.0" style="tracksTable" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+                                       <placeholder>
+                                          <Label style="tablePlaceholder" text="Please add audiotracks for the round" textFill="#ff004d" visible="false">
+                                             <font>
+                                                <Font name="System Italic" size="12.0" />
+                                             </font>
+                                          </Label>
+                                       </placeholder>
+                                       <columns>
                                         <TableColumn fx:id="artist" prefWidth="259.0" style="-fx-alignment: CENTER-LEFT;" text="Artist" />
                                         <TableColumn fx:id="title" prefWidth="346.0" style="-fx-alignment: CENTER-LEFT;" text="Title" />
                                           <TableColumn fx:id="play" prefWidth="25.0" style="-fx-alignment: CENTER-LEFT;" />

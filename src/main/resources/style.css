@@ -62,3 +62,80 @@
     -fx-background-color: #ff5A00;
     -fx-text-fill: white;
 }
+
+.warning {
+    -fx-font-style: italic;
+    -fx-prompt-text-fill: #ff0000;
+}
+
+/*.text-input:focused {
+    -fx-highlight-fill: -fx-accent;
+    -fx-highlight-text-fill: white;
+    -fx-background-color:
+        -fx-focus-color,
+        -fx-control-inner-background,
+        -fx-faint-focus-color,
+        linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
+    -fx-background-insets: -0.2, 1, -1.4, 3;
+    -fx-background-radius: 3, 2, 4, 0;
+    -fx-prompt-text-fill: transparent;
+}*/
+
+.playerButton {
+    -fx-border-color: rgba(100, 100, 100, 0.9);
+    -fx-border-width: 1px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-margin-right: 2px;
+    -fx-background-color: linear-gradient(rgba(246,211,147,1), rgba(255,165,0,1));
+    -fx-cursor: hand;
+}
+.playerButton:hover {
+    -fx-min-width: 52px;
+    -fx-min-height: 52px;
+    -fx-background-color: linear-gradient(rgba(262,227,163,1), rgba(255,181,16,1));
+}
+
+/*.arrow-shape {
+    -fx-fill: linear-gradient(rgba(255, 165, 0, 0.8), rgba(255, 165, 0, 0.6));
+    -fx-stroke: black;
+    -fx-height: 40px;
+    -fx-background-radius: 5px;
+    -fx-alignment: center-left;
+}*/
+
+.switchRound {
+    -fx-background-color: linear-gradient(rgba(246,211,147,1), rgba(255,165,0,1));
+    -fx-font-color: #282929;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-max-width: 120px;
+    -fx-min-width: 120px;
+    -fx-prefHeight: 33px;
+    -fx-prefWidth: 120px;
+}
+
+.switchRound:hover {
+    -fx-min-width: 105%;
+    -fx-min-height: 105%;
+    -fx-background-color: linear-gradient(rgba(262,227,163,1), rgba(255,181,16,1));
+}
+
+.exitPlayMode {
+    -fx-border-color: transparent;
+    -fx-background-color: linear-gradient(#D8785B, #DC4A1D);
+    -fx-cursor: hand;
+}
+
+.exitPlayMode:hover {
+    -fx-background-color: linear-gradient(#E8886B, #EC5A2D);
+}
+
+.slider .thumb {
+    -fx-background-image :url("playModeIcons/slider.png");
+}
+
+/*
+.progress-bar > .track {
+  -fx-background-color: linear-gradient(to right, #eee 30%, #aaa 30%, #999 50%, #aaa 70%, #eee 70%, #aaa 70%, #eee 70%)
+}*/

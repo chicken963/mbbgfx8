@@ -1,6 +1,11 @@
 package ru.orthodox.mbbg.services;
 
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +24,7 @@ public class ScreenService {
 
     @Setter
     @Getter
-    private Scene main;
+    private Scene startScene;
 
     @Autowired
     @Qualifier("mainView")
@@ -33,13 +38,18 @@ public class ScreenService {
     @Qualifier("newGameView")
     private ControllersConfig.View newGameView;
 
+    @Autowired
+    @Qualifier("popupView")
+    private ControllersConfig.View popupView;
+
     @PostConstruct
     public void addScenesToTray() {
-        main = new Scene(startMenuView.getParentNode());
+        startScene = new Scene(startMenuView.getParentNode());
 
         this.addScreen("startmenu", startMenuView);
         this.addScreen("main", mainView);
         this.addScreen("newgame", newGameView);
+        this.addScreen("popup", popupView);
     }
 
     private void addScreen(String name, ControllersConfig.View pane) {
@@ -51,7 +61,12 @@ public class ScreenService {
     }
 
     public Scene activate(String name) {
-        main.setRoot(screenMap.get(name).getParentNode());
-        return main;
+        startScene.setRoot(screenMap.get(name).getParentNode());
+        return startScene;
+    }
+
+
+    public Parent getParentNode(String name) {
+        return screenMap.get(name).getParentNode();
     }
 }

@@ -11,6 +11,7 @@ import javafx.scene.effect.FloatMap;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -124,7 +125,7 @@ public class NodeDeepCopyProvider {
     private static HBox createDeepCopy(HBox sourceHbox) {
         HBox copy = new HBox();
         HBox.setHgrow(copy, HBox.getHgrow(sourceHbox));
-        VBox.setMargin(copy, VBox.getMargin(sourceHbox));
+        VBox.setMargin(copy, createDeepCopy(VBox.getMargin(sourceHbox)));
         HBox.setMargin(copy, createDeepCopy(HBox.getMargin(sourceHbox)));
         copy.setAlignment(sourceHbox.getAlignment());
 
@@ -198,6 +199,7 @@ public class NodeDeepCopyProvider {
         sourceTable.getColumns()
                 .forEach(column -> copiedColumns.add(createDeepCopy((TableColumn) column)));
         copy.getColumns().addAll(copiedColumns);
+        copy.setPlaceholder(createDeepCopy((Label) sourceTable.getPlaceholder()));
         return copy;
     }
 
@@ -230,6 +232,7 @@ public class NodeDeepCopyProvider {
         copy.setPrefHeight(choiceBox.getPrefHeight());
         copy.setPrefWidth(choiceBox.getPrefWidth());
         copy.setStyle(choiceBox.getStyle());
+        copy.setOnAction(choiceBox.getOnAction());
         return copy;
     }
 
@@ -247,6 +250,10 @@ public class NodeDeepCopyProvider {
         return copy;
     }
 
+    private static Font createDeepCopy(Font sourceFont) {
+        return new Font(sourceFont.getName(), sourceFont.getSize());
+    }
+
     private static void alignWidthAndHeight(Region orig, Region copy) {
         copy.setPrefWidth(orig.getPrefWidth());
         copy.setPrefHeight(orig.getPrefHeight());
@@ -260,6 +267,7 @@ public class NodeDeepCopyProvider {
     }
 
     private static void alignCommonRegionProperties(Region orig, Region copy) {
+        copy.setVisible(orig.isVisible());
         copy.setOpaqueInsets(orig.getOpaqueInsets());
         copy.setStyle(orig.getStyle());
         copy.setOnMouseEntered(orig.getOnMouseEntered());
@@ -269,10 +277,11 @@ public class NodeDeepCopyProvider {
     private static void alignTextProperties(Labeled orig, Labeled copy) {
         copy.setText(orig.getText());
         copy.setTextFill(orig.getTextFill());
-        copy.setFont(orig.getFont());
+        copy.setFont(createDeepCopy(orig.getFont()));
     }
 
     private static void alignCommonLabeledProperties(Labeled orig, Labeled copy) {
+        copy.setWrapText(orig.isWrapText());
         copy.setAlignment(orig.getAlignment());
         copy.setContentDisplay(orig.getContentDisplay());
         copy.setTooltip(copyToolTip(orig.getTooltip()));

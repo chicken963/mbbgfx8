@@ -1,7 +1,16 @@
 package ru.orthodox.mbbg.configuration;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -26,9 +35,13 @@ public class ControllersConfig {
     }
 
     @Bean(name = "newGameView")
-    //@Scope("prototype")
     public View getNewGameView() throws IOException {
         return loadView("view/newgame.fxml");
+    }
+
+    @Bean(name = "popupView")
+    public View getPopupView() throws IOException {
+        return loadView("view/popup.fxml");
     }
 
     @Bean
@@ -60,30 +73,12 @@ public class ControllersConfig {
         }
     }
 
+    @Getter
+    @Setter
+    @AllArgsConstructor
     public class View {
         private Parent parentNode;
         private Object controller;
-
-        public View(Parent parent, Object controller) {
-            this.parentNode = parent;
-            this.controller = controller;
-        }
-
-        public Parent getParentNode() {
-            return parentNode;
-        }
-
-        public void setParentNode(Parent parent) {
-            this.parentNode = parent;
-        }
-
-        public Object getController() {
-            return controller;
-        }
-
-        public void setController(Object controller) {
-            this.controller = controller;
-        }
     }
 
 }

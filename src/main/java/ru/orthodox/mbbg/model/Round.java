@@ -1,5 +1,6 @@
 package ru.orthodox.mbbg.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,7 +45,7 @@ public class Round implements MarkedWithId {
     @Column(name = "thirdStrikeCondition")
     private WinCondition thirdStrikeCondition;
 
-    @Transient
+    @JsonIgnore
     private List<AudioTrack> audioTracks = new ArrayList<>();
 
 

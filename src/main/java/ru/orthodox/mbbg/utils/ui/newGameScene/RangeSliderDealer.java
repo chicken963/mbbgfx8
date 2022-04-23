@@ -41,6 +41,7 @@ public class RangeSliderDealer {
                 currentTrack.getStartInSeconds(),
                 currentTrack.getFinishInSeconds()
         );
+        rangeSlider.setLowValue(currentTrack.getStartInSeconds());
         rangeSlider.setShowTickLabels(true);
         rangeSlider.setShowTickMarks(true);
         rangeSlider.setPrefWidth(600);
@@ -116,7 +117,7 @@ public class RangeSliderDealer {
 
             double snippetLength = currentTrack.getFinishInSeconds() - currentTrack.getStartInSeconds();
             double currentTimeFromTrackBeginning = playService.getCurrentTime();
-            double playedInSnippet = playService.isStopped()
+            double playedInSnippet = playService.isStopped() || currentTimeFromTrackBeginning < currentTrack.getStartInSeconds()
                     ? 0
                     : currentTimeFromTrackBeginning - currentTrack.getStartInSeconds();
 
@@ -127,7 +128,7 @@ public class RangeSliderDealer {
             if (sliderBar != null) {
                 sliderBar.setStyle(new StringBuilder("-fx-background-color: ")
                         .append("linear-gradient(to right, green ")
-                        .append(decimalFormat.format(playedInSnippet / snippetLength * 100))
+                        .append(decimalFormat.format((playedInSnippet / snippetLength) * 100))
                         .append("%, red ")
                         .append(decimalFormat.format((playedInSnippet / snippetLength) * 100))
                         .append("%)")

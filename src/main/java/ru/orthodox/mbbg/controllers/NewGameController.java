@@ -5,28 +5,24 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
-import ru.orthodox.mbbg.mappers.TabToRoundMapper;
+import ru.orthodox.mbbg.exceptions.GameInputsValidationException;
+import ru.orthodox.mbbg.mappers.SceneToGameMapper;
 import ru.orthodox.mbbg.model.AudioTrack;
 import ru.orthodox.mbbg.model.Game;
-import ru.orthodox.mbbg.model.Round;
-import ru.orthodox.mbbg.services.AudioTrackService;
 import ru.orthodox.mbbg.services.GameService;
 import ru.orthodox.mbbg.services.ScreenService;
-import ru.orthodox.mbbg.utils.ui.newGameScene.AudioTracksTable;
-import ru.orthodox.mbbg.utils.ui.newGameScene.EditTracksWorkspaceDealer;
-import ru.orthodox.mbbg.utils.ui.newGameScene.RoundTab;
-import ru.orthodox.mbbg.utils.ui.newGameScene.RoundsTabPane;
+import ru.orthodox.mbbg.utils.ui.newGameScene.*;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static ru.orthodox.mbbg.utils.ui.CustomFontDealer.setDefaultFont;
 import static ru.orthodox.mbbg.utils.ui.NodeDeepCopyProvider.createDeepCopy;
@@ -60,9 +56,11 @@ public class NewGameController {
     @Autowired
     private GameService gameService;
     @Autowired
-    private AudioTrackService audioTrackService;
+    private SceneToGameMapper sceneToGameMapper;
     @Autowired
-    private TabToRoundMapper tabToRoundMapper;
+    private FileChooserDealer fileChooserDealer;
+    @Autowired
+    private GameValidator gameValidator;
 
     private EditTracksWorkspaceDealer editTracksWorkspaceDealer;
     private RoundsTabPane roundsTabPane;
@@ -78,11 +76,19 @@ public class NewGameController {
                 cancelCreation);
     }
 
+    public void render() {
+        RoundTab firstTab = new RoundTab(createDeepCopy(tabSample), 0);
+        List<RoundTab> roundTabs = new ArrayList<RoundTab>() {{
+            add(firstTab);
+        }};
+        this.roundsTabPane = new RoundsTabPane(tabPane, roundTabs);
+    }
+
     @FXML
     private void openExplorerMenu(ActionEvent e) {
-        FileChooser fileChooser = preconfigureFileChooser();
+        FileChooser fileChooser = fileChooserDealer.preconfigureFileChooser();
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(((Node) e.getSource()).getScene().getWindow());
-        List<AudioTrack> audioTracks = mapFilesToAudioTracks(selectedFiles);
+        List<AudioTrack> audioTracks = fileChooserDealer.mapFilesToAudioTracks(selectedFiles);
         RoundTab currentTab = roundsTabPane.findTabByChild((Node) e.getSource());
         AudioTracksTable roundTable = currentTab.getAudioTracksTable();
         roundTable.setAudioTracks(audioTracks);
@@ -91,15 +97,15 @@ public class NewGameController {
 
     @FXML
     private void saveNewGame(ActionEvent e) {
-        Game game = new Game();
-        game.setId(UUID.randomUUID());
-        game.setName(newGameName.getText());
+        GameScene gameScene = new GameScene(newGameName, roundsTabPane);
 
-        for (RoundTab tab: roundsTabPane.getRoundTabs()) {
-            Round round = tabToRoundMapper.generateFromUIContent(tab);
-            game.getRounds().add(round);
+        try {
+            gameValidator.validateGameScene(gameScene);
+        } catch (GameInputsValidationException ex) {
+            return;
         }
 
+        Game game = sceneToGameMapper.generateFromScene(gameScene);
         gameService.save(game);
 
         Button saveButton = (Button) e.getSource();
@@ -123,33 +129,34 @@ public class NewGameController {
     }
 
     @FXML
-    private void addRound(){
+    private void addRound() {
         RoundTab newTab = new RoundTab(createDeepCopy(tabSample), roundsTabPane.getTabsCount());
         roundsTabPane.addRoundTab(newTab);
     }
 
-    public void render() {
-        RoundTab firstTab = new RoundTab(createDeepCopy(tabSample), 0);
-        List<RoundTab> roundTabs = new ArrayList(){{add(firstTab);}};
-        this.roundsTabPane = new RoundsTabPane(tabPane, roundTabs);
+    @FXML
+    private void onFirstConditionChosen(ActionEvent actionEvent) {
+        RoundTab sourceTab = roundsTabPane.findTabByChild((Node) actionEvent.getSource());
+        sourceTab.validateConditions(1);
     }
 
-    private FileChooser preconfigureFileChooser() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Please select audio files");
-        //TODO: uncomment and delete the subsequent line
-//        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-        fileChooser.setInitialDirectory(new File("F:\\myDocs\\Моя музыка"));
-        fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("Music files", "*.mp3", "*.aac", "*.wav", "*.flac")
-        );
-        return fileChooser;
+    @FXML
+    private void onSecondConditionChosen(ActionEvent actionEvent) {
+        RoundTab sourceTab = roundsTabPane.findTabByChild((Node) actionEvent.getSource());
+        sourceTab.validateConditions(2);
     }
 
-    private List<AudioTrack> mapFilesToAudioTracks(List<File> files) {
-        return files.stream()
-                .map(File::getAbsolutePath)
-                .map(absPath -> audioTrackService.generateFromFile(absPath))
-                .collect(Collectors.toList());
+    @FXML
+    private void onThirdConditionChosen(ActionEvent actionEvent) {
+        RoundTab sourceTab = roundsTabPane.findTabByChild((Node) actionEvent.getSource());
+        sourceTab.validateConditions(3);
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public class GameScene {
+        private TextField gameNameInput;
+        private RoundsTabPane roundsTabPane;
+
     }
 }

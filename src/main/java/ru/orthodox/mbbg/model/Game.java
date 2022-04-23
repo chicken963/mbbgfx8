@@ -1,5 +1,6 @@
 package ru.orthodox.mbbg.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +29,7 @@ public class Game implements MarkedWithId {
     @Column(name = "roundIds")
     private List<UUID> roundIds;
 
-    @Transient
+    @JsonIgnore
     private List<Round> rounds = new ArrayList<>();
 
 }

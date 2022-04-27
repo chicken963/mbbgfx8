@@ -2,15 +2,11 @@ package ru.orthodox.mbbg;
 
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Lazy;
-import ru.orthodox.mbbg.configuration.ControllersConfig;
 import ru.orthodox.mbbg.services.ScreenService;
 
 @Lazy

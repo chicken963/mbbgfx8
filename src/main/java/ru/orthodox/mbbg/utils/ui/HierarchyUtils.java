@@ -4,7 +4,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 
 import java.util.ArrayList;
 import java.util.List;

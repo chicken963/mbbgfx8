@@ -1,18 +1,13 @@
 package ru.orthodox.mbbg.services;
 
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.Window;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import ru.orthodox.mbbg.configuration.ControllersConfig;
-import ru.orthodox.mbbg.enums.OpenSceneMode;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;

@@ -6,15 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.model.AudioTrack;
-
 import ru.orthodox.mbbg.services.LocalFilesService;
-import ru.orthodox.mbbg.utils.AudioUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.regex.Pattern;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service

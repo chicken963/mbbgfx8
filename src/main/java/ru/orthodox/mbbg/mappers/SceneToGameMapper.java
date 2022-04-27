@@ -1,15 +1,11 @@
 package ru.orthodox.mbbg.mappers;
 
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.controllers.NewGameController;
-import ru.orthodox.mbbg.enums.WinCondition;
 import ru.orthodox.mbbg.model.Game;
 import ru.orthodox.mbbg.model.Round;
-import ru.orthodox.mbbg.utils.ui.newGameScene.FieldsValidator;
-import ru.orthodox.mbbg.utils.ui.newGameScene.GameValidator;
 import ru.orthodox.mbbg.utils.ui.newGameScene.RoundTab;
 import ru.orthodox.mbbg.utils.ui.newGameScene.RoundsTabPane;
 

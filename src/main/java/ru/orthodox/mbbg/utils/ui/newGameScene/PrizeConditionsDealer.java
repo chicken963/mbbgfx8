@@ -4,7 +4,6 @@ import javafx.scene.control.ChoiceBox;
 import lombok.extern.slf4j.Slf4j;
 import ru.orthodox.mbbg.enums.WinCondition;
 
-import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

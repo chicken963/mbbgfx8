@@ -3,8 +3,7 @@ package ru.orthodox.mbbg.model;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 
-import javax.persistence.*;
-import java.io.File;
+import javax.persistence.Column;
 import java.util.UUID;
 
 @Data

@@ -1,19 +1,12 @@
 package ru.orthodox.mbbg.configuration;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import ru.orthodox.mbbg.controllers.NewGameController;
 import ru.orthodox.mbbg.controllers.PlayController;
 import ru.orthodox.mbbg.controllers.StartMenuController;

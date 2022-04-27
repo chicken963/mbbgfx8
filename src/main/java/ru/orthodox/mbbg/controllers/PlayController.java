@@ -7,32 +7,26 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.util.Callback;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import ru.orthodox.mbbg.events.AudioTrackChangedEvent;
 import ru.orthodox.mbbg.model.AudioTrack;
 import ru.orthodox.mbbg.model.Game;
 import ru.orthodox.mbbg.model.Round;
-import ru.orthodox.mbbg.services.PlayService;
-import ru.orthodox.mbbg.services.ScreenService;
 import ru.orthodox.mbbg.repositories.AudioTrackRepository;
 import ru.orthodox.mbbg.repositories.GamesRepository;
 import ru.orthodox.mbbg.repositories.RoundRepository;
+import ru.orthodox.mbbg.services.PlayService;
+import ru.orthodox.mbbg.services.ScreenService;
 
 import javax.annotation.PostConstruct;
-
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.orthodox.mbbg.events.AudioTrackChangedEvent.TRACK_CHANGED;
 import static ru.orthodox.mbbg.utils.ThreadUtils.runTaskInSeparateThread;
 import static ru.orthodox.mbbg.utils.TimeRepresentationConverter.getSongProgressAsString;
 import static ru.orthodox.mbbg.utils.ui.CustomFontDealer.setDefaultFont;

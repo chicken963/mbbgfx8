@@ -3,10 +3,8 @@ package ru.orthodox.mbbg.utils.ui.newGameScene;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
-import lombok.Data;
 import lombok.Getter;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.stream.Collectors;
 

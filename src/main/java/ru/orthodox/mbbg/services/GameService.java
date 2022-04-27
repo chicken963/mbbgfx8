@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.model.Game;
 import ru.orthodox.mbbg.repositories.GamesRepository;
-import ru.orthodox.mbbg.repositories.RoundRepository;
 
 @Service
 public class GameService {

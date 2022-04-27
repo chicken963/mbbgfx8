@@ -2,8 +2,6 @@ package ru.orthodox.mbbg.utils.ui.newGameScene;
 
 import javafx.scene.control.ChoiceBox;
 
-import javax.annotation.PostConstruct;
-
 public class RoundDimensionsDealer {
 
     private ChoiceBox rowsNumber;

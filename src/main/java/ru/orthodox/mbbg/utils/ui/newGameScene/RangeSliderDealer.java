@@ -5,7 +5,6 @@ import javafx.scene.control.Label;
 import javafx.util.StringConverter;
 import lombok.Builder;
 import org.controlsfx.control.RangeSlider;
-import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.model.AudioTrack;
 import ru.orthodox.mbbg.services.PlayService;
 

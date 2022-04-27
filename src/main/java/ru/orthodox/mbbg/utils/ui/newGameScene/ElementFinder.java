@@ -1,7 +1,6 @@
 package ru.orthodox.mbbg.utils.ui.newGameScene;
 
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;

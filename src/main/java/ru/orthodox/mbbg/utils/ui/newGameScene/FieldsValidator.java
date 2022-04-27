@@ -3,7 +3,6 @@ package ru.orthodox.mbbg.utils.ui.newGameScene;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -12,9 +11,7 @@ import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.enums.WinCondition;
 import ru.orthodox.mbbg.exceptions.GameInputsValidationException;
 import ru.orthodox.mbbg.model.AudioTrack;
-import ru.orthodox.mbbg.services.ScreenService;
 import ru.orthodox.mbbg.utils.ui.PopupAlerter;
-import ru.orthodox.mbbg.utils.ui.PopupConfigurator;
 
 import java.util.HashMap;
 import java.util.List;

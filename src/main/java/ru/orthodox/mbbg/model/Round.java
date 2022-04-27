@@ -9,7 +9,6 @@ import org.springframework.data.annotation.Id;
 import ru.orthodox.mbbg.enums.WinCondition;
 
 import javax.persistence.Column;
-import javax.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -27,8 +26,11 @@ public class Round implements MarkedWithId {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "tracksIds")
+    @Column(name = "cardsIds")
     private List<UUID> tracksIds;
+
+    @Column(name = "tracksIds")
+    private List<UUID> cardsIds;
 
     @Column(name = "width")
     private Integer width;
@@ -47,6 +49,9 @@ public class Round implements MarkedWithId {
 
     @JsonIgnore
     private List<AudioTrack> audioTracks = new ArrayList<>();
+
+    @JsonIgnore
+    private List<Card> cards = new ArrayList<>();
 
 
 }

@@ -10,25 +10,33 @@ import org.springframework.data.annotation.Id;
 import javax.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Game implements MarkedWithId {
+public class Card implements MarkedWithId {
 
     @Id
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "number")
+    private String number;
 
-    @Column(name = "roundIds")
-    private List<UUID> roundIds;
+    @Column(name = "artists")
+    private Set<String> artists;
 
-    @JsonIgnore
-    private List<Round> rounds = new ArrayList<>();
+    @Column(name = "width")
+    private Integer width;
+
+    @Column(name = "height")
+    private Integer height;
+
+    @Column(name = "progress")
+    private Integer progress;
+
 
 }

@@ -8,6 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
+import lombok.Setter;
 import org.controlsfx.control.RangeSlider;
 import ru.orthodox.mbbg.enums.ButtonType;
 import ru.orthodox.mbbg.model.AudioTrack;
@@ -32,7 +33,6 @@ public class EditTracksWorkspaceDealer {
     private AudioTracksTable audioTracksTable;
 
     private PlayService playService;
-    private List<AudioTrack> audioTracks;
 
     private ActiveTableRowDealer activeTableRowDealer;
 
@@ -40,9 +40,8 @@ public class EditTracksWorkspaceDealer {
 
     private RangeSliderDealer rangeSliderDealer;
 
-    public EditTracksWorkspaceDealer(RoundTab tab, List<AudioTrack> audioTracks) {
+    public EditTracksWorkspaceDealer(RoundTab tab) {
         this.tab = tab;
-        this.audioTracks = audioTracks;
 
         activeTableRowDealer = SpringUtils.getBean(ActiveTableRowDealer.class);
         imageButtonCellFactoryProvider = SpringUtils.getBean(ImageButtonCellFactoryProvider.class);
@@ -58,7 +57,7 @@ public class EditTracksWorkspaceDealer {
 
         rangeSliderDealer = buildRangeSliderDealer();
 
-        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderDealer.updateRangeSlider(), "newGamePlayInfo" + tab.getIndex());
+        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderDealer.updateRangeSlider(), "newGamePlayInfo" + tab.getIndex() + this.hashCode());
         defineRowsLogic(audioTracksTable);
         defineColumnsLogic(audioTracksTable);
     }
@@ -114,17 +113,17 @@ public class EditTracksWorkspaceDealer {
                                             TableColumn<AudioTrack, String> stopColumn,
                                             TableColumn<AudioTrack, String> deleteColumn) {
         playColumn.setCellFactory(imageButtonCellFactoryProvider.provide(
-                "/mediaplayerIcons/play-small.png",
+                "/mediaplayerIcons/play-small2.png",
                 this::activateTrackAndPlay,
                 ButtonType.PLAY));
 
         pauseColumn.setCellFactory(imageButtonCellFactoryProvider.provide(
-                "/mediaplayerIcons/pause-small.png",
+                "/mediaplayerIcons/pause-small3.png",
                 this::pause,
                 ButtonType.PAUSE));
 
         stopColumn.setCellFactory(imageButtonCellFactoryProvider.provide(
-                "/mediaplayerIcons/stop-small.png",
+                "/mediaplayerIcons/stop-small2.png",
                 this::stop,
                 ButtonType.STOP));
 
@@ -160,8 +159,7 @@ public class EditTracksWorkspaceDealer {
     }
 
     private void removeFromTable(AudioTrack audioTrack) {
-        audioTracks.remove(audioTrack);
-        audioTracksTable.setAudioTracks(audioTracks);
+        audioTracksTable.getAudioTracks().remove(audioTrack);
     }
 
     private void updateCurrentTrackInfoUIElements(PlayService playService) {

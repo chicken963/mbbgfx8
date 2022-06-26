@@ -11,7 +11,7 @@ public class RoundDimensionsDealer {
         this.rowsNumber = rowsNumber;
         this.columnsNumber = columnsNumber;
 
-        rowsNumber.getItems().addAll(4, 5, 6, 7, 8);
-        columnsNumber.getItems().addAll(4, 5, 6, 7, 8, 9, 10, 11, 12);
+        rowsNumber.getItems().addAll(2, 4, 5, 6, 7, 8);
+        columnsNumber.getItems().addAll(2, 4, 5, 6, 7, 8, 9, 10, 11, 12);
     }
 }

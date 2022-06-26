@@ -62,7 +62,7 @@ public class NewGameController {
     @Autowired
     private GameValidator gameValidator;
 
-    private EditTracksWorkspaceDealer editTracksWorkspaceDealer;
+
     private RoundsTabPane roundsTabPane;
 
     @PostConstruct
@@ -82,17 +82,20 @@ public class NewGameController {
             add(firstTab);
         }};
         this.roundsTabPane = new RoundsTabPane(tabPane, roundTabs);
+        //saveGame.setDisable(true);
     }
 
     @FXML
     private void openExplorerMenu(ActionEvent e) {
         FileChooser fileChooser = fileChooserDealer.preconfigureFileChooser();
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(((Node) e.getSource()).getScene().getWindow());
+        if (selectedFiles == null) {
+            return;
+        }
         List<AudioTrack> audioTracks = fileChooserDealer.mapFilesToAudioTracks(selectedFiles);
         RoundTab currentTab = roundsTabPane.findTabByChild((Node) e.getSource());
         AudioTracksTable roundTable = currentTab.getAudioTracksTable();
-        roundTable.setAudioTracks(audioTracks);
-        this.editTracksWorkspaceDealer = new EditTracksWorkspaceDealer(currentTab, audioTracks);
+        roundTable.addAudioTracks(audioTracks);
     }
 
     @FXML

@@ -25,7 +25,7 @@ public class FileChooserDealer {
         fileChooser.setTitle("Please select audio files");
         //TODO: uncomment and delete the subsequent line
 //        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-        fileChooser.setInitialDirectory(new File("F:\\myDocs\\Моя музыка"));
+        fileChooser.setInitialDirectory(new File("C:\\Users\\Aleksei_Andreichuk\\Music"));
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Music files", "*.mp3", "*.aac", "*.wav", "*.flac")
         );

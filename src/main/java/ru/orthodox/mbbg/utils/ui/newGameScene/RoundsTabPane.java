@@ -1,6 +1,8 @@
 package ru.orthodox.mbbg.utils.ui.newGameScene;
 
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.Labeled;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import lombok.Getter;
@@ -8,16 +10,25 @@ import lombok.Getter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.orthodox.mbbg.utils.ui.CustomFontDealer.setDefaultFont;
+import static ru.orthodox.mbbg.utils.ui.HierarchyUtils.findAllLabelsRecursively;
+
 @Getter
 public class RoundsTabPane {
     private final TabPane tabPane;
     private final List<RoundTab> roundTabs;
+    private boolean allRoundsAreFilled;
 
     public RoundsTabPane (TabPane tabPane, List<RoundTab> roundTabs) {
         this.tabPane = tabPane;
         this.roundTabs = roundTabs;
+        this.allRoundsAreFilled = false;
+        tabPane.getTabs().clear();
         tabPane.getTabs().addAll(roundTabs.stream().map(RoundTab::getTab).collect(Collectors.toList()));
         setDefaultTabNamesToUnnamedRounds();
+        setDefaultFont(
+            findAllLabelsRecursively(tabPane).toArray(new Labeled[0])
+        );
     }
 
     public RoundTab findTabByChild(Node child) {
@@ -34,6 +45,10 @@ public class RoundsTabPane {
         for (RoundTab tab : this.getRoundTabs()) {
             tab.enableDeleteRoundButton();
         }
+        allRoundsAreFilled = false;
+        setDefaultFont(
+                findAllLabelsRecursively((Parent) roundTab.getTab().getContent()).toArray(new Labeled[0])
+        );
     }
 
     public void removeRoundTab(RoundTab roundTab) {

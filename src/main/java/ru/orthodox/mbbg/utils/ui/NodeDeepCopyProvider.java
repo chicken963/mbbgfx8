@@ -12,6 +12,8 @@ import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class NodeDeepCopyProvider {
 
@@ -23,6 +25,8 @@ public class NodeDeepCopyProvider {
             copy = createDeepCopy((VBox) region);
         } else if (region instanceof AnchorPane) {
             copy = createDeepCopy((AnchorPane) region);
+        } else if (region instanceof GridPane) {
+            copy = createDeepCopy((GridPane) region);
         } else {
             throw new ClassCastException(String.format("Class %s is unable to be processed as a Pane",
                     region.getClass()));
@@ -56,6 +60,8 @@ public class NodeDeepCopyProvider {
             copy = createDeepCopy((TextField) control);
         } else if (control instanceof TableView) {
             copy = createDeepCopy((TableView) control);
+        }  else if (control instanceof ScrollPane) {
+            copy = createDeepCopy((ScrollPane) control);
         } else {
             throw new ClassCastException(String.format("Class %s is unable to be processed as a Control",
                     control.getClass()));
@@ -78,14 +84,16 @@ public class NodeDeepCopyProvider {
         return copy;
     }
 
-    private static Button createDeepCopy(Button sourceButton) {
+    public static Button createDeepCopy(Button sourceButton) {
         Button copy = new Button();
 
         HBox.setMargin(copy, createDeepCopy(HBox.getMargin(sourceButton)));
         copy.setOnAction(sourceButton.getOnAction());
+        copy.setOnMouseEntered(sourceButton.getOnMouseEntered());
+        copy.setOnMouseExited(sourceButton.getOnMouseExited());
         copy.setGraphic(copyImageView((ImageView) sourceButton.getGraphic()));
         copy.setMnemonicParsing(sourceButton.isMnemonicParsing());
-        copy.setStyle(sourceButton.getStyle());
+        copy.getStyleClass().setAll(sourceButton.getStyleClass());
 
         alignCommonRegionProperties(sourceButton, copy);
         alignCommonLabeledProperties(sourceButton, copy);
@@ -95,7 +103,7 @@ public class NodeDeepCopyProvider {
         return copy;
     }
 
-    private static Label createDeepCopy(Label sourceLabel) {
+    public static Label createDeepCopy(Label sourceLabel) {
         Label copy = new Label();
 
         HBox.setMargin(copy, createDeepCopy(HBox.getMargin(sourceLabel)));
@@ -162,6 +170,55 @@ public class NodeDeepCopyProvider {
         return copy;
     }
 
+    private static GridPane createDeepCopy(GridPane sourcePane) {
+        GridPane copy = new GridPane();
+
+        alignWidthAndHeight(sourcePane, copy);
+        alignCommonRegionProperties(sourcePane, copy);
+
+        return copy;
+    }
+
+    private static ScrollPane createDeepCopy(ScrollPane sourcePane) {
+        ScrollPane copy = new ScrollPane();
+
+        alignWidthAndHeight(sourcePane, copy);
+        alignCommonRegionProperties(sourcePane, copy);
+        alignAnchorInsets(sourcePane, copy);
+
+        copy.setHbarPolicy(sourcePane.getHbarPolicy());
+        copy.setVbarPolicy(sourcePane.getVbarPolicy());
+
+        Pane scrollPaneContent = (Pane) sourcePane.getContent();
+        copy.setContent(createDeepCopy(scrollPaneContent));
+
+        return copy;
+    }
+
+    public static RowConstraints createDeepCopy(RowConstraints sourceRowConstraints) {
+        RowConstraints copy = new RowConstraints();
+
+        copy.setMaxHeight(sourceRowConstraints.getMaxHeight());
+        copy.setMinHeight(sourceRowConstraints.getMinHeight());
+        copy.setPrefHeight(sourceRowConstraints.getPrefHeight());
+        copy.setValignment(sourceRowConstraints.getValignment());
+        copy.setVgrow(sourceRowConstraints.getVgrow());
+
+        return copy;
+    }
+
+    public static ColumnConstraints createDeepCopy(ColumnConstraints sourceRowConstraints) {
+        ColumnConstraints copy = new ColumnConstraints();
+
+        copy.setMaxWidth(sourceRowConstraints.getMaxWidth());
+        copy.setMinWidth(sourceRowConstraints.getMinWidth());
+        copy.setPrefWidth(sourceRowConstraints.getPrefWidth());
+        copy.setHalignment(sourceRowConstraints.getHalignment());
+        copy.setHgrow(sourceRowConstraints.getHgrow());
+
+        return copy;
+    }
+
     private static SplitPane createDeepCopy(SplitPane sourcePane) {
         SplitPane copy = new SplitPane();
 
@@ -179,10 +236,17 @@ public class NodeDeepCopyProvider {
 
     public static Tab createDeepCopy(Tab sourceTab) {
         Tab copy = new Tab();
-        SplitPane sourceTabContent = (SplitPane) sourceTab.getContent();
+        Node tabContent = sourceTab.getContent();
+        if (tabContent instanceof SplitPane) {
+            SplitPane sourceTabContent = (SplitPane) sourceTab.getContent();
+            SplitPane tabContentCopy = createDeepCopy(sourceTabContent);
+            copy.setContent(tabContentCopy);
+        } else if (tabContent instanceof Pane) {
+            Pane sourceTabContent = (Pane) sourceTab.getContent();
+            Pane tabContentCopy = createDeepCopy(sourceTabContent);
+            copy.setContent(tabContentCopy);
+        }
 
-        SplitPane tabContentCopy = createDeepCopy(sourceTabContent);
-        copy.setContent(tabContentCopy);
         return copy;
     }
 

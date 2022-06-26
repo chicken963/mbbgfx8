@@ -33,6 +33,8 @@ public class RoundTab {
     private PrizeConditionsDealer prizeConditionsDealer;
     private RoundDimensionsDealer roundDimensionsDealer;
 
+    private EditTracksWorkspaceDealer editTracksWorkspaceDealer;
+
     public RoundTab(Tab tab, int index) {
         this.tab = tab;
         this.index = index;
@@ -52,6 +54,7 @@ public class RoundTab {
 
 
         this.roundNameTextField = getNewRoundNameTextField();
+        this.editTracksWorkspaceDealer = new EditTracksWorkspaceDealer(this);
 
         this.bindRoundNameToTabName();
         this.disableDeleteRoundButton();
@@ -167,5 +170,16 @@ public class RoundTab {
             default:
                 break;
         }
+    }
+
+    public boolean isFilled(){
+        return !firstPrizeCondition.getValue().equals(null)
+            && !secondPrizeCondition.getValue().equals(null)
+            && !thirdPrizeCondition.getValue().equals(null)
+            && !rowsNumber.getValue().equals(null)
+            && !columnsNumber.getValue().equals(null)
+            && !roundNameTextField.getText().isEmpty()
+            && audioTracksTable.isFilled();
+
     }
 }

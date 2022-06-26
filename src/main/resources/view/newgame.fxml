@@ -202,7 +202,7 @@
                                                    <children>
                                                       <HBox alignment="TOP_RIGHT" prefHeight="17.0" prefWidth="117.0">
                                                          <children>
-                                                            <Label fx:id="currentSnippetRate" prefHeight="17.0" prefWidth="29.0" style="currentSnippetRate" text="00:00" />
+                                                            <Label fx:id="currentSnippetRate" prefHeight="17.0" minWidth="35.0" style="currentSnippetRate" text="00:00" />
                                                             <Label text="/" />
                                                             <Label fx:id="currentSnippetLength" style="currentSnippetLength" text="00:00" />
                                                          </children>

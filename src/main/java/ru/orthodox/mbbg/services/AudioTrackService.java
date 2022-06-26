@@ -30,15 +30,15 @@ public class AudioTrackService {
         AudioTrack audioTrack = AudioTrack.builder()
                 .id(UUID.randomUUID())
                 .localPath(absolutePath)
-                .artist(extractArtist(absolutePath))
-                .title(extractSongName(absolutePath))
+                .artist(extractArtistFromFileName(absolutePath))
+                .title(extractSongNameFromFileName(absolutePath))
                 .startInSeconds(0)
                 .build();
         AudioUtils.setAudioTrackLength(audioTrack);
         return audioTrack;
     }
 
-    private String extractArtist(String filename) {
+    private String extractArtistFromFileName(String filename) {
         filename = filename.substring(filename.lastIndexOf(System.getProperty("file.separator")) + 1);
         for (String separator : SEPARATORS) {
             List<String> splittedSegments = Arrays.asList(filename.split(separator));
@@ -54,7 +54,7 @@ public class AudioTrackService {
         return "";
     }
 
-    private String extractSongName(String filename) {
+    private String extractSongNameFromFileName(String filename) {
         filename = filename.substring(filename.lastIndexOf(System.getProperty("file.separator")) + 1);
         for (String separator : SEPARATORS) {
             List<String> splittedSegments = Arrays.asList(filename.split(separator));
@@ -81,5 +81,9 @@ public class AudioTrackService {
             }
         }
         return invalidTracks;
+    }
+
+    public List<AudioTrack> findByIds(List<UUID> uuids) {
+        return audioTrackRepository.findByIds(uuids);
     }
 }

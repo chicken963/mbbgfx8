@@ -2,29 +2,37 @@ package ru.orthodox.mbbg.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import lombok.Data;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 import ru.orthodox.mbbg.model.Game;
 import ru.orthodox.mbbg.repositories.GamesRepository;
+import ru.orthodox.mbbg.services.CardService;
+import ru.orthodox.mbbg.services.GameService;
 import ru.orthodox.mbbg.services.ScreenService;
+import ru.orthodox.mbbg.services.StartMenuService;
+import ru.orthodox.mbbg.utils.modelExtensions.GridItemService;
+import ru.orthodox.mbbg.utils.ui.PopupAlerter;
+import ru.orthodox.mbbg.utils.ui.startMenuScene.HoverDealer;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.List;
 
 import static ru.orthodox.mbbg.utils.ui.CustomFontDealer.setDefaultFont;
-import static ru.orthodox.mbbg.utils.ui.NodeDeepCopyProvider.createDeepCopy;
+import static ru.orthodox.mbbg.utils.ui.HierarchyUtils.findParentAnchorPane;
 
+@Slf4j
 @Configurable
 public class StartMenuController {
 
@@ -47,26 +55,34 @@ public class StartMenuController {
 
     @Autowired
     private ScreenService screenService;
-
+    @Autowired
+    private GameService gameService;
+    @Autowired
+    private CardService cardService;
+    @Autowired
+    private ApplicationContext applicationContext;
+    @Autowired
+    private HoverDealer hoverDealer;
+    @Autowired
+    private PopupAlerter popupAlerter;
     @Autowired
     private GamesRepository gamesRepository;
 
-    @Autowired
-    private ApplicationContext applicationContext;
-
-    private int columnsNumber;
-    private int rowsNumber;
-
-    private int currentRowIndex = 0;
-    private int currentColumnIndex = 0;
-
-    private static List<GridItem> availableGames = new ArrayList<>();
-    private List<Game> existingGames = new ArrayList<>();
+    private StartMenuService startMenuService;
 
     @PostConstruct
     private void setUp() {
         setDefaultFont(openGameButton, newGameButton, greetingLabel, gameLabel);
-        fillGridWithAllGames();
+        startMenuService = StartMenuService.builder()
+                .gamesField(gamesField)
+                .templatePagination(templatePagination)
+                .greetingLabel(greetingLabel)
+                .gameLabel(gameLabel)
+                .templateGameAnchorPane(templateGameAnchorPane)
+                .gamesRepository(gamesRepository)
+                .newGameAnchorPane(newGameAnchorPane)
+                .build();
+        startMenuService.fillGridWithAllGames();
     }
 
     public void openNewGameForm(ActionEvent actionEvent) {
@@ -76,21 +92,13 @@ public class StartMenuController {
     }
 
     public void openPlayGameForm(ActionEvent actionEvent) {
-        Button node = (Button) actionEvent.getSource();
-        Game targetGame = GridItemService.findByEventTarget((AnchorPane) node.getParent().getParent());
+        Button source = (Button) actionEvent.getSource();
+        AnchorPane gameGridItem = findParentAnchorPane(source);
+        Game targetGame = GridItemService.findByEventTarget(StartMenuService.getAvailableGames(), gameGridItem);
         PlayController controller = applicationContext.getBean(PlayController.class);
         controller.setGame(targetGame);
         controller.render();
         screenService.activate("main");
-    }
-
-    private void incrementIndexes() {
-        if (currentColumnIndex == columnsNumber) {
-            currentRowIndex++;
-            currentColumnIndex = 0;
-        } else {
-            currentColumnIndex++;
-        }
     }
 
     @FXML
@@ -103,56 +111,41 @@ public class StartMenuController {
         gameLabel.setTextFill(new Color(1, 165.0/255.0, 0, 1));
     }
 
-    @Data
-    private static class GridItem {
-        private final AnchorPane anchorPane;
-        private final Game game;
+    @FXML
+    private void invokeGameContextMenu(ActionEvent source) {
+        startMenuService.invokeGameContextMenu(source);
     }
 
-    private static class GridItemService {
-        static Game findByEventTarget(AnchorPane anchorPane) {
-            return availableGames
-                    .stream()
-                    .filter(gridItem -> gridItem.getAnchorPane().equals(anchorPane))
-                    .findFirst()
-                    .orElseThrow(() -> new NullPointerException("Grid not found"))
-                    .getGame();
-        }
+    public void highlightButton(MouseEvent mouseEvent) {
+        Button targetButton = (Button) mouseEvent.getSource();
+        hoverDealer.applyStylesOnMouseEnter(targetButton);
+    }
+
+    public void defaultStyleButton(MouseEvent mouseEvent) {
+        Button targetButton = (Button) mouseEvent.getSource();
+        hoverDealer.applyStylesOnMouseLeave(targetButton);
+    }
+
+    @FXML
+    private void generateTickets(ActionEvent event) {
+        Game targetGame = GridItemService.findByRightMenuButton(StartMenuService.getAvailableGames(), event);
+        cardService.generateTickets(targetGame);
+        popupAlerter.invoke(((Node) event.getSource()).getScene().getWindow(),
+                "Success",
+                "Tickets are generated successfully");
     }
 
     public void fillGridWithAllGames() {
-        existingGames = gamesRepository.findAllGames();
-        columnsNumber = gamesField.getColumnConstraints().size();
-        rowsNumber = gamesField.getRowConstraints().size();
-        int pageSize = rowsNumber * columnsNumber;
-        if (existingGames.size() >= pageSize) {
-            Pagination pagination = createDeepCopy(templatePagination);
-            pagination.setPageCount(existingGames.size() / pageSize + 1);
-            pagination.setPageFactory(pageIndex -> {
-                fillGamesFieldPage(pageIndex);
-                return gamesField;
-            });
-            ((Pane) greetingLabel.getParent()).getChildren().add(pagination);
-        }
-        fillGamesFieldPage(0);
+        startMenuService.fillGridWithAllGames();
     }
 
-    private void fillGamesFieldPage(int pageNumber){
-        gamesField.getChildren().clear();
-        int pageSize = rowsNumber * columnsNumber;
-        List<Game> sublistToRender = existingGames.subList(pageSize * pageNumber, Math.min(pageSize * (pageNumber + 1), existingGames.size()));
-        for (Game game : sublistToRender) {
-            int index = sublistToRender.indexOf(game);
-            currentRowIndex = index / columnsNumber;
-            currentColumnIndex = index % columnsNumber;
-            gameLabel.setText(game.getName());
-            Pane anchorPane = createDeepCopy(templateGameAnchorPane);
-            availableGames.add(new GridItem((AnchorPane) anchorPane, game));
-            gamesField.add(anchorPane, currentColumnIndex, currentRowIndex);
-        }
-        incrementIndexes();
-        if (currentRowIndex != rowsNumber || currentColumnIndex != columnsNumber) {
-            gamesField.add(newGameAnchorPane, currentColumnIndex, currentRowIndex);
-        }
+    @FXML
+    private void viewTickets(ActionEvent event) {
+        Button source = (Button) event.getSource();
+        AnchorPane gameGridItem = findParentAnchorPane(source);
+        Game targetGame = GridItemService.findByEventTarget(StartMenuService.getAvailableGames(), gameGridItem);
+        ViewTicketsController controller = applicationContext.getBean(ViewTicketsController.class);
+        controller.setGame(targetGame);
+        controller.render(event);
     }
 }

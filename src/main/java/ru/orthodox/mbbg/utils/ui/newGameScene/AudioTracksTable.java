@@ -8,6 +8,7 @@ import javafx.util.Callback;
 import lombok.RequiredArgsConstructor;
 import ru.orthodox.mbbg.model.AudioTrack;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static ru.orthodox.mbbg.utils.ui.newGameScene.ElementFinder.findTracksTableColumnByNumber;
@@ -16,6 +17,12 @@ import static ru.orthodox.mbbg.utils.ui.newGameScene.ElementFinder.findTracksTab
 public class AudioTracksTable {
 
     private final TableView<AudioTrack> table;
+
+    public void addAudioTracks(List<AudioTrack> audioTracks) {
+        List<AudioTrack> buffer = new ArrayList<>(table.getItems());
+        buffer.addAll(audioTracks);
+        table.getItems().setAll(buffer);
+    }
 
     public void setAudioTracks(List<AudioTrack> audioTracks) {
         table.getItems().setAll(audioTracks);
@@ -59,5 +66,11 @@ public class AudioTracksTable {
 
     public boolean isEmpty() {
         return table.getItems().isEmpty();
+    }
+
+    public boolean isFilled() {
+        return table.getItems().stream().allMatch(audioTrack ->
+            audioTrack.getTitle() != null && audioTrack.getArtist() != null
+        );
     }
 }

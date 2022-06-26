@@ -21,13 +21,17 @@ public class PopupAlerter {
     public void invoke(Window ownerWindow, String mainMessage, String detailedMessage, int tracksCount) {
 
         Parent popupTemplate = screenService.getParentNode("popup");
-
         popupConfigurator.configure(popupTemplate, mainMessage, detailedMessage);
-
-        invokeStage(popupTemplate, ownerWindow, tracksCount);
+        invokeTracksValidationPopupStage(popupTemplate, ownerWindow, tracksCount);
     }
 
-    private void invokeStage(Parent popup, Window sourceWindow, int tracksCount) {
+    public void invoke(Window ownerWindow, String title, String message) {
+        Parent popupTemplate = screenService.getParentNode("popup");
+        popupConfigurator.configure(popupTemplate, message, null);
+        invokeTracksValidationPopupStage(popupTemplate, title, ownerWindow);
+    }
+
+    private void invokeTracksValidationPopupStage(Parent popup, Window sourceWindow, int tracksCount) {
         final Stage popupStage = new Stage();
         popupStage.setTitle("Oops...");
         popupStage.initModality(Modality.APPLICATION_MODAL);
@@ -35,6 +39,22 @@ public class PopupAlerter {
         Scene dialogScene = null;
         try{
             dialogScene = new Scene(popup, 350, 140 + Math.max(tracksCount, 3) * 20);
+
+        } catch (NullPointerException e) {
+            log.warn("что-то непонятное с реюзом сцены");
+        }
+        popupStage.setScene(dialogScene);
+        popupStage.show();
+    }
+
+    private void invokeTracksValidationPopupStage(Parent popup, String title, Window sourceWindow) {
+        final Stage popupStage = new Stage();
+        popupStage.setTitle(title);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.initOwner(sourceWindow);
+        Scene dialogScene = null;
+        try{
+            dialogScene = new Scene(popup, 350, 140);
 
         } catch (NullPointerException e) {
             log.warn("что-то непонятное с реюзом сцены");

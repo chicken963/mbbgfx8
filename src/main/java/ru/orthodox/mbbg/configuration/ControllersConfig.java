@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import ru.orthodox.mbbg.controllers.NewGameController;
 import ru.orthodox.mbbg.controllers.PlayController;
 import ru.orthodox.mbbg.controllers.StartMenuController;
+import ru.orthodox.mbbg.controllers.ViewTicketsController;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +38,11 @@ public class ControllersConfig {
         return loadView("view/popup.fxml");
     }
 
+    @Bean(name = "viewTicketsView")
+    public View getViewTicketsView() throws IOException {
+        return loadView("view/view_tickets.fxml");
+    }
+
     @Bean
     public PlayController getPlayController() throws IOException {
         return (PlayController) getMainView().getController();
@@ -50,6 +56,11 @@ public class ControllersConfig {
     @Bean
     public NewGameController getNewGameController() throws IOException {
         return (NewGameController) getNewGameView().getController();
+    }
+
+    @Bean
+    public ViewTicketsController getViewTicketsController() throws IOException {
+        return (ViewTicketsController) getViewTicketsView().getController();
     }
 
     protected View loadView(String url) throws IOException {

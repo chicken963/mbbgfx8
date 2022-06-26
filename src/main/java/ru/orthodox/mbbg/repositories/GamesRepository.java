@@ -66,6 +66,12 @@ public class GamesRepository {
                 : null;
     }
 
+    public void deleteGame(Game gameToDelete) {
+        List<Game> allGames = findAllGames();
+        localFilesService.delete(gameToDelete, gamesFile);
+
+    }
+
     public List<Round> findRoundsByGame(Game game) {
         return roundRepository.findByIds(game.getRoundIds());
     }

@@ -168,24 +168,8 @@ public class PlayController {
             if (current / end >= 1) {
                 currentTrack = playService.next();
                 recalculateProgressBarBackgroundRange();
+                updateActiveRow();
                 playService.setVolume(volumeSlider.getValue());
-            }
-        }
-    }
-
-    private void updateActiveRowHighlight() {
-        if (playService != null) {
-
-            double current = playService.getCurrentTime();
-            double end = playService.getCurrentSongLength();
-
-            if (current / end >= 1) {
-                try {
-                    Thread.sleep(50);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-//                playlistTable.getRowFactory().call(playlistTable).getStyleClass().add("highlighted");
             }
         }
     }
@@ -193,7 +177,6 @@ public class PlayController {
     private void startTrackingTitle() {
         runTaskInSeparateThread(this::updateUIElementsState);
         runTaskInSeparateThread(this::checkAudioTrackSwitching);
-        runTaskInSeparateThread(this::updateActiveRowHighlight);
     }
 
     private void fillPlaylistTable() {
@@ -204,22 +187,6 @@ public class PlayController {
         artistInPlaylist.setCellValueFactory(
                 new PropertyValueFactory<AudioTrack, String>("artist"));
         playlistTable.getItems().setAll(playService.getQueue());
-/*        playlistTable.setRowFactory(new Callback<TableView<AudioTrack>, TableRow<AudioTrack>>() {
-            @Override
-            public TableRow<AudioTrack> call(TableView<AudioTrack> param) {
-                return new TableRow<AudioTrack>() {
-                    @Override
-                    protected void updateItem(AudioTrack item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (getIndex() == playService.getQueue().indexOf(currentTrack)) {
-                            getStyleClass().add("highlighted");
-                        } else {
-                            getStyleClass().remove("highlighted");
-                        }
-                    }
-                };
-            }
-        });*/
     }
 
     public void backToMenu(ActionEvent actionEvent) {
@@ -290,15 +257,6 @@ public class PlayController {
                 .map(node -> (TableRow<AudioTrack>) node)
                 .filter(row -> currentTrack.equals(row.getItem()))
                 .forEach(row -> row.getStyleClass().add("highlighted"));
-    }
-
-    private void updateActiveRow(int index) {
-        playlistTable.lookupAll(".table-row-cell").forEach(row -> row.getStyleClass().remove("highlighted"));
-        List<TableRow<AudioTrack>> rows = playlistTable.lookupAll(".table-row-cell").stream()
-                .map(node -> (TableRow<AudioTrack>) node)
-                .collect(Collectors.toList());
-        TableRow<AudioTrack> rowToActivate = rows.get(index);
-        rowToActivate.getStyleClass().add("highlighted");
     }
 
     @Data

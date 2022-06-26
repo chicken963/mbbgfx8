@@ -19,6 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.layout.HBox?>
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: linear-gradient(to bottom right, #008080, black);" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.StartMenuController">
     <children>
         <Label fx:id="greetingLabel" layoutX="189.0" layoutY="61.0" prefHeight="57.0" prefWidth="956.0" text="Ну что, дружочек-пирожочек, what we gonna do?" textFill="#ffa100">
@@ -91,36 +92,90 @@
                 </AnchorPane>
                 </fx:define>
                 <fx:define>
-                <AnchorPane fx:id="templateGameAnchorPane" maxHeight="130.0" maxWidth="200.0" minHeight="130.0" minWidth="200.0" prefHeight="130.0" prefWidth="200.0" style="-fx-border-style: dashed; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0); -fx-border-width: 2px; -fx-border-radius: 15px; -fx-border-color: #ffa500;" GridPane.columnIndex="1" GridPane.halignment="CENTER">
-                    <effect>
-                        <Lighting>
-                            <bumpInput>
-                                <Shadow />
-                            </bumpInput>
-                        </Lighting>
-                    </effect>
-                    <children>
-                        <VBox alignment="CENTER" layoutX="4.0" onMouseEntered="#whiteTextColor" onMouseExited="#defaultTextColor" prefHeight="130.0" prefWidth="200.0" style="-fx-cursor: hand;" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="-2.0">
-                            <Button fx:id="openGameButton" onAction="#openPlayGameForm" style="-fx-background-color: rgba(0, 0, 0, 0);">
-                                <graphic>
-                                    <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
-                                        <image>
-                                            <Image url="/menuItemsIcons/iwannarock3.png" />
-                                        </image>
-                                    </ImageView>
-                                </graphic>
-                        <tooltip>
-                           <Tooltip text="Play a game" />
-                        </tooltip>
-                            </Button>
-                            <Label fx:id="gameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="100.0" prefHeight="32.0" prefWidth="192.0" text="Game 1" textFill="ORANGE">
-                                <font>
-                                    <Font size="16.0" />
-                                </font>
-                            </Label>
-                        </VBox>
-                    </children>
-                </AnchorPane>
+                    <AnchorPane fx:id="templateGameAnchorPane" maxHeight="130.0" maxWidth="200.0" minHeight="130.0" minWidth="200.0" prefHeight="130.0" prefWidth="200.0" style="-fx-border-style: dashed; -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.8), 10, 0, 0, 0); -fx-border-width: 2px; -fx-border-radius: 15px; -fx-border-color: #ffa500;" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+                        <effect>
+                            <Lighting>
+                                <bumpInput>
+                                    <Shadow />
+                                </bumpInput>
+                            </Lighting>
+                        </effect>
+                        <children>
+                            <HBox prefHeight="130.0" prefWidth="200.0">
+                                <children>
+                                    <VBox alignment="CENTER" onMouseEntered="#whiteTextColor" onMouseExited="#defaultTextColor" prefHeight="130.0" prefWidth="200.0" style="-fx-cursor: hand;">
+                                        <Button fx:id="openGameButton" onAction="#openPlayGameForm" style="-fx-background-color: rgba(0, 0, 0, 0);">
+                                            <graphic>
+                                                <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                                                <image>
+                                                                                    <Image url="/menuItemsIcons/iwannarock3.png" />
+                                                                                </image>
+                                                </ImageView>
+                                            </graphic>
+                                            <tooltip>
+                                                <Tooltip text="Play a game" />
+                                            </tooltip>
+                                        </Button>
+                                        <Label fx:id="gameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="100.0" prefHeight="32.0" prefWidth="192.0" text="Game 1" textFill="ORANGE">
+                                            <font>
+                                                <Font size="16.0" />
+                                            </font>
+                                        </Label>
+                                    </VBox>
+                                    <VBox prefHeight="200.0" prefWidth="100.0">
+                                        <children>
+                                            <Button mnemonicParsing="false" onAction="#generateTickets" styleClass="generate-tickets" onMouseEntered="#highlightButton" onMouseExited="#defaultStyleButton" maxHeight="43.0" maxWidth="50.0" prefHeight="43.0" prefWidth="43.0" style="-fx-background-radius: 0 15px 0 0; -fx-background-color: linear-gradient(rgba(236,122,172,1) 0%, rgba(228,53,102,1) 61%); -fx-cursor: hand">
+                                                <effect>
+                                                    <Lighting>
+                                                        <bumpInput>
+                                                            <Shadow />
+                                                        </bumpInput>
+                                                    </Lighting>
+                                                </effect>
+                                                <graphic>
+                                                    <ImageView fitHeight="33.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                                                        <image>
+                                                            <Image url="/menuItemsIcons/generate2.png" />
+                                                        </image>
+                                                        <cursor>
+                                                            <Cursor fx:constant="OPEN_HAND" />
+                                                        </cursor>
+                                                    </ImageView>
+                                                </graphic>
+                                                <tooltip>
+                                                    <Tooltip text="Generate tickets" />
+                                                </tooltip>
+                                            </Button>
+                                            <Button  onAction="#viewTickets" mnemonicParsing="false" onMouseEntered="#highlightButton" onMouseExited="#defaultStyleButton" maxHeight="43.0" maxWidth="50.0" prefHeight="44.0" prefWidth="43.0" style="-fx-background-radius: 0 0 0 0; -fx-background-color: linear-gradient(rgba(244,233,162,1) 0%, rgba(227,206,86,1) 61%); -fx-cursor: hand;">
+                                                <graphic>
+                                                    <ImageView fitHeight="33.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                                                        <image>
+                                                            <Image url="/menuItemsIcons/view3.png" />
+                                                        </image>
+                                                    </ImageView>
+                                                </graphic>
+                                                <tooltip>
+                                                    <Tooltip text="View/print tickets" />
+                                                </tooltip>
+                                            </Button>
+                                            <Button onAction="#invokeGameContextMenu" onMouseEntered="#highlightButton" onMouseExited="#defaultStyleButton" maxHeight="43.0" maxWidth="50.0" prefHeight="43.0" prefWidth="43.0" style="-fx-background-radius: 0 0 15px 0; -fx-background-color: linear-gradient(rgba(26,221,35,1) 0%, rgba(19,170,26,1) 91%); -fx-cursor: hand;" >
+                                                <graphic>
+                                                    <ImageView fitHeight="33.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
+                                                        <image>
+                                                            <Image url="/menuItemsIcons/three_dots.png" />
+                                                        </image>
+                                                    </ImageView>
+                                                </graphic>
+                                                <tooltip>
+                                                    <Tooltip text="Game options" />
+                                                </tooltip>
+                                            </Button>
+                                        </children>
+                                    </VBox>
+                                </children>
+                            </HBox>
+                        </children>
+                    </AnchorPane>
                 </fx:define>
             </children>
         </GridPane>

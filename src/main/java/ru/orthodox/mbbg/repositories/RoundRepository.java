@@ -52,9 +52,6 @@ public class RoundRepository {
     }
 
     public void save(Round round) {
-        round.setTracksIds(round.getAudioTracks().stream()
-                .map(AudioTrack::getId)
-                .collect(Collectors.toList()));
         localFilesService.write(round, roundsFile);
     }
 

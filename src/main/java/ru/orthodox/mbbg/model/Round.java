@@ -26,11 +26,11 @@ public class Round implements MarkedWithId {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "cardsIds")
+    @Column(name = "blanksIds")
     private List<UUID> tracksIds;
 
     @Column(name = "tracksIds")
-    private List<UUID> cardsIds;
+    private List<UUID> blanksIds;
 
     @Column(name = "width")
     private Integer width;
@@ -47,11 +47,14 @@ public class Round implements MarkedWithId {
     @Column(name = "thirdStrikeCondition")
     private WinCondition thirdStrikeCondition;
 
+    @Column(name = "numberOfBlanks")
+    private Integer numberOfBlanks;
+
     @JsonIgnore
     private List<AudioTrack> audioTracks = new ArrayList<>();
 
     @JsonIgnore
-    private List<Card> cards = new ArrayList<>();
+    private List<Blank> blanks = new ArrayList<>();
 
 
 }

@@ -8,20 +8,16 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.controllers.StartMenuController;
 import ru.orthodox.mbbg.model.Game;
 import ru.orthodox.mbbg.repositories.GamesRepository;
-import ru.orthodox.mbbg.utils.modelExtensions.GridItem;
-import ru.orthodox.mbbg.utils.modelExtensions.GridItemService;
+import ru.orthodox.mbbg.ui.modelExtensions.startMenuScene.GridItem;
+import ru.orthodox.mbbg.ui.modelExtensions.startMenuScene.GridItemService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.orthodox.mbbg.utils.ui.CustomFontDealer.setDefaultFont;
-import static ru.orthodox.mbbg.utils.ui.HierarchyUtils.findParentAnchorPane;
-import static ru.orthodox.mbbg.utils.ui.NodeDeepCopyProvider.createDeepCopy;
+import static ru.orthodox.mbbg.ui.hierarchy.NodeDeepCopyProvider.createDeepCopy;
+import static ru.orthodox.mbbg.ui.hierarchy.ElementFinder.findParentAnchorPane;
 
 @Builder
 public class StartMenuService {

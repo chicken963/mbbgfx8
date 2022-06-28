@@ -24,7 +24,8 @@ public class Application extends AbstractJavaFxApplication {
         stage.setTitle(windowTitle);
         stage.getIcons().add(new Image(Application.class.getResourceAsStream("/icon.png")));
         Scene startScene = screenService.activate("startmenu");
-        startScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+//        startScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        startScene.getStylesheets().add("style.css");
         stage.setScene(startScene);
         stage.setResizable(true);
         stage.centerOnScreen();

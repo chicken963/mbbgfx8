@@ -106,7 +106,7 @@
                                     <VBox alignment="CENTER" onMouseEntered="#whiteTextColor" onMouseExited="#defaultTextColor" prefHeight="130.0" prefWidth="200.0" style="-fx-cursor: hand;">
                                         <Button fx:id="openGameButton" onAction="#openPlayGameForm" style="-fx-background-color: rgba(0, 0, 0, 0);">
                                             <graphic>
-                                                <ImageView fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                                                <ImageView styleClass="template-game-image" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                                                                                 <image>
                                                                                     <Image url="/menuItemsIcons/iwannarock3.png" />
                                                                                 </image>
@@ -124,7 +124,7 @@
                                     </VBox>
                                     <VBox prefHeight="200.0" prefWidth="100.0">
                                         <children>
-                                            <Button mnemonicParsing="false" onAction="#generateTickets" styleClass="generate-tickets" onMouseEntered="#highlightButton" onMouseExited="#defaultStyleButton" maxHeight="43.0" maxWidth="50.0" prefHeight="43.0" prefWidth="43.0" style="-fx-background-radius: 0 15px 0 0; -fx-background-color: linear-gradient(rgba(236,122,172,1) 0%, rgba(228,53,102,1) 61%); -fx-cursor: hand">
+                                            <Button mnemonicParsing="false" onAction="#generateBlanks" styleClass="generate-blanks" maxHeight="43.0" maxWidth="50.0" prefHeight="43.0" prefWidth="43.0">
                                                 <effect>
                                                     <Lighting>
                                                         <bumpInput>
@@ -143,10 +143,10 @@
                                                     </ImageView>
                                                 </graphic>
                                                 <tooltip>
-                                                    <Tooltip text="Generate tickets" />
+                                                    <Tooltip text="Generate blanks" />
                                                 </tooltip>
                                             </Button>
-                                            <Button  onAction="#viewTickets" mnemonicParsing="false" onMouseEntered="#highlightButton" onMouseExited="#defaultStyleButton" maxHeight="43.0" maxWidth="50.0" prefHeight="44.0" prefWidth="43.0" style="-fx-background-radius: 0 0 0 0; -fx-background-color: linear-gradient(rgba(244,233,162,1) 0%, rgba(227,206,86,1) 61%); -fx-cursor: hand;">
+                                            <Button styleClass="view-blanks" onAction="#viewBlanks" mnemonicParsing="false" maxHeight="43.0" maxWidth="50.0" prefHeight="44.0" prefWidth="43.0">
                                                 <graphic>
                                                     <ImageView fitHeight="33.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                                                         <image>
@@ -155,10 +155,10 @@
                                                     </ImageView>
                                                 </graphic>
                                                 <tooltip>
-                                                    <Tooltip text="View/print tickets" />
+                                                    <Tooltip text="View/print blanks" />
                                                 </tooltip>
                                             </Button>
-                                            <Button onAction="#invokeGameContextMenu" onMouseEntered="#highlightButton" onMouseExited="#defaultStyleButton" maxHeight="43.0" maxWidth="50.0" prefHeight="43.0" prefWidth="43.0" style="-fx-background-radius: 0 0 15px 0; -fx-background-color: linear-gradient(rgba(26,221,35,1) 0%, rgba(19,170,26,1) 91%); -fx-cursor: hand;" >
+                                            <Button styleClass="game-options" onAction="#invokeGameContextMenu" maxHeight="43.0" maxWidth="50.0" prefHeight="43.0" prefWidth="43.0" >
                                                 <graphic>
                                                     <ImageView fitHeight="33.0" fitWidth="33.0" pickOnBounds="true" preserveRatio="true">
                                                         <image>

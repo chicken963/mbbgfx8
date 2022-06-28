@@ -17,15 +17,15 @@ import ru.orthodox.mbbg.model.AudioTrack;
 import ru.orthodox.mbbg.model.Game;
 import ru.orthodox.mbbg.services.GameService;
 import ru.orthodox.mbbg.services.ScreenService;
-import ru.orthodox.mbbg.utils.ui.newGameScene.*;
+import ru.orthodox.mbbg.ui.modelExtensions.newGameScene.*;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.orthodox.mbbg.utils.ui.CustomFontDealer.setDefaultFont;
-import static ru.orthodox.mbbg.utils.ui.NodeDeepCopyProvider.createDeepCopy;
+import static ru.orthodox.mbbg.ui.CustomFontDealer.setDefaultFont;
+import static ru.orthodox.mbbg.ui.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
 @Configurable
 @Scope("prototype")
@@ -37,6 +37,8 @@ public class NewGameController {
     private Label newGameLabel;
     @FXML
     private TextField newGameName;
+    @FXML
+    private TextField numberOfBlanks;
     @FXML
     private Button addTracksButton;
     @FXML

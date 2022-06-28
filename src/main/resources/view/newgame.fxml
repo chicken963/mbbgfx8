@@ -70,10 +70,9 @@
                                           <HBox prefHeight="31.0" prefWidth="288.0">
                                              <children>
                                                 <Label alignment="CENTER" prefHeight="51.0" prefWidth="88.0" text="Blank size" />
-                                                <ChoiceBox prefHeight="40.0" prefWidth="75.0" style="rowsNumber" />
-                                                <Label alignment="CENTER" prefHeight="61.0" prefWidth="58.0" text="rows      X" />
-                                                <ChoiceBox prefHeight="40.0" prefWidth="79.0" style="columnsNumber" />
-                                                <Label alignment="CENTER" prefHeight="61.0" prefWidth="48.0" text="columns" />
+                                                <ChoiceBox prefHeight="40.0" prefWidth="75.0" style="blankDimensions" />
+                                                <Label alignment="CENTER" prefHeight="51.0" prefWidth="108.0" text="Number of blanks" />
+                                                <TextField fx:id="numberOfBlanks" style="numberOfBlanks" prefHeight="40.0" prefWidth="59.0" />
                                              </children>
                                              <VBox.margin>
                                                 <Insets top="20.0" />
@@ -81,7 +80,7 @@
                                           </HBox>
                                           <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="364.0">
                                              <children>
-                                                <Label style="rowsWarning" prefHeight="40.0" prefWidth="127.0" text="Please fill number of rows in tickets for this round" textFill="#ff004d" wrapText="true" visible="false">
+                                                <Label style="blankDimensionsWarning" prefHeight="40.0" prefWidth="127.0" text="Please fill blank dimensions for this round" textFill="#ff004d" wrapText="true" visible="false">
                                                    <font>
                                                       <Font name="System Italic" size="11.0" />
                                                    </font>
@@ -89,7 +88,7 @@
                                                       <Insets right="13.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <Label style="columnsWarning" prefHeight="40.0" prefWidth="144.0" text="Please fill number of columns in tickets for this round" textFill="#ff004d" wrapText="true" visible="false">
+                                                <Label style="numberOfBlanksWarning" prefHeight="40.0" prefWidth="144.0" text="Please fill number of blanks with non-zero number value" textFill="#ff004d" wrapText="true" visible="false">
                                                    <HBox.margin>
                                                       <Insets right="12.0" />
                                                    </HBox.margin>

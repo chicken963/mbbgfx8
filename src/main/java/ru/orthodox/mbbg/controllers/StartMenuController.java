@@ -3,7 +3,6 @@ package ru.orthodox.mbbg.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
@@ -11,26 +10,23 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 import ru.orthodox.mbbg.model.Game;
 import ru.orthodox.mbbg.repositories.GamesRepository;
-import ru.orthodox.mbbg.services.CardService;
+import ru.orthodox.mbbg.services.BlankService;
 import ru.orthodox.mbbg.services.GameService;
 import ru.orthodox.mbbg.services.ScreenService;
 import ru.orthodox.mbbg.services.StartMenuService;
-import ru.orthodox.mbbg.utils.modelExtensions.GridItemService;
-import ru.orthodox.mbbg.utils.ui.PopupAlerter;
-import ru.orthodox.mbbg.utils.ui.startMenuScene.HoverDealer;
+import ru.orthodox.mbbg.ui.modelExtensions.startMenuScene.GridItemService;
+import ru.orthodox.mbbg.ui.PopupAlerter;
 
 import javax.annotation.PostConstruct;
 
-import static ru.orthodox.mbbg.utils.ui.CustomFontDealer.setDefaultFont;
-import static ru.orthodox.mbbg.utils.ui.HierarchyUtils.findParentAnchorPane;
+import static ru.orthodox.mbbg.ui.CustomFontDealer.setDefaultFont;
+import static ru.orthodox.mbbg.ui.hierarchy.ElementFinder.findParentAnchorPane;
 
 @Slf4j
 @Configurable
@@ -58,11 +54,9 @@ public class StartMenuController {
     @Autowired
     private GameService gameService;
     @Autowired
-    private CardService cardService;
+    private BlankService blankService;
     @Autowired
     private ApplicationContext applicationContext;
-    @Autowired
-    private HoverDealer hoverDealer;
     @Autowired
     private PopupAlerter popupAlerter;
     @Autowired
@@ -116,23 +110,13 @@ public class StartMenuController {
         startMenuService.invokeGameContextMenu(source);
     }
 
-    public void highlightButton(MouseEvent mouseEvent) {
-        Button targetButton = (Button) mouseEvent.getSource();
-        hoverDealer.applyStylesOnMouseEnter(targetButton);
-    }
-
-    public void defaultStyleButton(MouseEvent mouseEvent) {
-        Button targetButton = (Button) mouseEvent.getSource();
-        hoverDealer.applyStylesOnMouseLeave(targetButton);
-    }
-
     @FXML
-    private void generateTickets(ActionEvent event) {
+    private void generateBlanks(ActionEvent event) {
         Game targetGame = GridItemService.findByRightMenuButton(StartMenuService.getAvailableGames(), event);
-        cardService.generateTickets(targetGame);
+        blankService.generateBlanks(targetGame);
         popupAlerter.invoke(((Node) event.getSource()).getScene().getWindow(),
                 "Success",
-                "Tickets are generated successfully");
+                "Blanks are generated successfully");
     }
 
     public void fillGridWithAllGames() {
@@ -140,11 +124,11 @@ public class StartMenuController {
     }
 
     @FXML
-    private void viewTickets(ActionEvent event) {
+    private void viewBlanks(ActionEvent event) {
         Button source = (Button) event.getSource();
         AnchorPane gameGridItem = findParentAnchorPane(source);
         Game targetGame = GridItemService.findByEventTarget(StartMenuService.getAvailableGames(), gameGridItem);
-        ViewTicketsController controller = applicationContext.getBean(ViewTicketsController.class);
+        ViewBlanksController controller = applicationContext.getBean(ViewBlanksController.class);
         controller.setGame(targetGame);
         controller.render(event);
     }

@@ -38,8 +38,8 @@ public class ScreenService {
     private ControllersConfig.View popupView;
 
     @Autowired
-    @Qualifier("viewTicketsView")
-    private ControllersConfig.View viewTicketsView;
+    @Qualifier("viewBlanksView")
+    private ControllersConfig.View viewBlanksView;
 
     @PostConstruct
     public void addScenesToTray() {
@@ -49,7 +49,7 @@ public class ScreenService {
         this.addScreen("main", mainView);
         this.addScreen("newgame", newGameView);
         this.addScreen("popup", popupView);
-        this.addScreen("viewTickets", viewTicketsView);
+        this.addScreen("viewBlanks", viewBlanksView);
     }
 
     private void addScreen(String name, ControllersConfig.View pane) {

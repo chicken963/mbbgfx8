@@ -114,7 +114,7 @@
     -fx-background-image :url("playModeIcons/slider.png");
 }
 
-.ticketNumber {
+.blankNumber {
    -fx-background-color: #bbb;
    -fx-border-radius: 5px;
    -fx-background-radius: 10px;
@@ -127,22 +127,22 @@
     -fx-background-radius: 10;
 }
 
-.card-item {
+.blank-item {
     -fx-border-style: hidden hidden solid solid;
     -fx-border-color: #444;
 }
 
-.card-item.left {
+.blank-item.left {
     -fx-border-style: hidden hidden solid hidden;
     -fx-border-color: #444;
 }
 
-.card-item.lower {
+.blank-item.lower {
     -fx-border-style: hidden hidden hidden solid;
     -fx-border-color: #444;
 }
 
-.card-item.left.lower {
+.blank-item.left.lower {
     -fx-border-style: hidden;
     -fx-border-color: #444;
 }
@@ -157,6 +157,63 @@
     -fx-background-color: #dde;
     -fx-scale-y: 1.05;
     -fx-scale-x: 1.05;
+}
+
+.save-all-to-png: hover {
+    -fx-background-color: linear-gradient(rgba(255,218,136,1) 0%, rgba(195,159,104,1) 93%);
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+    -fx-cursor: hand;
+}
+
+.save-all-to-png {
+    -fx-background-color: linear-gradient(rgba(252,208,126,1) 0%, rgba(185,149,94,1) 93%);
+    -fx-background-radius: 1px;
+    -fx-min-width: 200px;
+    -fx-pref-width: 200px;
+    -fx-max-width: 200px;
+}
+
+.template-game-image:hover {
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+    -fx-box-shadow: 6px 6px 16px 2px rgba(255,255,255,0.69);
+}
+
+.generate-blanks {
+    -fx-background-radius: 0 15px 0 0;
+    -fx-background-color: linear-gradient(rgba(236,122,172,1) 0%, rgba(228,53,102,1) 61%);
+    -fx-cursor: hand;
+}
+
+.generate-blanks:hover {
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+    -fx-background-color: linear-gradient(rgba(246,132,182,1) 0%, rgba(238,63,112,1) 61%);
+}
+
+.view-blanks {
+    -fx-background-radius: 0 0 0 0;
+    -fx-background-color: linear-gradient(rgba(244,233,162,1) 0%, rgba(227,206,86,1) 61%);
+    -fx-cursor: hand;
+}
+
+.view-blanks:hover {
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+    -fx-background-color: linear-gradient(rgba(254,243,172,1) 0%, rgba(237,216,96,1) 61%);
+}
+
+.game-options {
+   -fx-background-radius: 0 0 15px 0;
+   -fx-background-color: linear-gradient(rgba(26,221,35,1) 0%, rgba(19,170,26,1) 91%);
+   -fx-cursor: hand;
+}
+
+.game-options:hover {
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+    -fx-background-color: linear-gradient(rgba(36,231,45,1) 0%, rgba(29,180,36,1) 91%);
 }
 /*
 .progress-bar > .track {

@@ -25,11 +25,10 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static ru.orthodox.mbbg.utils.ThreadUtils.runTaskInSeparateThread;
 import static ru.orthodox.mbbg.utils.TimeRepresentationConverter.getSongProgressAsString;
-import static ru.orthodox.mbbg.utils.ui.CustomFontDealer.setDefaultFont;
+import static ru.orthodox.mbbg.ui.CustomFontDealer.setDefaultFont;
 
 @Configurable
 public class PlayController {

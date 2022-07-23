@@ -1,12 +1,15 @@
 package ru.orthodox.mbbg.ui.modelExtensions.newGameScene;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import lombok.Getter;
 import ru.orthodox.mbbg.enums.WinCondition;
-import ru.orthodox.mbbg.model.AudioTrack;
+import ru.orthodox.mbbg.services.EventsHandlingService;
 import ru.orthodox.mbbg.ui.hierarchy.ElementFinder;
 import ru.orthodox.mbbg.ui.hierarchy.HierarchyUtils;
 
@@ -16,7 +19,7 @@ import java.util.stream.Stream;
 public class RoundTab {
     private final Tab tab;
 
-    private AudioTracksTable audioTracksTable;
+    private AudioTracksView audioTracksTable;
 
     private final int index;
 
@@ -30,17 +33,23 @@ public class RoundTab {
     private TextField numberOfBlanks;
 
     private PrizeConditionsDealer prizeConditionsDealer;
-    private RoundDimensionsDealer roundDimensionsDealer;
 
-    private EditTracksWorkspaceDealer editTracksWorkspaceDealer;
+    private EventsHandlingService eventsHandlingService;
 
-    public RoundTab(Tab tab, int index) {
+    public RoundTab(Tab tab, EventsHandlingService eventsHandlingService, int index) {
         this.tab = tab;
+        this.eventsHandlingService = eventsHandlingService;
         this.index = index;
+        this.audioTracksTable = Stream.of(ElementFinder.<GridPane>findTabElementByTypeAndStyleclass(tab, "tracksGrid"))
+                .map(gridPane -> new AudioTracksGrid(gridPane, eventsHandlingService))
+                .findFirst()
+                .orElse(null);
+        /*
         this.audioTracksTable = Stream.of(ElementFinder.<TableView<AudioTrack>>findTabElementByTypeAndStyleclass(tab, "tracksTable"))
                 .map(AudioTracksTable::new)
                 .findFirst()
                 .orElse(null);
+        */
 
         this.firstPrizeCondition = getFirstPrizeCondition();
         this.secondPrizeCondition = getSecondPrizeCondition();
@@ -54,10 +63,18 @@ public class RoundTab {
 
 
         this.roundNameTextField = getNewRoundNameTextField();
-        this.editTracksWorkspaceDealer = new EditTracksWorkspaceDealer(this);
 
         this.bindRoundNameToTabName();
-        this.disableDeleteRoundButton();
+        EventHandler<Event> defaultTabCloseBehaviour = tab.getOnClosed();
+/*        tab.setOnClosed(event -> {
+            if (defaultTabCloseBehaviour != null ) {
+                defaultTabCloseBehaviour.handle(event);
+            }
+            TabPane parentTabPane = tab.getTabPane();
+            if (parentTabPane.getTabs().size() == 1) {
+                parentTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+            }
+        });*/
     }
 
     public boolean containsChild(Node child) {
@@ -143,14 +160,6 @@ public class RoundTab {
                 tab.setText(roundNameTextField.getText().isEmpty()
                         ? "Round " + (index + 1)
                         : roundNameTextField.getText()));
-    }
-
-    public void disableDeleteRoundButton() {
-        findDeleteRoundButton().setDisable(true);
-    }
-
-    public void enableDeleteRoundButton() {
-        findDeleteRoundButton().setDisable(false);
     }
 
     public void validateConditions(int sourceConditionNumber) {

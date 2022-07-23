@@ -82,7 +82,7 @@ public class StartMenuController {
     public void openNewGameForm(ActionEvent actionEvent) {
         NewGameController controller = applicationContext.getBean(NewGameController.class);
         controller.render();
-        screenService.activate("newgame");
+        screenService.activate("newGame");
     }
 
     public void openPlayGameForm(ActionEvent actionEvent) {
@@ -92,7 +92,7 @@ public class StartMenuController {
         PlayController controller = applicationContext.getBean(PlayController.class);
         controller.setGame(targetGame);
         controller.render();
-        screenService.activate("main");
+        screenService.activate("play");
     }
 
     @FXML

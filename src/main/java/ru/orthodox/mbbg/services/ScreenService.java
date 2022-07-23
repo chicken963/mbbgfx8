@@ -5,68 +5,51 @@ import javafx.scene.Scene;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import ru.orthodox.mbbg.configuration.ControllersConfig;
+import ru.orthodox.mbbg.utils.screen.ScreenViewResource;
 
 import javax.annotation.PostConstruct;
-import java.util.HashMap;
+import java.util.List;
 
 @Component
 public class ScreenService {
-
-    private HashMap<String, ControllersConfig.View> screenMap = new HashMap<>();
 
     @Setter
     @Getter
     private Scene startScene;
 
     @Autowired
-    @Qualifier("mainView")
-    private ControllersConfig.View mainView;
-
-    @Autowired
-    @Qualifier("startMenuView")
-    private ControllersConfig.View startMenuView;
-
-    @Autowired
-    @Qualifier("newGameView")
-    private ControllersConfig.View newGameView;
-
-    @Autowired
-    @Qualifier("popupView")
-    private ControllersConfig.View popupView;
-
-    @Autowired
-    @Qualifier("viewBlanksView")
-    private ControllersConfig.View viewBlanksView;
+    private List<ScreenViewResource> screenList;
 
     @PostConstruct
     public void addScenesToTray() {
-        startScene = new Scene(startMenuView.getParentNode());
-
-        this.addScreen("startmenu", startMenuView);
-        this.addScreen("main", mainView);
-        this.addScreen("newgame", newGameView);
-        this.addScreen("popup", popupView);
-        this.addScreen("viewBlanks", viewBlanksView);
-    }
-
-    private void addScreen(String name, ControllersConfig.View pane) {
-        screenMap.put(name, pane);
+        startScene = new Scene(getParentNode("startMenu"));
     }
 
     private void removeScreen(String name) {
-        screenMap.remove(name);
+        ScreenViewResource resourceToDelete =  screenList.stream()
+                .filter(screenViewResource -> screenViewResource.isNamedAs(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Failed to find screen with a name " + name));
+        screenList.remove(resourceToDelete);
     }
 
     public Scene activate(String name) {
-        startScene.setRoot(screenMap.get(name).getParentNode());
+        ScreenViewResource resource = findByName(name);
+        startScene.setRoot(resource.getParentNode());
+        startScene.getStylesheets().clear();
+        startScene.getStylesheets().add(resource.getStyleSheetUrl());
         return startScene;
     }
 
-
     public Parent getParentNode(String name) {
-        return screenMap.get(name).getParentNode();
+        return findByName(name).getParentNode();
+    }
+
+    private ScreenViewResource findByName(String name) {
+        return screenList.stream()
+                .filter(screenViewResource -> screenViewResource.isNamedAs(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Failed to find screen with a name " + name));
     }
 }

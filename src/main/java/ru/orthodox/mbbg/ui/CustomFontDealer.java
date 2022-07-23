@@ -1,7 +1,10 @@
 package ru.orthodox.mbbg.ui;
 
+import javafx.scene.control.Control;
 import javafx.scene.control.Labeled;
+import javafx.scene.control.Tab;
 import javafx.scene.control.Tooltip;
+import javafx.scene.layout.Region;
 import javafx.scene.text.Font;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.utils.NormalizedPathString;

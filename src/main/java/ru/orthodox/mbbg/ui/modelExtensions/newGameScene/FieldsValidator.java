@@ -62,7 +62,7 @@ public class FieldsValidator {
 
 
         try {
-            AudioTracksTable table = tab.getAudioTracksTable();
+            AudioTracksView table = tab.getAudioTracksTable();
             validateAudiotracksTable(table);
         } catch (GameInputsValidationException ex) {
             tabIsValid = false;
@@ -150,7 +150,7 @@ public class FieldsValidator {
         }
     }
 
-    private void validateAudiotracksTable(AudioTracksTable table){
+    private void validateAudiotracksTable(AudioTracksView table){
         Label tablePlaceHolder = table.getPlaceholder();
         if (table.isEmpty()) {
             tablePlaceHolder.setVisible(true);

@@ -23,9 +23,8 @@ public class Application extends AbstractJavaFxApplication {
     public void start(Stage stage) throws Exception {
         stage.setTitle(windowTitle);
         stage.getIcons().add(new Image(Application.class.getResourceAsStream("/icon.png")));
-        Scene startScene = screenService.activate("startmenu");
-//        startScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
-        startScene.getStylesheets().add("style.css");
+        Scene startScene = screenService.activate("startMenu");
+        startScene.getStylesheets().add("styleSheets/start-scene.css");
         stage.setScene(startScene);
         stage.setResizable(true);
         stage.centerOnScreen();

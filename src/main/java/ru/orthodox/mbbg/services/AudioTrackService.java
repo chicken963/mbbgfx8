@@ -17,6 +17,9 @@ import java.util.regex.Pattern;
 public class AudioTrackService {
 
     @Autowired
+    private AudioUtils audioUtils;
+
+    @Autowired
     private AudioTrackRepository audioTrackRepository;
 
     private static final String[] SEPARATORS = {"_-_", " - ", "-", "_"};
@@ -34,7 +37,7 @@ public class AudioTrackService {
                 .title(extractSongNameFromFileName(absolutePath))
                 .startInSeconds(0)
                 .build();
-        AudioUtils.setAudioTrackLength(audioTrack);
+        audioUtils.setAudioTrackLength(audioTrack);
         return audioTrack;
     }
 

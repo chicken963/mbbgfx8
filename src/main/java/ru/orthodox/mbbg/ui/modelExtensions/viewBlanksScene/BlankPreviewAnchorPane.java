@@ -80,12 +80,7 @@ public class BlankPreviewAnchorPane {
         List<Label> gridItems = blank.getBlankItems().stream()
                 .map(blankItem -> {
                     Label gridItem = createDeepCopy(templateGridItem);
-                    gridItem.setPrefHeight(gridItemHeightInPixels);
-                    gridItem.setPrefWidth(gridItemWidthInPixels);
-                    gridItem.setMinHeight(gridItemHeightInPixels);
-                    gridItem.setMinWidth(gridItemWidthInPixels);
-                    gridItem.setMaxHeight(gridItemHeightInPixels);
-                    gridItem.setMaxWidth(gridItemWidthInPixels);
+                    configureGridItemSize(gridItem, gridItemWidthInPixels, gridItemHeightInPixels);
                     GridPane.setColumnIndex(gridItem, blankItem.getXIndex());
                     GridPane.setRowIndex(gridItem, blankItem.getYIndex());
                     gridItem.setText(blankItem.getArtist());
@@ -102,5 +97,14 @@ public class BlankPreviewAnchorPane {
         gridPane.getChildren().setAll(gridItems);
 
 
+    }
+
+    private void configureGridItemSize(Label gridItem, double gridItemWidthInPixels, double gridItemHeightInPixels) {
+        gridItem.setPrefHeight(gridItemHeightInPixels);
+        gridItem.setPrefWidth(gridItemWidthInPixels);
+        gridItem.setMinHeight(gridItemHeightInPixels);
+        gridItem.setMinWidth(gridItemWidthInPixels);
+        gridItem.setMaxHeight(gridItemHeightInPixels);
+        gridItem.setMaxWidth(gridItemWidthInPixels);
     }
 }

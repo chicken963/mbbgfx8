@@ -18,9 +18,9 @@ import java.io.InputStream;
 @Configuration
 public class ControllersConfig {
 
-    @Bean(name = "mainView")
-    public View getMainView() throws IOException {
-        return loadView("view/main.fxml");
+    @Bean(name = "playView")
+    public View getPlayView() throws IOException {
+        return loadView("view/play.fxml");
     }
 
     @Bean(name = "startMenuView")
@@ -45,7 +45,7 @@ public class ControllersConfig {
 
     @Bean
     public PlayController getPlayController() throws IOException {
-        return (PlayController) getMainView().getController();
+        return (PlayController) getPlayView().getController();
     }
 
     @Bean

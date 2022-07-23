@@ -2,29 +2,32 @@ package ru.orthodox.mbbg.ui.modelExtensions.newGameScene;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Labeled;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import lombok.Getter;
+import ru.orthodox.mbbg.services.EventsHandlingService;
 import ru.orthodox.mbbg.ui.hierarchy.ElementFinder;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static ru.orthodox.mbbg.ui.CustomFontDealer.setDefaultFont;
+import static ru.orthodox.mbbg.ui.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
 @Getter
 public class RoundsTabPane {
     private final TabPane tabPane;
     private final List<RoundTab> roundTabs;
     private boolean allRoundsAreFilled;
+    private EventsHandlingService eventsHandlingService;
 
-    public RoundsTabPane (TabPane tabPane, List<RoundTab> roundTabs) {
+    public RoundsTabPane (TabPane tabPane, Tab tabSample, List<RoundTab> roundTabs, EventsHandlingService eventsHandlingService) {
         this.tabPane = tabPane;
         this.roundTabs = roundTabs;
         this.allRoundsAreFilled = false;
+        this.eventsHandlingService = eventsHandlingService;
         tabPane.getTabs().clear();
         tabPane.getTabs().addAll(roundTabs.stream().map(RoundTab::getTab).collect(Collectors.toList()));
+        tabPane.getTabs().add(newTabButton(tabPane, tabSample));
         setDefaultTabNamesToUnnamedRounds();
         setDefaultFont(
             ElementFinder.findAllLabelsRecursively(tabPane).toArray(new Labeled[0])
@@ -38,13 +41,10 @@ public class RoundsTabPane {
                 .orElseThrow(() -> new IllegalArgumentException("Parent tab for table not found"));
     }
 
-    public void addRoundTab(RoundTab roundTab) {
+    public void addRoundTab(int index, RoundTab roundTab) {
         this.getRoundTabs().add(roundTab);
         roundTab.getTab().setText("Round " + (roundTab.getIndex() + 1));
-        tabPane.getTabs().add(roundTab.getTab());
-        for (RoundTab tab : this.getRoundTabs()) {
-            tab.enableDeleteRoundButton();
-        }
+        tabPane.getTabs().add(index, roundTab.getTab());
         allRoundsAreFilled = false;
         setDefaultFont(
                 ElementFinder.findAllLabelsRecursively((Parent) roundTab.getTab().getContent()).toArray(new Labeled[0])
@@ -55,7 +55,7 @@ public class RoundsTabPane {
         this.getRoundTabs().remove(roundTab);
         tabPane.getTabs().remove(roundTab.getTab());
         if (tabPane.getTabs().size() == 1) {
-            this.getRoundTabs().get(0).disableDeleteRoundButton();
+            this.getTabPane().setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         }
         setDefaultTabNamesToUnnamedRounds();
     }
@@ -66,7 +66,23 @@ public class RoundsTabPane {
 
     private void setDefaultTabNamesToUnnamedRounds(){
         tabPane.getTabs().stream()
+                .limit(roundTabs.size())
                 .filter(tab -> ElementFinder.<TextField>findTabElementByTypeAndStyleclass(tab, "newRoundName").getText().isEmpty())
                 .forEach(tab -> tab.setText("Round " + (tabPane.getTabs().indexOf(tab) + 1)));
+    }
+
+    private Tab newTabButton(TabPane tabPane, Tab tabSample) {
+        Tab addTab = new Tab("+");
+        addTab.setTooltip(new Tooltip("Add round"));
+        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            if(newTab == addTab) {
+                RoundTab newTab1 = new RoundTab(createDeepCopy(tabSample), eventsHandlingService, this.getTabsCount() - 1);
+                this.addRoundTab(this.getTabsCount() - 1, newTab1);
+                tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
+                tabPane.getSelectionModel().select(tabPane.getTabs().size() - 2); // Selecting the tab before the button, which is the newly created one
+            }
+        });
+        addTab.setClosable(false);
+        return addTab;
     }
 }

@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class AudioTracksTable {
+public class AudioTracksTable implements AudioTracksView {
 
     private final TableView<AudioTrack> table;
 
@@ -43,20 +43,36 @@ public class AudioTracksTable {
         return ElementFinder.findTracksTableColumnByNumber(table, 1);
     }
 
-    public TableColumn<AudioTrack, String> findPlayColumn(){
+    public TableColumn<AudioTrack, String> findStartTimeColumn() {
         return ElementFinder.findTracksTableColumnByNumber(table, 2);
     }
 
-    public TableColumn<AudioTrack, String> findPauseColumn(){
+    public TableColumn<AudioTrack, String> findEndTimeColumn() {
         return ElementFinder.findTracksTableColumnByNumber(table, 3);
     }
 
-    public TableColumn<AudioTrack, String> findStopColumn(){
+    public TableColumn<AudioTrack, String> findProgressColumn() {
         return ElementFinder.findTracksTableColumnByNumber(table, 4);
     }
 
-    public TableColumn<AudioTrack, String> findDeleteColumn(){
+    public TableColumn<AudioTrack, String> findTimelineColumn() {
         return ElementFinder.findTracksTableColumnByNumber(table, 5);
+    }
+
+    public TableColumn<AudioTrack, String> findPlayColumn(){
+        return ElementFinder.findTracksTableColumnByNumber(table, 6);
+    }
+
+    public TableColumn<AudioTrack, String> findPauseColumn(){
+        return ElementFinder.findTracksTableColumnByNumber(table, 7);
+    }
+
+    public TableColumn<AudioTrack, String> findStopColumn(){
+        return ElementFinder.findTracksTableColumnByNumber(table, 8);
+    }
+
+    public TableColumn<AudioTrack, String> findDeleteColumn(){
+        return ElementFinder.findTracksTableColumnByNumber(table, 9);
     }
 
     public Label getPlaceholder() {

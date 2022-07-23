@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import ru.orthodox.mbbg.exceptions.GameInputsValidationException;
 import ru.orthodox.mbbg.mappers.SceneToGameMapper;
 import ru.orthodox.mbbg.model.AudioTrack;
 import ru.orthodox.mbbg.model.Game;
+import ru.orthodox.mbbg.services.EventsHandlingService;
 import ru.orthodox.mbbg.services.GameService;
 import ru.orthodox.mbbg.services.ScreenService;
 import ru.orthodox.mbbg.ui.modelExtensions.newGameScene.*;
@@ -42,6 +44,8 @@ public class NewGameController {
     @FXML
     private Button addTracksButton;
     @FXML
+    private Button importTracksButton;
+    @FXML
     private Button deleteRound;
     @FXML
     private Button saveGame;
@@ -63,6 +67,8 @@ public class NewGameController {
     private FileChooserDealer fileChooserDealer;
     @Autowired
     private GameValidator gameValidator;
+    @Autowired
+    private EventsHandlingService eventsHandlingService;
 
 
     private RoundsTabPane roundsTabPane;
@@ -73,17 +79,17 @@ public class NewGameController {
                 newGameLabel,
                 enterNewGameNameLabel,
                 addTracksButton,
-                deleteRound,
                 saveGame,
-                cancelCreation);
+                cancelCreation,
+                importTracksButton);
     }
 
     public void render() {
-        RoundTab firstTab = new RoundTab(createDeepCopy(tabSample), 0);
+        RoundTab firstTab = new RoundTab(createDeepCopy(tabSample), eventsHandlingService, 0);
         List<RoundTab> roundTabs = new ArrayList<RoundTab>() {{
             add(firstTab);
         }};
-        this.roundsTabPane = new RoundsTabPane(tabPane, roundTabs);
+        this.roundsTabPane = new RoundsTabPane(tabPane, tabSample, roundTabs, eventsHandlingService);
         //saveGame.setDisable(true);
     }
 
@@ -96,7 +102,7 @@ public class NewGameController {
         }
         List<AudioTrack> audioTracks = fileChooserDealer.mapFilesToAudioTracks(selectedFiles);
         RoundTab currentTab = roundsTabPane.findTabByChild((Node) e.getSource());
-        AudioTracksTable roundTable = currentTab.getAudioTracksTable();
+        AudioTracksView roundTable = currentTab.getAudioTracksTable();
         roundTable.addAudioTracks(audioTracks);
     }
 
@@ -123,7 +129,7 @@ public class NewGameController {
     private void cancelCreation() {
         StartMenuController startMenuController = applicationContext.getBean(StartMenuController.class);
         startMenuController.fillGridWithAllGames();
-        screenService.activate("startmenu");
+        screenService.activate("startMenu");
     }
 
 
@@ -135,8 +141,9 @@ public class NewGameController {
 
     @FXML
     private void addRound() {
-        RoundTab newTab = new RoundTab(createDeepCopy(tabSample), roundsTabPane.getTabsCount());
-        roundsTabPane.addRoundTab(newTab);
+        RoundTab newTab = new RoundTab(createDeepCopy(tabSample), eventsHandlingService, roundsTabPane.getTabsCount());
+        roundsTabPane.addRoundTab(1, newTab);
+        roundsTabPane.getTabPane().setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
     }
 
     @FXML

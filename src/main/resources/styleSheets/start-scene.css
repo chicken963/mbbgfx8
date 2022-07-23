@@ -1,22 +1,6 @@
 .table-cell .tab .split-pane .anchor-pane {
     -fx-background-color: transparent;
 }
-.table-view {
-    -fx-border-width: 0px;
-    -fx-table-cell-border-color: transparent;
-    -fx-border-color: transparent;
-}
-.table-row-cell {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-table-cell-border-color: transparent;
-}
-
-.table-view .column-header,
-.table-view .column-header .filler,
-.table-view .column-header-background .filler {
-    -fx-background-color: linear-gradient(to bottom, #009090, #008080);
-}
 
 .table-row:highlighted {
     -fx-text-fill: orange;
@@ -159,7 +143,7 @@
     -fx-scale-x: 1.05;
 }
 
-.save-all-to-png: hover {
+.save-all-to-png:hover {
     -fx-background-color: linear-gradient(rgba(255,218,136,1) 0%, rgba(195,159,104,1) 93%);
     -fx-scale-y: 1.05;
     -fx-scale-x: 1.05;
@@ -177,7 +161,6 @@
 .template-game-image:hover {
     -fx-scale-y: 1.05;
     -fx-scale-x: 1.05;
-    -fx-box-shadow: 6px 6px 16px 2px rgba(255,255,255,0.69);
 }
 
 .generate-blanks {

@@ -132,6 +132,11 @@ public class PlayService {
         return !queueIterator.hasNext();
     }
 
+    public boolean isCurrentStopInPlayableRange(){
+        double currentRate = mediaPlayer.getCurrentTime().toSeconds();
+        return currentRate >= currentTrack.getStartInSeconds() && currentRate <= currentTrack.getFinishInSeconds();
+    }
+
     private void generateMediaPlayer(AudioTrack audioTrack) {
         if (mediaPlayer != null) {
             volumeCache = mediaPlayer.getVolume();

@@ -9,10 +9,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import org.controlsfx.control.RangeSlider;
 import ru.orthodox.mbbg.ui.CustomFontDealer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class NodeDeepCopyProvider {
 
@@ -40,6 +42,10 @@ public class NodeDeepCopyProvider {
                 throw new ClassCastException(String.format("Class %s was met among familiar node children and is " +
                         "unable to be processed", region.getClass()));
             }
+            if (region instanceof GridPane) {
+                GridPane.setColumnIndex(childCopy, GridPane.getColumnIndex(child));
+                GridPane.setRowIndex(childCopy, GridPane.getRowIndex(child));
+            }
             copy.getChildren().add(childCopy);
         }
         return copy;
@@ -61,7 +67,9 @@ public class NodeDeepCopyProvider {
             copy = createDeepCopy((TableView) control);
         }  else if (control instanceof ScrollPane) {
             copy = createDeepCopy((ScrollPane) control);
-        } else {
+        }  else if (control instanceof RangeSlider) {
+            copy = createDeepCopy((RangeSlider) control);
+        }else {
             throw new ClassCastException(String.format("Class %s is unable to be processed as a Control",
                     control.getClass()));
         }
@@ -126,13 +134,13 @@ public class NodeDeepCopyProvider {
         );
     }
 
-    private static HBox createDeepCopy(HBox sourceHbox) {
+    public static HBox createDeepCopy(HBox sourceHbox) {
         HBox copy = new HBox();
         HBox.setHgrow(copy, HBox.getHgrow(sourceHbox));
         VBox.setMargin(copy, createDeepCopy(VBox.getMargin(sourceHbox)));
         HBox.setMargin(copy, createDeepCopy(HBox.getMargin(sourceHbox)));
         copy.setAlignment(sourceHbox.getAlignment());
-
+        copy.setPadding(createDeepCopy(sourceHbox.getPadding()));
         alignWidthAndHeight(sourceHbox, copy);
         alignCommonRegionProperties(sourceHbox, copy);
         alignAnchorInsets(sourceHbox, copy);
@@ -142,8 +150,11 @@ public class NodeDeepCopyProvider {
 
     private static VBox createDeepCopy(VBox sourceVbox) {
         VBox copy = new VBox();
+        VBox.setMargin(copy, createDeepCopy(VBox.getMargin(sourceVbox)));
+        HBox.setMargin(copy, createDeepCopy(HBox.getMargin(sourceVbox)));
         VBox.setVgrow(copy, HBox.getHgrow(sourceVbox));
         copy.setAlignment(sourceVbox.getAlignment());
+        copy.setPadding(createDeepCopy(sourceVbox.getPadding()));
 
         alignWidthAndHeight(sourceVbox, copy);
         alignCommonRegionProperties(sourceVbox, copy);
@@ -166,6 +177,7 @@ public class NodeDeepCopyProvider {
         GridPane.setValignment(copy, GridPane.getValignment(sourcePane));
 
         copy.setEffect(sourcePane.getEffect());
+        copy.setPadding(createDeepCopy(sourcePane.getPadding()));
         return copy;
     }
 
@@ -174,7 +186,30 @@ public class NodeDeepCopyProvider {
 
         alignWidthAndHeight(sourcePane, copy);
         alignCommonRegionProperties(sourcePane, copy);
+        copy.getStyleClass().setAll(sourcePane.getStyleClass());
+        copy.getRowConstraints().setAll(sourcePane.getRowConstraints().stream()
+                .map(NodeDeepCopyProvider::createDeepCopy)
+                .collect(Collectors.toList()));
+        copy.getColumnConstraints().setAll(sourcePane.getColumnConstraints().stream()
+                .map(NodeDeepCopyProvider::createDeepCopy)
+                .collect(Collectors.toList()));
+        AnchorPane.setBottomAnchor(copy, AnchorPane.getBottomAnchor(sourcePane));
+        AnchorPane.setTopAnchor(copy, AnchorPane.getTopAnchor(sourcePane));
+        AnchorPane.setLeftAnchor(copy, AnchorPane.getLeftAnchor(sourcePane));
+        AnchorPane.setRightAnchor(copy, AnchorPane.getRightAnchor(sourcePane));
 
+        return copy;
+    }
+
+    public static RangeSlider createDeepCopy(RangeSlider origSlider) {
+        RangeSlider copy = new RangeSlider();
+        copy.setLowValue(origSlider.getLowValue());
+        copy.setHighValue(origSlider.getHighValue());
+        alignWidthAndHeight(origSlider, copy);
+        copy.setShowTickLabels(origSlider.isShowTickLabels());
+        copy.setShowTickMarks(origSlider.isShowTickMarks());
+        copy.setMajorTickUnit(origSlider.getMajorTickUnit());
+        copy.setBlockIncrement(origSlider.getBlockIncrement());
         return copy;
     }
 
@@ -224,6 +259,7 @@ public class NodeDeepCopyProvider {
         copy.setDividerPositions(sourcePane.getDividerPositions());
         copy.setPrefHeight(sourcePane.getPrefHeight());
         copy.setPrefWidth(sourcePane.getPrefWidth());
+        copy.setStyle(sourcePane.getStyle());
 
         Pane leftPane = (AnchorPane) sourcePane.getItems().get(0);
         Pane rightPane = (AnchorPane) sourcePane.getItems().get(1);
@@ -279,11 +315,14 @@ public class NodeDeepCopyProvider {
         return copy;
     }
 
-    private static TextField createDeepCopy(TextField textField) {
+    public static TextField createDeepCopy(TextField textField) {
         TextField copy = new TextField();
         copy.setStyle(textField.getStyle());
+        copy.getStyleClass().setAll(textField.getStyleClass());
         copy.setPrefHeight(textField.getPrefHeight());
         copy.setPrefWidth(textField.getPrefWidth());
+        copy.setEditable(textField.isEditable());
+        copy.setDisable(textField.isDisable());
         return copy;
     }
 
@@ -292,6 +331,7 @@ public class NodeDeepCopyProvider {
         copy.setPrefHeight(choiceBox.getPrefHeight());
         copy.setPrefWidth(choiceBox.getPrefWidth());
         copy.setStyle(choiceBox.getStyle());
+        copy.getStyleClass().setAll(choiceBox.getStyleClass());
         copy.setOnAction(choiceBox.getOnAction());
         return copy;
     }
@@ -330,6 +370,7 @@ public class NodeDeepCopyProvider {
         copy.setVisible(orig.isVisible());
         copy.setOpaqueInsets(orig.getOpaqueInsets());
         copy.setStyle(orig.getStyle());
+        copy.getStyleClass().setAll(orig.getStyleClass());
         copy.setOnMouseEntered(orig.getOnMouseEntered());
         copy.setOnMouseExited(orig.getOnMouseExited());
     }

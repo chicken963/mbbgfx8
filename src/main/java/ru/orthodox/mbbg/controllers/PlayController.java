@@ -189,7 +189,7 @@ public class PlayController {
     }
 
     public void backToMenu(ActionEvent actionEvent) {
-        screenService.activate("startmenu");
+        screenService.activate("startMenu");
     }
 
     public void switchToNextRound(ActionEvent event) {

@@ -73,7 +73,7 @@ public class ViewBlanksController {
     @PostConstruct
     private void init() {
         dialogScene = new Scene(container, 880, 560);
-        dialogScene.getStylesheets().add("style.css");
+        dialogScene.getStylesheets().add("styleSheets/start-scene.css");
         blankPreview.setVisible(false);
     }
 

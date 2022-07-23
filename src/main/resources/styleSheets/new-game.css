@@ -1,0 +1,162 @@
+.split-pane {
+    -fx-background-color: black;
+    -fx-border-width: 4px;
+    -fx-border-color: orange;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+.tracksTable {
+ -fx-background-color: transparent;
+}
+
+.tab:selected .tab-label {
+    -fx-alignment: CENTER;
+}
+
+.tab {
+    -fx-alignment: CENTER;
+    -fx-background-radius: 5px 5px 0 0;
+    -fx-border-radius: 5px 5px 0 0;
+    -fx-background-color: orange;
+    -fx-border-color: orange;
+    -fx-border-width: 0 0 1px 0;
+    -fx-filltext: #ffA100;
+}
+
+.tab:hover {
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+    -fx-background-color: rgb(255,202,105);
+}
+
+.button {
+ -fx-background-radius: 1px;
+ -fx-background-color: orange;
+ -fx-text-fill: black;
+}
+
+.split-pane:horizontal > .split-pane-divider {
+   -fx-background-color: transparent;
+}
+
+.split-pane:horizontal {
+   -fx-background-color: transparent;
+}
+
+.choice-box .context-menu {
+    -fx-background-color: black;
+}
+
+.choice-box .menu-item:focused {
+    -fx-background-color: orange;
+}
+
+.choice-box .menu-item > .label {
+    -fx-text-fill: white;
+}
+
+.choice-box .menu-item:focused > .label {
+    -fx-text-fill: black;
+}
+
+.choice-box {
+    -fx-background-color: black;
+    -fx-border-color: white;
+    -fx-background-radius: 2px;
+    -fx-text-fill: white;
+}
+
+.table-cell .tab .split-pane .anchor-pane {
+    -fx-background-color: transparent;
+}
+
+.choice-box .arrow{
+-fx-background-color: #789;
+}
+
+.tab-pane:focused>.tab-header-area>.headers-region>.tab:selected .focus-indicator {
+   -fx-border-color: white;
+}
+
+.tab-pane>*.tab-header-area>*.tab-header-background {
+  -fx-background-color: transparent;
+  -fx-background-insets:0;
+}
+
+.table-view .grid-pane {
+    -fx-border-width: 3px;
+    -fx-border-color: orange;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+.table-row-cell {
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: white;
+}
+.table-row-cell .table-cell {
+    -fx-background-color: transparent;
+    -fx-border-width: 1px;
+    -fx-border-color: black;
+    -fx-padding: 1 1 1 1;
+}
+.table-view .column-header,
+.table-view .column-header .filler,
+.table-view .column-header-background .filler {
+    -fx-background-color: orange;
+}
+
+.range-bar {
+    -fx-background-color: #baa;
+}
+
+.editable-column:readonly {
+    -fx-opacity: 1.0;
+    -fx-pref-height: 25px;
+    -fx-min-height: 25px;
+    -fx-max-height: 25px;
+    -fx-border-style: solid hidden solid hidden;
+    -fx-background-color: inherit;
+    -fx-font-size: 13px;
+    -fx-margin-bottom: 2px;
+}
+
+.editable-column:hover {
+    -fx-pref-height: 25px;
+    -fx-min-height: 25px;
+    -fx-max-height: 25px;
+}
+
+.editable-column:readonly, .time-column {
+    -fx-text-fill: white;
+}
+
+.main-anchor-pane {
+    -fx-background-color: #111;
+}
+
+.grid-header {
+    -fx-background-color: orange;
+}
+
+.tracksGrid {
+    -fx-border-color: orange;
+    -fx-border-width: 3px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+.button {
+    -fx-background-radius: 3px;
+}
+.button:hover {
+    -fx-cursor: hand;
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+    -fx-background-color: rgb(255,202,105);
+}
+
+.grid-row-hovered {
+    -fx-border-style: solid hidden solid hidden;
+    -fx-border-color: white;
+}

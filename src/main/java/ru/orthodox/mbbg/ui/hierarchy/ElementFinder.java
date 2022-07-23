@@ -4,6 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import ru.orthodox.mbbg.model.AudioTrack;
 
 import java.util.Collection;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 public class ElementFinder {
 
     public static<T> T findTabElementByTypeAndStyleclass(Tab tab, String styleClass) {
-        return findRecursivelyByStyle((Parent) tab.getContent(), styleClass)
+        return findRecursivelyByStyleClass((Parent) tab.getContent(), styleClass)
                 .stream()
                 .map(node -> (T) node)
                 .findFirst()
@@ -80,6 +81,13 @@ public class ElementFinder {
             p = p.getParent();
         }
         return (AnchorPane) p;
+    }
+
+    public static Node findGridPaneNodeByIndexes(GridPane gridPane, int rowIndex, int columnIndex) {
+        return gridPane.getChildren().stream()
+                .filter(node -> GridPane.getRowIndex(node).equals(rowIndex) && GridPane.getColumnIndex(node).equals(columnIndex))
+                .findFirst()
+                .orElseThrow(() -> new IndexOutOfBoundsException("No node found with indexes " + rowIndex + " and " + columnIndex));
     }
 
 }

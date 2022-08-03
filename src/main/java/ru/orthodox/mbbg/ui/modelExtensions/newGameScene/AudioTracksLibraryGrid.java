@@ -2,23 +2,22 @@ package ru.orthodox.mbbg.ui.modelExtensions.newGameScene;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.RowConstraints;
 import org.controlsfx.control.RangeSlider;
 import ru.orthodox.mbbg.enums.ButtonType;
 import ru.orthodox.mbbg.model.AudioTrack;
-import ru.orthodox.mbbg.services.EventsHandlingService;
 import ru.orthodox.mbbg.services.PlayService;
 import ru.orthodox.mbbg.ui.hierarchy.ElementFinder;
-import ru.orthodox.mbbg.utils.GridRowUtils;
+import ru.orthodox.mbbg.ui.modelExtensions.audioTracksLibrary.UITemplatesService;
 import ru.orthodox.mbbg.utils.ThreadUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.orthodox.mbbg.services.PlayFromWorkBenchService.*;
 import static ru.orthodox.mbbg.ui.hierarchy.NodeDeepCopyProvider.createDeepCopy;
@@ -27,116 +26,96 @@ import static ru.orthodox.mbbg.ui.modelExtensions.newGameScene.RangeSliderServic
 import static ru.orthodox.mbbg.utils.TimeRepresentationConverter.getSongProgressAsString;
 import static ru.orthodox.mbbg.utils.TimeRepresentationConverter.toStringFormat;
 
-public class AudioTracksGrid implements AudioTracksView {
+public class AudioTracksLibraryGrid {
 
     private static final int NUMBER_OF_COLUMNS = 10;
-    private static final int ARTIST_COLUMN_INDEX = 0;
-    private static final int TITLE_COLUMN_INDEX = 1;
-    private static final int START_TIME_COLUMN_INDEX = 2;
-    private static final int TIMELINE_COLUMN_INDEX = 3;
-    private static final int END_TIME_COLUMN_INDEX = 4;
-    private static final int PROGRESS_COLUMN_INDEX = 5;
-    private static final int PLAY_BUTTON_COLUMN_INDEX = 6;
-    private static final int PAUSE_BUTTON_COLUMN_INDEX = 7;
-    private static final int STOP_BUTTON_COLUMN_INDEX = 8;
-    private static final int DELETE_BUTTON_COLUMN_INDEX = 9;
-
+    private static final int CHECKBOX_COLUMN_INDEX = 0;
+    private static final int ARTIST_COLUMN_INDEX = 1;
+    private static final int TITLE_COLUMN_INDEX = 2;
+    private static final int START_TIME_COLUMN_INDEX = 3;
+    private static final int TIMELINE_COLUMN_INDEX = 4;
+    private static final int END_TIME_COLUMN_INDEX = 5;
+    private static final int PROGRESS_COLUMN_INDEX = 6;
+    private static final int PLAY_BUTTON_COLUMN_INDEX = 7;
+    private static final int PAUSE_BUTTON_COLUMN_INDEX = 8;
+    private static final int STOP_BUTTON_COLUMN_INDEX = 9;
     private static final int TEMPLATE_ROW_INDEX = 0;
 
-
-    private final EventsHandlingService eventsHandlingService;
+    private HBox checkBoxContainerTemplate;
     private final GridPane audioTracksGridPane;
-    private List<AudioTrack> audioTracks = new ArrayList<>();
+    private List<AudioTrack> audioTracks;
     private PlayService playService;
     private final List<AudioTrackUIMapper> gridRows = new ArrayList<>();
     private final RowConstraints templateRowConstraints;
-    private final TextField artistTemplate;
-    private final TextField songTitleTemplate;
-    private final Label startTimeTemplate;
-    private final Label endTimeTemplate;
-    private final Label progressTemplate;
-    private final HBox timelineContainerTemplate;
-    private final RangeSlider rangeSliderTemplate;
-    private final HBox playButtonContainerTemplate;
-    private final HBox pauseButtonContainerTemplate;
-    private final HBox stopButtonContainerTemplate;
-    private final HBox deleteButtonContainerTemplate;
+    private Label artistTemplate;
+    private Label songTitleTemplate;
+    private Label startTimeTemplate;
+    private Label endTimeTemplate;
+    private Label progressTemplate;
+    private HBox timelineContainerTemplate;
+    private RangeSlider rangeSliderTemplate;
+    private HBox playButtonContainerTemplate;
+    private HBox pauseButtonContainerTemplate;
+    private HBox stopButtonContainerTemplate;
+    private final CheckBox checkBoxTemplate;
 
-    public AudioTracksGrid(GridPane audioTracksGridPane, EventsHandlingService eventsHandlingService) {
-        this.eventsHandlingService = eventsHandlingService;
+    public AudioTracksLibraryGrid(GridPane audioTracksGridPane) {
         this.audioTracksGridPane = audioTracksGridPane;
         this.templateRowConstraints = audioTracksGridPane.getRowConstraints().get(0);
-        this.artistTemplate = (TextField) findGridPaneNodeByIndexes(TEMPLATE_ROW_INDEX, ARTIST_COLUMN_INDEX);
-        this.songTitleTemplate = (TextField) findGridPaneNodeByIndexes(TEMPLATE_ROW_INDEX, TITLE_COLUMN_INDEX);
+        initiateTemplatesFromTemplateRowInUI();
+
+        this.rangeSliderTemplate = (RangeSlider) timelineContainerTemplate.getChildren().get(0);
+        this.checkBoxTemplate = (CheckBox) checkBoxContainerTemplate.getChildren().get(0);
+
+        ThreadUtils.runTaskInSeparateThread(() -> updateRangeSlider(playService, gridRows), "newGamePlayInfo" + this.hashCode());
+    }
+
+/*    private void initiateTemplatesFromCache() {
+        List<Node> templatesFromCache = uiTemplatesService.getTemplates();
+        this.artistTemplate = (Label) templatesFromCache.get(ARTIST_COLUMN_INDEX);
+        this.songTitleTemplate = (Label) templatesFromCache.get(TITLE_COLUMN_INDEX);
+        this.startTimeTemplate = (Label) templatesFromCache.get(START_TIME_COLUMN_INDEX);
+        this.timelineContainerTemplate = (HBox) templatesFromCache.get(TIMELINE_COLUMN_INDEX);
+        this.endTimeTemplate = (Label) templatesFromCache.get(END_TIME_COLUMN_INDEX);
+        this.progressTemplate = (Label) templatesFromCache.get(PROGRESS_COLUMN_INDEX);
+        this.playButtonContainerTemplate = (HBox) templatesFromCache.get(PLAY_BUTTON_COLUMN_INDEX);
+        this.pauseButtonContainerTemplate = (HBox) templatesFromCache.get(PAUSE_BUTTON_COLUMN_INDEX);
+        this.stopButtonContainerTemplate = (HBox) templatesFromCache.get(STOP_BUTTON_COLUMN_INDEX);
+        this.checkBoxContainerTemplate = (HBox) templatesFromCache.get(CHECKBOX_COLUMN_INDEX);
+    }*/
+
+    private void initiateTemplatesFromTemplateRowInUI() {
+        this.artistTemplate = (Label) findGridPaneNodeByIndexes(TEMPLATE_ROW_INDEX, ARTIST_COLUMN_INDEX);
+        this.songTitleTemplate = (Label) findGridPaneNodeByIndexes(TEMPLATE_ROW_INDEX, TITLE_COLUMN_INDEX);
         this.startTimeTemplate = (Label) findGridPaneNodeByIndexes(TEMPLATE_ROW_INDEX, START_TIME_COLUMN_INDEX);
         this.timelineContainerTemplate = (HBox) findGridPaneNodeByIndexes(TEMPLATE_ROW_INDEX, TIMELINE_COLUMN_INDEX);
-        this.rangeSliderTemplate = (RangeSlider) timelineContainerTemplate.getChildren().get(0);
         this.endTimeTemplate = (Label) findGridPaneNodeByIndexes(TEMPLATE_ROW_INDEX, END_TIME_COLUMN_INDEX);
         this.progressTemplate = (Label) findGridPaneNodeByIndexes(TEMPLATE_ROW_INDEX, PROGRESS_COLUMN_INDEX);
         this.playButtonContainerTemplate = (HBox) findGridPaneNodeByIndexes(TEMPLATE_ROW_INDEX, PLAY_BUTTON_COLUMN_INDEX);
         this.pauseButtonContainerTemplate = (HBox) findGridPaneNodeByIndexes(TEMPLATE_ROW_INDEX, PAUSE_BUTTON_COLUMN_INDEX);
         this.stopButtonContainerTemplate = (HBox) findGridPaneNodeByIndexes(TEMPLATE_ROW_INDEX, STOP_BUTTON_COLUMN_INDEX);
-        this.deleteButtonContainerTemplate = (HBox) findGridPaneNodeByIndexes(TEMPLATE_ROW_INDEX, DELETE_BUTTON_COLUMN_INDEX);
-
-        removeTemplateElements();
-        if (eventsHandlingService != null) {
-            eventsHandlingService.setGridRows(gridRows);
-        }
-        ThreadUtils.runTaskInSeparateThread(() -> updateRangeSlider(playService, gridRows), "newGamePlayInfo" + this.hashCode());
+        this.checkBoxContainerTemplate = (HBox) findGridPaneNodeByIndexes(TEMPLATE_ROW_INDEX, CHECKBOX_COLUMN_INDEX);
     }
 
-    private void removeTemplateElements() {
-        audioTracksGridPane.getRowConstraints().remove(TEMPLATE_ROW_INDEX);
-        audioTracksGridPane.getChildren().remove(NUMBER_OF_COLUMNS * TEMPLATE_ROW_INDEX, NUMBER_OF_COLUMNS * (TEMPLATE_ROW_INDEX + 1));
-    }
-
-    private Node findGridPaneNodeByIndexes(int rowIndex, int columnIndex) {
-        return ElementFinder.findGridPaneNodeByIndexes(audioTracksGridPane, rowIndex, columnIndex);
-    }
-
-    @Override
-    public List<AudioTrack> getAudioTracks() {
-        return audioTracks;
-    }
-
-    @Override
-    public Label getPlaceholder() {
-        return gridRows.get(0).getProgressLabel();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return audioTracks == null || audioTracks.size() == 0;
-    }
-
-    @Override
-    public boolean isFilled() {
-        return gridRows.stream().allMatch(gridRow ->
-                !((TextField) gridRow.getArtistLabel()).getText().isEmpty()
-             && !((TextField) gridRow.getSongTitleLabel()).getText().isEmpty()
-        );
-    }
-
-    @Override
     public void addAudioTracks(List<AudioTrack> audioTracks) {
         audioTracks.forEach(this::addTrack);
+        removeTemplateElementsFromGrid();
     }
 
     private void addTrack(AudioTrack audioTrack) {
         addNewRowConstraint();
-        AudioTrackGridRow row = addNewRowToGridPane(audioTrack);
+        AudioTrackLibraryGridRow row = addNewRowToGridPane(audioTrack);
         gridRows.add(row);
-        audioTracks.add(audioTrack);
     }
 
-    private AudioTrackGridRow addNewRowToGridPane(AudioTrack audioTrack) {
+    private AudioTrackLibraryGridRow addNewRowToGridPane(AudioTrack audioTrack) {
         int rowIndex = audioTracksGridPane.getRowConstraints().size();
         audioTracksGridPane.addRow(rowIndex - 1);
 
-        AudioTrackGridRow row = createUIRowElementsFromTemplates(audioTrack, rowIndex);
+        AudioTrackLibraryGridRow row = createUIRowElementsFromTemplates(audioTrack, rowIndex);
 
         row.setAudioTrack(audioTrack);
-        row.defineLabelsLogic();
+
         return row;
     }
 
@@ -144,12 +123,17 @@ public class AudioTracksGrid implements AudioTracksView {
         this.audioTracksGridPane.getRowConstraints().add(createDeepCopy(templateRowConstraints));
     }
 
-    private AudioTrackGridRow createUIRowElementsFromTemplates(AudioTrack audioTrack, int rowIndex) {
-        TextField artist = createDeepCopy(artistTemplate);
+    private AudioTrackLibraryGridRow createUIRowElementsFromTemplates(AudioTrack audioTrack, int rowIndex) {
+        HBox checkBoxContainer = createDeepCopy(checkBoxContainerTemplate);
+        CheckBox checkBox = createDeepCopy(checkBoxTemplate);
+        checkBoxContainer.getChildren().add(checkBox);
+        audioTracksGridPane.add(checkBoxContainer, CHECKBOX_COLUMN_INDEX, rowIndex);
+
+        Label artist = createDeepCopy(artistTemplate);
         artist.setText(audioTrack.getArtist());
         audioTracksGridPane.add(artist, ARTIST_COLUMN_INDEX, rowIndex);
 
-        TextField songTitle = createDeepCopy(songTitleTemplate);
+        Label songTitle = createDeepCopy(songTitleTemplate);
         songTitle.setText(audioTrack.getTitle());
         audioTracksGridPane.add(songTitle, TITLE_COLUMN_INDEX, rowIndex);
 
@@ -159,8 +143,10 @@ public class AudioTracksGrid implements AudioTracksView {
 
         HBox rangeSliderContainer = createDeepCopy(timelineContainerTemplate);
         RangeSlider rangeSlider = createDeepCopy(rangeSliderTemplate);
-        rangeSlider.highValueProperty().addListener((observable, oldValue, newValue) -> { if (playService != null) playService.pause(); });
-        rangeSlider.lowValueProperty().addListener((observable, oldValue, newValue) -> { if (playService != null) playService.pause(); });
+        rangeSlider.setMin(0);
+        rangeSlider.setMax(audioTrack.getLengthInSeconds());
+        rangeSlider.setHighValue(audioTrack.getFinishInSeconds());
+        rangeSlider.setLowValue(audioTrack.getStartInSeconds());
         rangeSliderContainer.getChildren().add(rangeSlider);
         audioTracksGridPane.add(rangeSliderContainer, TIMELINE_COLUMN_INDEX, rowIndex);
 
@@ -169,7 +155,7 @@ public class AudioTracksGrid implements AudioTracksView {
         audioTracksGridPane.add(endTime, END_TIME_COLUMN_INDEX, rowIndex);
 
         Label progress = createDeepCopy(progressTemplate);
-        progress.setText(getSongProgressAsString(0, audioTrack.getLengthInSeconds()));
+        progress.setText(getSongProgressAsString(0, audioTrack.getFinishInSeconds() - audioTrack.getStartInSeconds()));
         audioTracksGridPane.add(progress, PROGRESS_COLUMN_INDEX, rowIndex);
 
         HBox playButtonContainer = createDeepCopy(playButtonContainerTemplate);
@@ -184,11 +170,7 @@ public class AudioTracksGrid implements AudioTracksView {
         stopButtonContainer.getChildren().add(prepareEditPlayerButton("/mediaplayerIcons/stop-small2.png", ButtonType.STOP, audioTrack));
         audioTracksGridPane.add(stopButtonContainer, STOP_BUTTON_COLUMN_INDEX, rowIndex);
 
-        HBox deleteButtonContainer = createDeepCopy(deleteButtonContainerTemplate);
-        deleteButtonContainer.getChildren().add(prepareEditPlayerButton("/mediaplayerIcons/delete2.png", ButtonType.DELETE, audioTrack));
-        audioTracksGridPane.add(deleteButtonContainer, DELETE_BUTTON_COLUMN_INDEX, rowIndex);
-
-        AudioTrackGridRow row =AudioTrackGridRow.builder()
+        AudioTrackLibraryGridRow row = AudioTrackLibraryGridRow.builder()
                 .artistLabel(artist)
                 .songTitleLabel(songTitle)
                 .startTimeLabel(startTime)
@@ -198,7 +180,7 @@ public class AudioTracksGrid implements AudioTracksView {
                 .playButtonContainer(playButtonContainer)
                 .pauseButtonContainer(pauseButtonContainer)
                 .stopButtonContainer(stopButtonContainer)
-                .deleteButtonContainer(deleteButtonContainer)
+                .checkBoxContainer(checkBoxContainer)
                 .build();
 
 //        row.defineHoverLogic();
@@ -215,30 +197,30 @@ public class AudioTracksGrid implements AudioTracksView {
                 case PAUSE:
                     defineOnPauseLogic(playService, audioTrack);
                     break;
-                case STOP:
-                    defineOnStopLogic(playService, audioTrack);
-                    break;
                 default:
-                    deleteRow(audioTrack);
+                    defineOnStopLogic(playService, audioTrack);
                     break;
             }
         });
         return buttonView;
     }
 
-    private void deleteRow(AudioTrack audioTrack) {
-        if (playService != null && playService.getCurrentTrack().equals(audioTrack)) {
-            playService.stop();
-        }
-        AudioTrackGridRow rowToDelete = (AudioTrackGridRow) GridRowUtils.findByAudioTrack(gridRows, audioTrack);
-        int rowIndex = gridRows.indexOf(rowToDelete);
-        gridRows.remove(rowToDelete);
-        gridRows.subList(rowIndex, gridRows.size())
-                .forEach(gridRow ->
-                        gridRow.getUIElements()
-                                .forEach(uiElem ->
-                                        GridPane.setRowIndex(uiElem, GridPane.getRowIndex(uiElem) - 1)));
-        audioTracksGridPane.getRowConstraints().remove(rowIndex);
-        audioTracksGridPane.getChildren().remove(NUMBER_OF_COLUMNS * (rowIndex), NUMBER_OF_COLUMNS * (rowIndex + 1));
+    public List<AudioTrack> getSelectedAudiotracks() {
+        return gridRows.stream()
+                .map(row -> (AudioTrackLibraryGridRow) row)
+                .filter(AudioTrackLibraryGridRow::isSelected)
+                .map(AudioTrackUIMapper::getAudioTrack)
+                .collect(Collectors.toList());
+    }
+
+    private Node findGridPaneNodeByIndexes(int rowIndex, int columnIndex) {
+        return ElementFinder.findGridPaneNodeByIndexes(audioTracksGridPane, rowIndex, columnIndex);
+    }
+
+    private void removeTemplateElementsFromGrid() {
+        audioTracksGridPane.getRowConstraints().remove(TEMPLATE_ROW_INDEX);
+        audioTracksGridPane.getChildren()
+                .subList(NUMBER_OF_COLUMNS * TEMPLATE_ROW_INDEX, NUMBER_OF_COLUMNS * (TEMPLATE_ROW_INDEX + 1))
+                .forEach(elem -> elem.setVisible(false));
     }
 }

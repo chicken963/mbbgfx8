@@ -29,6 +29,10 @@ public class ScreenConfiguration {
     @Qualifier("viewBlanksView")
     private ControllersConfig.View viewBlanksView;
 
+    @Autowired
+    @Qualifier("audioTracksLibraryView")
+    private ControllersConfig.View audioTracksLibraryView;
+
     @Bean
     public ScreenViewResource startMenuScene() {
         return new ScreenViewResource("startMenu", startMenuView, "styleSheets/start-scene.css");
@@ -36,7 +40,7 @@ public class ScreenConfiguration {
 
     @Bean
     public ScreenViewResource playGameScene() {
-        return new ScreenViewResource("play", playView, "styleSheets/start-scene.css");
+        return new ScreenViewResource("play", playView, "styleSheets/play-game.css");
     }
 
     @Bean
@@ -46,11 +50,15 @@ public class ScreenConfiguration {
 
     @Bean
     public ScreenViewResource popupScene() {
-        return new ScreenViewResource("popup", viewBlanksView, "styleSheets/start-scene.css");
+        return new ScreenViewResource("popup", popupView, "styleSheets/start-scene.css");
     }
     @Bean
     public ScreenViewResource viewBlanksScene() {
-        return new ScreenViewResource("viewBlanks", popupView, "styleSheets/start-scene.css");
+        return new ScreenViewResource("viewBlanks", viewBlanksView, "styleSheets/start-scene.css");
+    }
+    @Bean
+    public ScreenViewResource audioTracksLibraryScene() {
+        return new ScreenViewResource("audioTracksLibrary", audioTracksLibraryView, "styleSheets/new-game.css");
     }
 
 }

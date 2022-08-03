@@ -53,35 +53,17 @@
 }
 
 .playerButton {
-    -fx-border-color: rgba(100, 100, 100, 0.9);
-    -fx-border-width: 1px;
-    -fx-background-radius: 5px;
-    -fx-border-radius: 5px;
+    /*-fx-border-color: rgba(100, 100, 100, 0.9);
+    -fx-border-width: 1px;*/
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
     -fx-margin-right: 2px;
-    -fx-background-color: linear-gradient(rgba(246,211,147,1), rgba(255,165,0,1));
+    -fx-background-color: #eee;
     -fx-cursor: hand;
 }
 .playerButton:hover {
-    -fx-min-width: 52px;
-    -fx-min-height: 52px;
-    -fx-background-color: linear-gradient(rgba(262,227,163,1), rgba(255,181,16,1));
-}
-
-.switchRound {
-    -fx-background-color: linear-gradient(rgba(246,211,147,1), rgba(255,165,0,1));
-    -fx-font-color: #282929;
-    -fx-font-size: 14px;
-    -fx-cursor: hand;
-    -fx-max-width: 120px;
-    -fx-min-width: 120px;
-    -fx-prefHeight: 33px;
-    -fx-prefWidth: 120px;
-}
-
-.switchRound:hover {
-    -fx-min-width: 105%;
-    -fx-min-height: 105%;
-    -fx-background-color: linear-gradient(rgba(262,227,163,1), rgba(255,181,16,1));
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
 }
 
 .exitPlayMode {
@@ -129,18 +111,6 @@
 .blank-item.left.lower {
     -fx-border-style: hidden;
     -fx-border-color: #444;
-}
-
-.blank-miniature {
-    -fx-background-color: #ccd;
-    -fx-background-radius: 10px;
-    -fx-cursor: hand;
-}
-
-.blank-miniature:hover {
-    -fx-background-color: #dde;
-    -fx-scale-y: 1.05;
-    -fx-scale-x: 1.05;
 }
 
 .save-all-to-png:hover {

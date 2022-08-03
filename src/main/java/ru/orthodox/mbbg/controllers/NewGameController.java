@@ -3,9 +3,15 @@ package ru.orthodox.mbbg.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +22,7 @@ import ru.orthodox.mbbg.exceptions.GameInputsValidationException;
 import ru.orthodox.mbbg.mappers.SceneToGameMapper;
 import ru.orthodox.mbbg.model.AudioTrack;
 import ru.orthodox.mbbg.model.Game;
+import ru.orthodox.mbbg.services.AudiotracksLibraryService;
 import ru.orthodox.mbbg.services.EventsHandlingService;
 import ru.orthodox.mbbg.services.GameService;
 import ru.orthodox.mbbg.services.ScreenService;
@@ -27,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static ru.orthodox.mbbg.ui.CustomFontDealer.setDefaultFont;
+import static ru.orthodox.mbbg.ui.hierarchy.ElementFinder.*;
 import static ru.orthodox.mbbg.ui.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
 @Configurable
@@ -69,8 +77,11 @@ public class NewGameController {
     private GameValidator gameValidator;
     @Autowired
     private EventsHandlingService eventsHandlingService;
+    @Autowired
+    AudiotracksLibraryService audiotracksLibraryService;
 
 
+    private Scene audioTracksLibraryScene;
     private RoundsTabPane roundsTabPane;
 
     @PostConstruct
@@ -82,6 +93,8 @@ public class NewGameController {
                 saveGame,
                 cancelCreation,
                 importTracksButton);
+        audioTracksLibraryScene = new Scene(screenService.getParentNode("audioTracksLibrary"));
+        audioTracksLibraryScene.getStylesheets().add("styleSheets/new-game.css");
     }
 
     public void render() {
@@ -164,11 +177,27 @@ public class NewGameController {
         sourceTab.validateConditions(3);
     }
 
+    @FXML
+    private void openLibrary(ActionEvent event) {
+        final Stage popupStage = new Stage();
+        popupStage.setTitle("Вот всё, что ты надобавлял за эти годы");
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.initOwner(((Node) event.getSource()).getScene().getWindow());
+        popupStage.setScene(audioTracksLibraryScene);
+
+        RoundTab currentTab = roundsTabPane.findTabByChild((Node) event.getSource());
+        AudioTracksGrid roundTableToAddSelected = (AudioTracksGrid) currentTab.getAudioTracksTable();
+        AudioTracksLibraryGrid audioTracksLibraryGrid = audiotracksLibraryService.populateTableWithAllAudioTracks((AnchorPane)audioTracksLibraryScene.getRoot());
+
+        Button addSelectedLibraryTracksToRound = audiotracksLibraryService.getAddLibraryTracksButtonFromUI((AnchorPane) audioTracksLibraryScene.getRoot());
+        addSelectedLibraryTracksToRound.setOnAction(e -> audiotracksLibraryService.addSelectedTracksToRound(audioTracksLibraryGrid, roundTableToAddSelected, popupStage));
+        popupStage.show();
+    }
+
     @Getter
     @AllArgsConstructor
     public class GameScene {
         private TextField gameNameInput;
         private RoundsTabPane roundsTabPane;
-
     }
 }

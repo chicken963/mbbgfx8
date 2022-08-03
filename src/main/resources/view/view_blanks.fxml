@@ -28,7 +28,7 @@
                                                                         style="-fx-background-color: linear-gradient(to bottom left, #008080 30%, black);">
                                                                 <children>
                                                                     <GridPane fx:id="miniaturesGrid" prefHeight="180.0"
-                                                                              prefWidth="426.0" minWidth="426.0" maxWidth="1000.0" style="miniaturesGrid">
+                                                                              prefWidth="426.0" minWidth="426.0" maxWidth="1000.0" styleClass="miniaturesGrid">
                                                                         <columnConstraints>
                                                                             <fx:define>
                                                                                 <ColumnConstraints

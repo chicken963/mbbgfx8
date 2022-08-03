@@ -1,5 +1,6 @@
 package ru.orthodox.mbbg.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,8 +33,8 @@ public class Blank implements MarkedWithId {
     @Column(name = "height")
     private Integer height;
 
-    @Column(name = "progress")
-    private Integer progress;
+    @JsonIgnore
+    private Double progress;
 
 
 }

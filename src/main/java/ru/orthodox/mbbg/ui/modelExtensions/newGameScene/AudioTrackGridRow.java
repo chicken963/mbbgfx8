@@ -21,7 +21,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class AudioTrackGridRow {
+public class AudioTrackGridRow implements AudioTrackUIMapper {
     @Setter
     private AudioTrack audioTrack;
     private RowConstraints rowConstraints;
@@ -96,11 +96,11 @@ public class AudioTrackGridRow {
         });
     }
 
-    public void defineHoverLogic() {
+/*    public void defineHoverLogic() {
         List<Region> children = this.getUIElements();
         children.forEach(element -> {
             element.setOnMouseEntered(event -> children.forEach(child -> child.getStyleClass().add("grid-row-hovered")));
             element.setOnMouseExited(event -> children.forEach(child -> child.getStyleClass().remove("grid-row-hovered")));
         });
-    }
+    }*/
 }

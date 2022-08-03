@@ -38,7 +38,7 @@ public class BlankPreviewAnchorPane {
         CustomFontDealer.setDefaultFont();
     }
 
-    public void render() {
+    public List<Label> addItemsToPreview() {
         Label blankNumberLabel = ElementFinder.findRecursivelyByStyle(anchorPane, "blankNumber")
                 .stream().map(element -> (Label) element)
                 .findFirst()
@@ -96,7 +96,7 @@ public class BlankPreviewAnchorPane {
 
         gridPane.getChildren().setAll(gridItems);
 
-
+        return gridItems;
     }
 
     private void configureGridItemSize(Label gridItem, double gridItemWidthInPixels, double gridItemHeightInPixels) {

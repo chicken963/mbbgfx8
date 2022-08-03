@@ -57,6 +57,8 @@ public class NodeDeepCopyProvider {
             copy = createDeepCopy((Label) control);
         } else if (control instanceof Button) {
             copy = createDeepCopy((Button) control);
+        } else if (control instanceof CheckBox) {
+            copy = createDeepCopy((CheckBox) control);
         } else if (control instanceof SplitPane) {
             copy = createDeepCopy((SplitPane) control);
         } else if (control instanceof ChoiceBox) {
@@ -69,7 +71,7 @@ public class NodeDeepCopyProvider {
             copy = createDeepCopy((ScrollPane) control);
         }  else if (control instanceof RangeSlider) {
             copy = createDeepCopy((RangeSlider) control);
-        }else {
+        } else {
             throw new ClassCastException(String.format("Class %s is unable to be processed as a Control",
                     control.getClass()));
         }
@@ -110,6 +112,20 @@ public class NodeDeepCopyProvider {
         return copy;
     }
 
+    public static CheckBox createDeepCopy(CheckBox sourceCheckbox) {
+        CheckBox copy = new CheckBox();
+        copy.setMnemonicParsing(sourceCheckbox.isMnemonicParsing());
+        copy.getStyleClass().setAll(sourceCheckbox.getStyleClass());
+        alignCommonRegionProperties(sourceCheckbox, copy);
+        alignCommonLabeledProperties(sourceCheckbox, copy);
+        alignTextProperties(sourceCheckbox, copy);
+        alignWidthAndHeight(sourceCheckbox, copy);
+        VBox.setMargin(copy, createDeepCopy(VBox.getMargin(sourceCheckbox)));
+        HBox.setMargin(copy, createDeepCopy(HBox.getMargin(sourceCheckbox)));
+
+        return copy;
+    }
+
     public static Label createDeepCopy(Label sourceLabel) {
         Label copy = new Label();
 
@@ -118,6 +134,9 @@ public class NodeDeepCopyProvider {
         alignCommonLabeledProperties(sourceLabel, copy);
         alignTextProperties(sourceLabel, copy);
         alignWidthAndHeight(sourceLabel, copy);
+        if (sourceLabel.getGraphic() != null) {
+            copy.setGraphic(createDeepCopy((CheckBox) sourceLabel.getGraphic()));
+        }
 
         return copy;
     }
@@ -203,13 +222,14 @@ public class NodeDeepCopyProvider {
 
     public static RangeSlider createDeepCopy(RangeSlider origSlider) {
         RangeSlider copy = new RangeSlider();
-        copy.setLowValue(origSlider.getLowValue());
         copy.setHighValue(origSlider.getHighValue());
+        copy.setLowValue(origSlider.getLowValue());
         alignWidthAndHeight(origSlider, copy);
         copy.setShowTickLabels(origSlider.isShowTickLabels());
         copy.setShowTickMarks(origSlider.isShowTickMarks());
         copy.setMajorTickUnit(origSlider.getMajorTickUnit());
         copy.setBlockIncrement(origSlider.getBlockIncrement());
+        copy.setDisable(origSlider.isDisable());
         return copy;
     }
 
@@ -317,6 +337,7 @@ public class NodeDeepCopyProvider {
 
     public static TextField createDeepCopy(TextField textField) {
         TextField copy = new TextField();
+        copy.setAlignment(textField.getAlignment());
         copy.setStyle(textField.getStyle());
         copy.getStyleClass().setAll(textField.getStyleClass());
         copy.setPrefHeight(textField.getPrefHeight());

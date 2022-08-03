@@ -80,7 +80,7 @@ public class ViewBlanksService {
 
         blankPreviewAnchorPane = new BlankPreviewAnchorPane(blankPreview, blankToRender, roundName, blankItem);
         blankPreview.setVisible(true);
-        blankPreviewAnchorPane.render();
+        blankPreviewAnchorPane.addItemsToPreview();
     }
 
     private void populateTabWithRoundContent(Tab tab, Round round) {

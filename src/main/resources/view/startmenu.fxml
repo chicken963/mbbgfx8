@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.HBox?>
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: linear-gradient(to bottom right, #008080, black);" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.StartMenuController">
     <children>
-        <Label fx:id="greetingLabel" layoutX="189.0" layoutY="61.0" prefHeight="57.0" prefWidth="956.0" text="Ну что, дружочек-пирожочек, what we gonna do?" textFill="#ffa100">
+        <Label fx:id="greetingLabel" layoutX="189.0" layoutY="61.0" prefHeight="57.0" prefWidth="956.0" text="Choose your destiny" textFill="#ffa100">
             <font>
                 <Font size="36.0" />
             </font>

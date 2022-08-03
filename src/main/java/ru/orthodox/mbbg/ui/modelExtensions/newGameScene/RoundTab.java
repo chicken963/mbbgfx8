@@ -40,7 +40,7 @@ public class RoundTab {
         this.tab = tab;
         this.eventsHandlingService = eventsHandlingService;
         this.index = index;
-        this.audioTracksTable = Stream.of(ElementFinder.<GridPane>findTabElementByTypeAndStyleclass(tab, "tracksGrid"))
+        this.audioTracksTable = Stream.of(ElementFinder.<GridPane>findTabElementByTypeAndStyleclass(tab, "tracks-grid"))
                 .map(gridPane -> new AudioTracksGrid(gridPane, eventsHandlingService))
                 .findFirst()
                 .orElse(null);

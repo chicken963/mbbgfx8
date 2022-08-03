@@ -6,10 +6,10 @@ import java.util.Arrays;
 
 public enum WinCondition {
     ONE_LINE_STRIKE("One line strike", 0),
-    TWO_LINES_STRIKE("Two lines strike", 1),
+//    TWO_LINES_STRIKE("Two lines strike", 1),
     THREE_LINES_STRIKE("Three lines strike", 2),
-    FOUR_LINES_STRIKE("Four lines strike", 3),
-    FIVE_LINES_STRIKE("Five lines strike", 4),
+//    FOUR_LINES_STRIKE("Four lines strike", 3),
+//    FIVE_LINES_STRIKE("Five lines strike", 4),
     WHOLE_FIELD_STRIKE("Whole field strike", 5);
 
     @Getter

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import org.controlsfx.control.RangeSlider?>
+<AnchorPane prefHeight="800.0" prefWidth="1450.0" style="-fx-background-color: #111" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+            <children>
+                <HBox maxHeight="25.0" minHeight="25.0" prefHeight="25.0" prefWidth="1435.0" styleClass="grid-header-line">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="25.0" prefWidth="260.0" styleClass="grid-header-first">
+                            <children>
+                                <CheckBox alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" maxHeight="10.0" maxWidth="10.0" minHeight="10.0" minWidth="10.0" mnemonicParsing="false" prefHeight="10.0" prefWidth="10.0">
+                                </CheckBox>
+                            </children>
+                            <padding>
+                                <Insets left="5.5" />
+                            </padding>
+                        </HBox>
+                        <Label alignment="CENTER" prefHeight="25.0" prefWidth="260.0" styleClass="grid-header" text="Artist">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="25.0" prefWidth="315.0" styleClass="grid-header" text="Title">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="25.0" prefWidth="48.0" styleClass="grid-header" text="Start">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label alignment="CENTER" maxWidth="555.0" minWidth="555.0" prefHeight="25.0" prefWidth="555.0" styleClass="grid-header" text="Timeline" textAlignment="CENTER">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label alignment="CENTER" maxWidth="48.0" minWidth="48.0" prefHeight="25.0" prefWidth="48.0" styleClass="grid-header" text="End">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label alignment="CENTER" maxWidth="84.0" minWidth="84.0" prefHeight="25.0" prefWidth="84.0" styleClass="grid-header" text="Progress">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="25.0" prefWidth="25.0" styleClass="grid-header">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="25.0" prefWidth="25.0" styleClass="grid-header">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                        <Label alignment="CENTER" prefHeight="25.0" prefWidth="36.0" styleClass="grid-header-last">
+                            <font>
+                                <Font name="System Bold" size="14.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+                <ScrollPane fitToHeight="true" hbarPolicy="NEVER" maxHeight="710.0" minHeight="0.0" prefWidth="1435.0" styleClass="tracks-grid-scroll-pane">
+                    <GridPane prefWidth="1450.0" styleClass="tracks-grid">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="260.0" minWidth="260.0" prefWidth="260.0" />
+                            <ColumnConstraints hgrow="ALWAYS" maxWidth="315.0" minWidth="315.0" prefWidth="315.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="48.0" minWidth="48.0" prefWidth="48.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="555.0" minWidth="555.0" prefWidth="555.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="48.0" minWidth="48.0" prefWidth="48.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="84.0" minWidth="84.0" prefWidth="84.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                        <children>
+                            <HBox alignment="CENTER" maxHeight="30.0" maxWidth="25.0" minHeight="30.0" minWidth="25.0" prefHeight="30.0" prefWidth="25.0" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                                <children>
+                                    <CheckBox alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" maxHeight="10.0" maxWidth="10.0" mnemonicParsing="false" prefHeight="10.0" prefWidth="10.0" />
+                                </children>
+                            </HBox>
+                            <Label maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="260.0" styleClass="time-column" text="Artist" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                <GridPane.margin>
+                                    <Insets left="20.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="315.0" styleClass="time-column" text="Song title" GridPane.columnIndex="2" GridPane.rowIndex="0">
+                                <GridPane.margin>
+                                    <Insets left="10.0" />
+                                </GridPane.margin>
+                            </Label>
+                            <Label alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="48.0" styleClass="time-column" text="00:00" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                            <HBox alignment="CENTER" maxHeight="30.0" maxWidth="555.0" minHeight="30.0" minWidth="555.0" prefHeight="30.0" prefWidth="555.0" GridPane.columnIndex="4" GridPane.rowIndex="0">
+                                <RangeSlider maxHeight="30.0" minHeight="30.0" prefHeight="30.0"
+                                             prefWidth="500.0" maxWidth="500.0" minWidth="500.0"
+                                             lowValue="0" highValue="100"
+                                             showTickLabels="false"
+                                             showTickMarks="false"
+                                             majorTickUnit="60"
+                                             blockIncrement="5"
+                                             disable="true"/>
+                            </HBox>
+                            <Label alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="48.0" styleClass="time-column" text="00:00" GridPane.columnIndex="5" GridPane.rowIndex="0" />
+                            <Label alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="84.0" styleClass="time-column" text="00:00/00:00" GridPane.columnIndex="6" GridPane.rowIndex="0" />
+                            <HBox maxHeight="30.0" maxWidth="25.0" minHeight="30.0" minWidth="25.0" prefHeight="30.0" prefWidth="25.0" GridPane.columnIndex="7" GridPane.rowIndex="0">
+                                <padding>
+                                    <Insets bottom="2.0" />
+                                </padding>
+                            </HBox>
+                            <HBox maxHeight="30.0" maxWidth="25.0" minHeight="30.0" minWidth="25.0" prefHeight="30.0" prefWidth="25.0" GridPane.columnIndex="8" GridPane.rowIndex="0" />
+                            <HBox maxHeight="30.0" maxWidth="25.0" minHeight="30.0" minWidth="25.0" prefHeight="30.0" prefWidth="25.0" GridPane.columnIndex="9" GridPane.rowIndex="0" />
+                        </children>
+                    </GridPane>
+                </ScrollPane>
+            <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
+               <children>
+                  <Button styleClass="add-selected-tracks" mnemonicParsing="false" prefWidth="200.0" text="Add selected tracks to the round">
+                     <HBox.margin>
+                        <Insets left="10.0" top="3.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

@@ -1,0 +1,146 @@
+.audio-tracks-row .artist-label.active {
+    -fx-text-fill: black;
+}
+
+.audio-tracks-row .song-title-label.active {
+    -fx-text-fill: black;
+}
+
+.audio-tracks-row.active {
+    -fx-background-color: orange;
+}
+
+.audio-tracks-row {
+    -fx-background-color: #111;
+}
+
+.audio-tracks-row:hover {
+    -fx-background-color: #333;
+    -fx-cursor: hand;
+    -fx-scale-y: 1.08;
+}
+
+.root {
+    -fx-background-color: #111;
+    /*-fx-background-color: linear-gradient(to bottom right, #008080, black)*/
+}
+
+.workbench {
+    -fx-background-color: #111;
+}
+
+.audio-tracks-header-row {
+ -fx-background-color: orange;
+ -fx-font-weight: bold;
+}
+
+.audio-tracks-row .artist-label {
+  -fx-text-fill: white;
+}
+.audio-tracks-row .song-title-label {
+  -fx-text-fill: white;
+}
+
+.scroll-pane > .viewport {
+   -fx-background-color: #111;
+}
+
+.tracks-grid {
+  -fx-background-color: #111;
+}
+
+.blank-preview {
+  -fx-background-radius: 5px;
+  -fx-border-radius: 5px;
+  -fx-border-color: orange;
+  -fx-border-style: dashed;
+}
+
+.switchRound {
+    -fx-background-color: orange;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-pref-width: 100.0;
+}
+
+.switchRound:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.switchRound.previous {
+  -fx-background-radius: 20px 2px 2px 20px;
+}
+
+.switchRound.next {
+  -fx-background-radius: 2px 20px 20px 2px;
+}
+
+.blank-miniature {
+    -fx-background-color: white;
+    -fx-border-color: orange;
+    -fx-border-style: solid;
+    -fx-text-fill: #111;
+    -fx-background-radius: 10px;
+    -fx-cursor: hand;
+    -fx-max-height: 30.0;
+    -fx-border-radius: 10px;
+}
+
+.blank-miniature:hover {
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+}
+
+.blankNumber {
+   -fx-background-color: orange;
+   -fx-border-radius: 5px;
+   -fx-background-radius: 10px;
+}
+
+.gridPane {
+    -fx-border-radius: 10;
+    -fx-border-color: #444;
+    -fx-background-color: #bbb;
+    -fx-background-radius: 10;
+}
+
+.blank-item {
+    -fx-border-style: hidden hidden solid solid;
+    -fx-border-color: #444;
+}
+
+.blank-item.left {
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-color: #444;
+}
+
+.blank-item.lower {
+    -fx-border-style: hidden hidden hidden solid;
+    -fx-border-color: #444;
+}
+
+.blank-item.left.lower {
+    -fx-border-style: hidden;
+    -fx-border-color: #444;
+}
+
+.blank-item.passed {
+    -fx-background-color: orange;
+    -fx-border-color: #444;
+}
+
+.blank-preview-background {
+  -fx-background-color: #111;
+  -fx-background-radius: 5px;
+  -fx-border-radius: 5px;
+  -fx-border-color: orange;
+  -fx-border-style: dashed;
+}
+
+.harden-condition {
+  -fx-background-radius: 15px;
+  -fx-background-color: #F43558;
+  -fx-margin-right: 40px;
+}

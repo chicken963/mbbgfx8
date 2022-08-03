@@ -6,341 +6,561 @@
 <?import javafx.scene.text.*?>
 
 <?import org.controlsfx.control.RangeSlider?>
-<ScrollPane minHeight="600.0" minWidth="800.0" prefHeight="1000.0" prefWidth="1920.0" styleClass="container" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.NewGameController">
+<ScrollPane minHeight="600.0" minWidth="800.0" prefHeight="1000.0" prefWidth="1920.0" styleClass="container"
+            xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.orthodox.mbbg.controllers.NewGameController">
     <content>
-       <AnchorPane minHeight="600.0" minWidth="800.0" prefHeight="1000.0" prefWidth="1860.0" styleClass="main-anchor-pane">
-               <children>
-       <HBox alignment="CENTER" layoutY="61.0" prefWidth="1860.0">
-         <children>
-              <Label fx:id="newGameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="57.0" prefWidth="956.0" text="New game" textFill="#ffa100">
-                  <font>
-                      <Font size="36.0" />
-                  </font>
-              </Label>
-         </children>
-      </HBox>
-      <VBox layoutX="48.0" layoutY="118.0" prefHeight="820.0" prefWidth="1760.0">
-         <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
-               <children>
-                  <Label fx:id="enterNewGameNameLabel" text="Enter new game name:" textFill="#ffa100">
-                     <font>
-                        <Font size="22.0" />
-                     </font>
-                  </Label>
-                  <TextField fx:id="newGameName" prefHeight="25.0" prefWidth="475.0" styleClass="newGameName">
-                     <HBox.margin>
-                        <Insets left="10.0" />
-                     </HBox.margin></TextField>
-               </children>
-            </HBox>
-            <TabPane fx:id="tabPane" prefHeight="810.0" prefWidth="1710.0" tabClosingPolicy="ALL_TABS">
-              <tabs>
-<!--              <fx:define>-->
-                <Tab fx:id="tabSample" text="Round 1">
-                     <content>
-                        <SplitPane dividerPositions="0.144" prefHeight="160.0" prefWidth="200.0">
-                          <items>
-                            <AnchorPane maxHeight="710.0" maxWidth="270.0" minHeight="0.0" minWidth="0.0" prefHeight="431.0" prefWidth="270.0">
-                                 <children>
-                                    <VBox alignment="TOP_CENTER" layoutY="5.0" prefHeight="577.0" prefWidth="255.0" AnchorPane.leftAnchor="0.0">
-                                       <children>
-                                          <VBox>
-                                             <VBox.margin>
-                                                <Insets top="20.0" />
-                                             </VBox.margin>
-                                             <children>
-                                                <Label alignment="BOTTOM_LEFT" prefHeight="36.0" prefWidth="126.0" text="Round name:" textFill="#ffa100">
-                                                   <font>
-                                                      <Font name="System Italic" size="12.0" />
-                                                   </font>
-                                                </Label>
-                                                <TextField prefHeight="24.0" prefWidth="255.0" styleClass="newRoundName" />
-                                             </children>
-                                             <padding>
-                                                <Insets left="20.0" />
-                                             </padding>
-                                          </VBox>
-                                          <HBox prefHeight="41.0" prefWidth="288.0" style="-fx-border-color: #ffa100; -fx-border-radius: 3px;">
-                                             <children>
-                                                <VBox>
-                                                   <children>
-                                                      <Label alignment="TOP_LEFT" prefHeight="51.0" prefWidth="88.0" text="Blank size" textFill="#ffa100">
-                                                         <font>
-                                                            <Font name="System Italic" size="12.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <ChoiceBox prefHeight="40.0" prefWidth="75.0" styleClass="blankDimensions" />
-                                                   </children>
-                                                   <HBox.margin>
-                                                      <Insets right="35.0" />
-                                                   </HBox.margin>
-                                                </VBox>
-                                                <VBox>
-                                                   <children>
-                                                      <Label alignment="TOP_LEFT" prefHeight="51.0" prefWidth="108.0" text="Number of blanks" textFill="#ffa100">
-                                                         <font>
-                                                            <Font name="System Italic" size="12.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <TextField fx:id="numberOfBlanks" prefHeight="40.0" prefWidth="59.0" styleClass="numberOfBlanks" />
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                             <VBox.margin>
-                                                <Insets left="15.0" top="20.0" />
-                                             </VBox.margin>
-                                             <padding>
-                                                <Insets bottom="10.0" left="5.0" right="5.0" />
-                                             </padding>
-                                          </HBox>
-                                          <HBox alignment="CENTER_RIGHT" prefHeight="40.0" prefWidth="364.0">
-                                             <children>
-                                                <Label prefHeight="40.0" prefWidth="127.0" styleClass="blankDimensionsWarning" text="Please fill blank dimensions for this round" textFill="#ff004d" visible="false" wrapText="true">
-                                                   <font>
-                                                      <Font name="System Italic" size="11.0" />
-                                                   </font>
-                                                   <HBox.margin>
-                                                      <Insets right="13.0" />
-                                                   </HBox.margin>
-                                                </Label>
-                                                <Label prefHeight="40.0" prefWidth="144.0" styleClass="numberOfBlanksWarning" text="Please fill number of blanks with non-zero number value" textFill="#ff004d" visible="false" wrapText="true">
-                                                   <HBox.margin>
-                                                      <Insets right="12.0" />
-                                                   </HBox.margin>
-                                                   <font>
-                                                      <Font name="System Italic" size="11.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </HBox>
-                                          <VBox style="-fx-border-color: #ffa100; -fx-border-radius: 3px;">
-                                             <children>
-                                                <VBox alignment="CENTER_LEFT">
-                                                   <children>
-                                                      <Label alignment="BOTTOM_LEFT" prefHeight="20.0" prefWidth="127.0" text="First win condition:" textFill="#ffa100">
-                                                         <font>
-                                                            <Font name="System Italic" size="12.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <ChoiceBox onAction="#onFirstConditionChosen" prefHeight="26.0" prefWidth="240.0" styleClass="firstPrizeCondition" />
-                                                   </children>
-                                                   <opaqueInsets>
-                                                      <Insets />
-                                                   </opaqueInsets>
-                                                </VBox>
-                                                <HBox prefHeight="12.0" prefWidth="227.0">
-                                                   <children>
-                                                      <Label prefHeight="12.0" prefWidth="208.0" styleClass="firstConditionWarning" text="Please fill first win condition" textFill="#ff004d" visible="false">
-                                                         <font>
-                                                            <Font name="System Italic" size="12.0" />
-                                                         </font>
-                                                      </Label>
-                                                   </children>
-                                                </HBox>
-                                                <VBox>
-                                                   <children>
-                                                      <Label alignment="BOTTOM_LEFT" prefHeight="21.0" prefWidth="127.0" text="Second win condition:" textFill="#ffa100">
-                                                         <font>
-                                                            <Font name="System Italic" size="12.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <ChoiceBox onAction="#onSecondConditionChosen" prefHeight="26.0" prefWidth="240.0" styleClass="secondPrizeCondition" />
-                                                   </children>
-                                                </VBox>
-                                                <HBox prefHeight="12.0" prefWidth="200.0">
-                                                   <children>
-                                                      <Label prefHeight="12.0" prefWidth="208.0" styleClass="secondConditionWarning" text="Please fill second win condition" textFill="#ff004d" visible="false">
-                                                         <font>
-                                                            <Font name="System Italic" size="12.0" />
-                                                         </font>
-                                                      </Label>
-                                                   </children>
-                                                </HBox>
-                                                <VBox>
-                                                   <children>
-                                                      <Label alignment="BOTTOM_LEFT" prefHeight="22.0" prefWidth="127.0" text="Third win condition:" textFill="#ffa100">
-                                                         <font>
-                                                            <Font name="System Italic" size="12.0" />
-                                                         </font>
-                                                      </Label>
-                                                      <ChoiceBox onAction="#onThirdConditionChosen" prefHeight="26.0" prefWidth="240.0" styleClass="thirdPrizeCondition" />
-                                                   </children>
-                                                </VBox>
-                                             </children>
-                                             <padding>
-                                                <Insets bottom="10.0" left="5.0" right="5.0" />
-                                             </padding>
-                                             <VBox.margin>
-                                                <Insets left="15.0" />
-                                             </VBox.margin>
-                                          </VBox>
-                                          <HBox alignment="TOP_RIGHT" prefHeight="25.0" prefWidth="200.0">
-                                             <children>
-                                                <Label prefHeight="17.0" prefWidth="208.0" styleClass="thirdConditionWarning" text="Please fill third win condition" textFill="#ff004d" visible="false">
-                                                   <font>
-                                                      <Font name="System Italic" size="12.0" />
-                                                   </font>
-                                                </Label>
-                                             </children>
-                                          </HBox>
-                                          <VBox prefWidth="100.0">
-                                             <children>
-                                                <Button fx:id="addTracksButton" alignment="CENTER" mnemonicParsing="false" onAction="#openExplorerMenu" prefHeight="25.0" prefWidth="200.0" text="Add music tracks...">
-                                                   <VBox.margin>
-                                                      <Insets bottom="10.0" />
-                                                   </VBox.margin>
-                                                   <font>
-                                                      <Font size="13.0" />
-                                                   </font>
-                                                </Button>
-                                                <Button fx:id="importTracksButton" alignment="CENTER" mnemonicParsing="false" onAction="#openExplorerMenu" prefHeight="25.0" prefWidth="200.0" text="Import from library...">
-                                                   <font>
-                                                      <Font size="13.0" />
-                                                   </font>
-                                                </Button>
-                                             </children>
-                                             <padding>
-                                                <Insets left="20.0" />
-                                             </padding>
-                                          </VBox>
-                                       </children>
-                                    </VBox>
-                                 </children>
-                              </AnchorPane>
-                            <AnchorPane maxHeight="710.0" maxWidth="1482.0" minHeight="0.0" minWidth="0.0" prefHeight="710.0" prefWidth="1482.0">
-                                 <padding>
-                                    <Insets bottom="10.0" left="10.0" right="17.0" />
-                                 </padding>
-                                 <children>
-                                    <GridPane prefHeight="50.0" prefWidth="1450.0" styleClass="tracksGrid" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="20.0">
-                                      <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="260.0" minWidth="260.0" prefWidth="260.0" />
-                                         <ColumnConstraints hgrow="ALWAYS" maxWidth="345.0" minWidth="345.0" prefWidth="345.0"/>
-                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="48.0" minWidth="48.0" prefWidth="48.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="555.0" minWidth="555.0" prefWidth="555.0"/>
-                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="48.0" minWidth="48.0" prefWidth="48.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="84.0" minWidth="84.0" prefWidth="84.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" maxWidth="25.0" minWidth="25.0" prefWidth="25.0" />
-                                      </columnConstraints>
-                                      <rowConstraints>
-                                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="25.0" minHeight="25.0" prefHeight="25.0" vgrow="SOMETIMES" />
-                                      </rowConstraints>
-                                       <children>
-                                          <Label alignment="CENTER" prefHeight="25.0" prefWidth="265.0" styleClass="grid-header" text="Artist" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="CENTER" prefHeight="25.0" prefWidth="360.0" styleClass="grid-header" text="Title" GridPane.columnIndex="1" GridPane.rowIndex="0">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="CENTER" prefHeight="25.0" prefWidth="48.0" styleClass="grid-header" text="Start" GridPane.columnIndex="2" GridPane.rowIndex="0">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="CENTER" maxWidth="555.0" minWidth="555.0" prefHeight="25.0" prefWidth="555.0" styleClass="grid-header" text="Timeline" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.rowIndex="0">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="CENTER" maxWidth="48.0" minWidth="48.0" prefHeight="25.0" prefWidth="48.0" styleClass="grid-header" text="End" GridPane.columnIndex="4" GridPane.rowIndex="0">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="CENTER" maxWidth="84.0" minWidth="84.0" prefHeight="25.0" prefWidth="84.0" styleClass="grid-header" text="Progress" GridPane.columnIndex="5" GridPane.rowIndex="0">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="CENTER" prefHeight="25.0" prefWidth="26.0" styleClass="grid-header" GridPane.columnIndex="6" GridPane.rowIndex="0">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="CENTER" prefHeight="25.0" prefWidth="32.0" styleClass="grid-header" GridPane.columnIndex="7" GridPane.rowIndex="0">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="CENTER" prefHeight="25.0" prefWidth="31.0" styleClass="grid-header" GridPane.columnIndex="8" GridPane.rowIndex="0">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="CENTER" prefHeight="25.0" prefWidth="33.0" styleClass="grid-header" GridPane.columnIndex="9" GridPane.rowIndex="0">
-                                             <font>
-                                                <Font name="System Bold" size="14.0" />
-                                             </font>
-                                          </Label>
-                                          <TextField editable="false" alignment="TOP_LEFT" maxHeight="25.0" minHeight="25.0" prefHeight="25.0" prefWidth="260.0" styleClass="editable-column" text="Artist" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                                             <GridPane.margin>
-                                                <Insets left="10.0" />
-                                             </GridPane.margin>
-                                          </TextField>
-                                          <TextField editable="false" alignment="TOP_LEFT" maxHeight="25.0" minHeight="25.0" prefHeight="25.0" prefWidth="346.0" styleClass="editable-column" text="Song title" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                             <GridPane.margin>
-                                                <Insets left="10.0" />
-                                             </GridPane.margin>
-                                          </TextField>
-                                          <Label alignment="CENTER" prefHeight="25.0" prefWidth="48.0" styleClass="time-column" text="00:00" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                                          <HBox alignment="CENTER" maxHeight="25.0" maxWidth="555.0" minHeight="25.0" minWidth="555.0" prefHeight="25.0" prefWidth="555.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
-                                             <RangeSlider maxHeight="25.0" minHeight="25.0" prefHeight="25.0"
-                                                          prefWidth="500.0" maxWidth="500.0" minWidth="500.0"
-                                                          lowValue="0" highValue="100"
-                                                          showTickLabels="false"
-                                                          showTickMarks="false"
-                                                          majorTickUnit="60"
-                                                          blockIncrement="5"/>
-                                          </HBox>
-                                          <Label alignment="CENTER" prefHeight="25.0" prefWidth="48.0" styleClass="time-column" text="00:00" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                                          <Label alignment="CENTER" prefHeight="25.0" prefWidth="84.0" styleClass="time-column" text="00:00/00:00" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                          <HBox maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" prefHeight="25.0" prefWidth="25.0" GridPane.columnIndex="6" GridPane.rowIndex="1">
-                                             <padding>
-                                                <Insets bottom="2.0" />
-                                             </padding>
-                                          </HBox>
-                                          <HBox maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" prefHeight="25.0" prefWidth="25.0" GridPane.columnIndex="7" GridPane.rowIndex="1" />
-                                          <HBox maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" prefHeight="25.0" prefWidth="25.0" GridPane.columnIndex="8" GridPane.rowIndex="1" />
-                                          <HBox maxHeight="25.0" maxWidth="25.0" minHeight="25.0" minWidth="25.0" prefHeight="25.0" prefWidth="25.0" GridPane.columnIndex="9" GridPane.rowIndex="1" />
-                                       </children>
-                                    </GridPane>
-                                 </children>
-                              </AnchorPane>
-                          </items>
-                           <opaqueInsets>
-                              <Insets top="1.0" />
-                           </opaqueInsets>
-                        </SplitPane>
-                     </content>
-                  </Tab>
-<!--              </fx:define>-->
-              </tabs>
-            </TabPane>
-            <HBox prefHeight="56.0" prefWidth="1177.0">
-               <children>
-                  <Button fx:id="saveGame" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#saveNewGame" text="Save">
-                     <HBox.margin>
-                        <Insets right="10.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="cancelCreation" mnemonicParsing="false" onAction="#cancelCreation" text="Cancel" />
-               </children>
-               <VBox.margin>
-                  <Insets top="10.0" />
-               </VBox.margin>
-            </HBox>
-         </children>
-      </VBox>
-               </children>
-       </AnchorPane>
+        <AnchorPane minHeight="600.0" minWidth="800.0" prefHeight="1000.0" prefWidth="1860.0"
+                    styleClass="main-anchor-pane">
+            <children>
+                <HBox alignment="CENTER" layoutY="61.0" prefWidth="1860.0">
+                    <children>
+                        <Label fx:id="newGameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="57.0"
+                               prefWidth="956.0" text="New game" textFill="#ffa100">
+                            <font>
+                                <Font size="36.0"/>
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+                <VBox layoutX="48.0" layoutY="118.0" prefHeight="820.0" prefWidth="1760.0">
+                    <children>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                            <children>
+                                <Label fx:id="enterNewGameNameLabel" text="Enter new game name:" textFill="#ffa100">
+                                    <font>
+                                        <Font size="22.0"/>
+                                    </font>
+                                </Label>
+                                <TextField fx:id="newGameName" prefHeight="25.0" prefWidth="475.0"
+                                           styleClass="newGameName">
+                                    <HBox.margin>
+                                        <Insets left="10.0"/>
+                                    </HBox.margin>
+                                </TextField>
+                            </children>
+                        </HBox>
+                        <TabPane fx:id="tabPane" prefHeight="810.0" prefWidth="1710.0" tabClosingPolicy="ALL_TABS">
+                            <tabs>
+                                <!--              <fx:define>-->
+                                <Tab fx:id="tabSample" text="Round 1">
+                                    <content>
+                                        <SplitPane dividerPositions="0.144" prefHeight="160.0" prefWidth="200.0">
+                                            <items>
+                                                <AnchorPane maxHeight="710.0" maxWidth="270.0" minHeight="0.0"
+                                                            minWidth="0.0" prefHeight="431.0" prefWidth="270.0">
+                                                    <children>
+                                                        <VBox alignment="TOP_CENTER" layoutY="5.0" prefHeight="577.0"
+                                                              prefWidth="255.0" AnchorPane.leftAnchor="0.0">
+                                                            <children>
+                                                                <VBox>
+                                                                    <VBox.margin>
+                                                                        <Insets top="20.0"/>
+                                                                    </VBox.margin>
+                                                                    <children>
+                                                                        <Label alignment="BOTTOM_LEFT" prefHeight="36.0"
+                                                                               prefWidth="126.0" text="Round name:"
+                                                                               textFill="#ffa100">
+                                                                            <font>
+                                                                                <Font name="System Italic" size="12.0"/>
+                                                                            </font>
+                                                                        </Label>
+                                                                        <TextField prefHeight="24.0" prefWidth="255.0"
+                                                                                   styleClass="newRoundName"/>
+                                                                    </children>
+                                                                    <padding>
+                                                                        <Insets left="20.0"/>
+                                                                    </padding>
+                                                                </VBox>
+                                                                <HBox prefHeight="41.0" prefWidth="288.0"
+                                                                      style="-fx-border-color: #ffa100; -fx-border-radius: 3px;">
+                                                                    <children>
+                                                                        <VBox>
+                                                                            <children>
+                                                                                <Label alignment="TOP_LEFT"
+                                                                                       prefHeight="51.0"
+                                                                                       prefWidth="88.0"
+                                                                                       text="Blank size"
+                                                                                       textFill="#ffa100">
+                                                                                    <font>
+                                                                                        <Font name="System Italic"
+                                                                                              size="12.0"/>
+                                                                                    </font>
+                                                                                </Label>
+                                                                                <ChoiceBox prefHeight="40.0"
+                                                                                           prefWidth="75.0"
+                                                                                           styleClass="blankDimensions"/>
+                                                                            </children>
+                                                                            <HBox.margin>
+                                                                                <Insets right="35.0"/>
+                                                                            </HBox.margin>
+                                                                        </VBox>
+                                                                        <VBox>
+                                                                            <children>
+                                                                                <Label alignment="TOP_LEFT"
+                                                                                       prefHeight="51.0"
+                                                                                       prefWidth="108.0"
+                                                                                       text="Number of blanks"
+                                                                                       textFill="#ffa100">
+                                                                                    <font>
+                                                                                        <Font name="System Italic"
+                                                                                              size="12.0"/>
+                                                                                    </font>
+                                                                                </Label>
+                                                                                <TextField fx:id="numberOfBlanks"
+                                                                                           prefHeight="40.0"
+                                                                                           prefWidth="59.0"
+                                                                                           styleClass="numberOfBlanks"/>
+                                                                            </children>
+                                                                        </VBox>
+                                                                    </children>
+                                                                    <VBox.margin>
+                                                                        <Insets left="15.0" top="20.0"/>
+                                                                    </VBox.margin>
+                                                                    <padding>
+                                                                        <Insets bottom="10.0" left="5.0" right="5.0"/>
+                                                                    </padding>
+                                                                </HBox>
+                                                                <HBox alignment="CENTER_RIGHT" prefHeight="40.0"
+                                                                      prefWidth="364.0">
+                                                                    <children>
+                                                                        <Label prefHeight="40.0" prefWidth="127.0"
+                                                                               styleClass="blankDimensionsWarning"
+                                                                               text="Please fill blank dimensions for this round"
+                                                                               textFill="#ff004d" visible="false"
+                                                                               wrapText="true">
+                                                                            <font>
+                                                                                <Font name="System Italic" size="11.0"/>
+                                                                            </font>
+                                                                            <HBox.margin>
+                                                                                <Insets right="13.0"/>
+                                                                            </HBox.margin>
+                                                                        </Label>
+                                                                        <Label prefHeight="40.0" prefWidth="144.0"
+                                                                               styleClass="numberOfBlanksWarning"
+                                                                               text="Please fill number of blanks with non-zero number value"
+                                                                               textFill="#ff004d" visible="false"
+                                                                               wrapText="true">
+                                                                            <HBox.margin>
+                                                                                <Insets right="12.0"/>
+                                                                            </HBox.margin>
+                                                                            <font>
+                                                                                <Font name="System Italic" size="11.0"/>
+                                                                            </font>
+                                                                        </Label>
+                                                                    </children>
+                                                                </HBox>
+                                                                <VBox style="-fx-border-color: #ffa100; -fx-border-radius: 3px;">
+                                                                    <children>
+                                                                        <VBox alignment="CENTER_LEFT">
+                                                                            <children>
+                                                                                <Label alignment="BOTTOM_LEFT"
+                                                                                       prefHeight="20.0"
+                                                                                       prefWidth="127.0"
+                                                                                       text="First win condition:"
+                                                                                       textFill="#ffa100">
+                                                                                    <font>
+                                                                                        <Font name="System Italic"
+                                                                                              size="12.0"/>
+                                                                                    </font>
+                                                                                </Label>
+                                                                                <ChoiceBox
+                                                                                        onAction="#onFirstConditionChosen"
+                                                                                        prefHeight="26.0"
+                                                                                        prefWidth="240.0"
+                                                                                        styleClass="firstPrizeCondition"/>
+                                                                            </children>
+                                                                            <opaqueInsets>
+                                                                                <Insets/>
+                                                                            </opaqueInsets>
+                                                                        </VBox>
+                                                                        <HBox prefHeight="12.0" prefWidth="227.0">
+                                                                            <children>
+                                                                                <Label prefHeight="12.0"
+                                                                                       prefWidth="208.0"
+                                                                                       styleClass="firstConditionWarning"
+                                                                                       text="Please fill first win condition"
+                                                                                       textFill="#ff004d"
+                                                                                       visible="false">
+                                                                                    <font>
+                                                                                        <Font name="System Italic"
+                                                                                              size="12.0"/>
+                                                                                    </font>
+                                                                                </Label>
+                                                                            </children>
+                                                                        </HBox>
+                                                                        <VBox>
+                                                                            <children>
+                                                                                <Label alignment="BOTTOM_LEFT"
+                                                                                       prefHeight="21.0"
+                                                                                       prefWidth="127.0"
+                                                                                       text="Second win condition:"
+                                                                                       textFill="#ffa100">
+                                                                                    <font>
+                                                                                        <Font name="System Italic"
+                                                                                              size="12.0"/>
+                                                                                    </font>
+                                                                                </Label>
+                                                                                <ChoiceBox
+                                                                                        onAction="#onSecondConditionChosen"
+                                                                                        prefHeight="26.0"
+                                                                                        prefWidth="240.0"
+                                                                                        styleClass="secondPrizeCondition"/>
+                                                                            </children>
+                                                                        </VBox>
+                                                                        <HBox prefHeight="12.0" prefWidth="200.0">
+                                                                            <children>
+                                                                                <Label prefHeight="12.0"
+                                                                                       prefWidth="208.0"
+                                                                                       styleClass="secondConditionWarning"
+                                                                                       text="Please fill second win condition"
+                                                                                       textFill="#ff004d"
+                                                                                       visible="false">
+                                                                                    <font>
+                                                                                        <Font name="System Italic"
+                                                                                              size="12.0"/>
+                                                                                    </font>
+                                                                                </Label>
+                                                                            </children>
+                                                                        </HBox>
+                                                                        <VBox>
+                                                                            <children>
+                                                                                <Label alignment="BOTTOM_LEFT"
+                                                                                       prefHeight="22.0"
+                                                                                       prefWidth="127.0"
+                                                                                       text="Third win condition:"
+                                                                                       textFill="#ffa100">
+                                                                                    <font>
+                                                                                        <Font name="System Italic"
+                                                                                              size="12.0"/>
+                                                                                    </font>
+                                                                                </Label>
+                                                                                <ChoiceBox
+                                                                                        onAction="#onThirdConditionChosen"
+                                                                                        prefHeight="26.0"
+                                                                                        prefWidth="240.0"
+                                                                                        styleClass="thirdPrizeCondition"/>
+                                                                            </children>
+                                                                        </VBox>
+                                                                    </children>
+                                                                    <padding>
+                                                                        <Insets bottom="10.0" left="5.0" right="5.0"/>
+                                                                    </padding>
+                                                                    <VBox.margin>
+                                                                        <Insets left="15.0"/>
+                                                                    </VBox.margin>
+                                                                </VBox>
+                                                                <HBox alignment="TOP_RIGHT" prefHeight="25.0"
+                                                                      prefWidth="200.0">
+                                                                    <children>
+                                                                        <Label prefHeight="17.0" prefWidth="208.0"
+                                                                               styleClass="thirdConditionWarning"
+                                                                               text="Please fill third win condition"
+                                                                               textFill="#ff004d" visible="false">
+                                                                            <font>
+                                                                                <Font name="System Italic" size="12.0"/>
+                                                                            </font>
+                                                                        </Label>
+                                                                    </children>
+                                                                </HBox>
+                                                                <VBox prefWidth="100.0">
+                                                                    <children>
+                                                                        <Button fx:id="addTracksButton"
+                                                                                alignment="CENTER"
+                                                                                mnemonicParsing="false"
+                                                                                onAction="#openExplorerMenu"
+                                                                                prefHeight="25.0" prefWidth="200.0"
+                                                                                text="Add music tracks...">
+                                                                            <VBox.margin>
+                                                                                <Insets bottom="10.0"/>
+                                                                            </VBox.margin>
+                                                                            <font>
+                                                                                <Font size="13.0"/>
+                                                                            </font>
+                                                                        </Button>
+                                                                        <Button fx:id="importTracksButton"
+                                                                                alignment="CENTER"
+                                                                                mnemonicParsing="false"
+                                                                                onAction="#openLibrary"
+                                                                                prefHeight="25.0" prefWidth="200.0"
+                                                                                text="Import from library...">
+                                                                            <font>
+                                                                                <Font size="13.0"/>
+                                                                            </font>
+                                                                        </Button>
+                                                                    </children>
+                                                                    <padding>
+                                                                        <Insets left="20.0"/>
+                                                                    </padding>
+                                                                </VBox>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </AnchorPane>
+                                                <AnchorPane maxHeight="710.0" maxWidth="1482.0" minHeight="0.0"
+                                                            minWidth="0.0" prefHeight="710.0" prefWidth="1482.0">
+                                                    <padding>
+                                                        <Insets bottom="10.0" left="5.0" right="22.0"/>
+                                                    </padding>
+                                                    <children>
+                                                        <VBox prefHeight="200.0" prefWidth="100.0"
+                                                              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0"
+                                                              AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                                            <children>
+                                                                <HBox prefWidth="1435.0" styleClass="grid-header-line" maxHeight="25.0" minHeight="25.0"
+                                                                      prefHeight="25.0">
+                                                                    <children>
+                                                                        <Label alignment="CENTER" prefHeight="25.0"
+                                                                               prefWidth="260.0"
+                                                                               styleClass="grid-header-first" text="Artist">
+                                                                            <font>
+                                                                                <Font name="System Bold" size="14.0"/>
+                                                                            </font>
+                                                                        </Label>
+                                                                        <Label alignment="CENTER" prefHeight="25.0"
+                                                                               prefWidth="315.0"
+                                                                               styleClass="grid-header" text="Title">
+                                                                            <font>
+                                                                                <Font name="System Bold" size="14.0"/>
+                                                                            </font>
+                                                                        </Label>
+                                                                        <Label alignment="CENTER" prefHeight="25.0"
+                                                                               prefWidth="48.0" styleClass="grid-header"
+                                                                               text="Start">
+                                                                            <font>
+                                                                                <Font name="System Bold" size="14.0"/>
+                                                                            </font>
+                                                                        </Label>
+                                                                        <Label alignment="CENTER" maxWidth="555.0"
+                                                                               minWidth="555.0" prefHeight="25.0"
+                                                                               prefWidth="555.0"
+                                                                               styleClass="grid-header" text="Timeline"
+                                                                               textAlignment="CENTER">
+                                                                            <font>
+                                                                                <Font name="System Bold" size="14.0"/>
+                                                                            </font>
+                                                                        </Label>
+                                                                        <Label alignment="CENTER" maxWidth="48.0"
+                                                                               minWidth="48.0" prefHeight="25.0"
+                                                                               prefWidth="48.0" styleClass="grid-header"
+                                                                               text="End">
+                                                                            <font>
+                                                                                <Font name="System Bold" size="14.0"/>
+                                                                            </font>
+                                                                        </Label>
+                                                                        <Label alignment="CENTER" maxWidth="84.0"
+                                                                               minWidth="84.0" prefHeight="25.0"
+                                                                               prefWidth="84.0" styleClass="grid-header"
+                                                                               text="Progress">
+                                                                            <font>
+                                                                                <Font name="System Bold" size="14.0"/>
+                                                                            </font>
+                                                                        </Label>
+                                                                        <Label alignment="CENTER" prefHeight="25.0"
+                                                                               prefWidth="26.0"
+                                                                               styleClass="grid-header">
+                                                                            <font>
+                                                                                <Font name="System Bold" size="14.0"/>
+                                                                            </font>
+                                                                        </Label>
+                                                                        <Label alignment="CENTER" prefHeight="25.0"
+                                                                               prefWidth="32.0"
+                                                                               styleClass="grid-header">
+                                                                            <font>
+                                                                                <Font name="System Bold" size="14.0"/>
+                                                                            </font>
+                                                                        </Label>
+                                                                        <Label alignment="CENTER" prefHeight="25.0"
+                                                                               prefWidth="31.0"
+                                                                               styleClass="grid-header">
+                                                                            <font>
+                                                                                <Font name="System Bold" size="14.0"/>
+                                                                            </font>
+                                                                        </Label>
+                                                                        <Label alignment="CENTER" prefHeight="25.0"
+                                                                               prefWidth="36.0"
+                                                                               styleClass="grid-header-last">
+                                                                            <font>
+                                                                                <Font name="System Bold" size="14.0"/>
+                                                                            </font>
+                                                                        </Label>
+                                                                    </children>
+                                                                </HBox>
+                                                                <ScrollPane hbarPolicy="NEVER" fitToHeight="true"
+                                                                            maxHeight="710.0"
+                                                                            minHeight="0.0"
+                                                                            styleClass="tracks-grid-scroll-pane"
+                                                                            prefWidth="1435.0">
+                                                                    <GridPane prefWidth="1450.0"
+                                                                              styleClass="tracks-grid">
+                                                                        <columnConstraints>
+                                                                            <ColumnConstraints hgrow="SOMETIMES"
+                                                                                               maxWidth="260.0"
+                                                                                               minWidth="260.0"
+                                                                                               prefWidth="260.0"/>
+                                                                            <ColumnConstraints hgrow="ALWAYS"
+                                                                                               maxWidth="315.0"
+                                                                                               minWidth="315.0"
+                                                                                               prefWidth="315.0"/>
+                                                                            <ColumnConstraints hgrow="SOMETIMES"
+                                                                                               maxWidth="48.0"
+                                                                                               minWidth="48.0"
+                                                                                               prefWidth="48.0"/>
+                                                                            <ColumnConstraints hgrow="SOMETIMES"
+                                                                                               maxWidth="555.0"
+                                                                                               minWidth="555.0"
+                                                                                               prefWidth="555.0"/>
+                                                                            <ColumnConstraints hgrow="SOMETIMES"
+                                                                                               maxWidth="48.0"
+                                                                                               minWidth="48.0"
+                                                                                               prefWidth="48.0"/>
+                                                                            <ColumnConstraints hgrow="SOMETIMES"
+                                                                                               maxWidth="84.0"
+                                                                                               minWidth="84.0"
+                                                                                               prefWidth="84.0"/>
+                                                                            <ColumnConstraints hgrow="SOMETIMES"
+                                                                                               maxWidth="25.0"
+                                                                                               minWidth="25.0"
+                                                                                               prefWidth="25.0"/>
+                                                                            <ColumnConstraints hgrow="SOMETIMES"
+                                                                                               maxWidth="25.0"
+                                                                                               minWidth="25.0"
+                                                                                               prefWidth="25.0"/>
+                                                                            <ColumnConstraints hgrow="SOMETIMES"
+                                                                                               maxWidth="25.0"
+                                                                                               minWidth="25.0"
+                                                                                               prefWidth="25.0"/>
+                                                                            <ColumnConstraints hgrow="SOMETIMES"
+                                                                                               maxWidth="25.0"
+                                                                                               minWidth="25.0"
+                                                                                               prefWidth="25.0"/>
+                                                                        </columnConstraints>
+                                                                        <rowConstraints>
+                                                                            <RowConstraints maxHeight="30.0"
+                                                                                            minHeight="30.0"
+                                                                                            prefHeight="30.0"
+                                                                                            vgrow="SOMETIMES"/>
+                                                                        </rowConstraints>
+                                                                        <children>
+<!--                                                                            <HBox styleClass="grid-row">-->
+                                                                            <TextField editable="false"
+                                                                                       maxHeight="30.0"
+                                                                                       minHeight="30.0"
+                                                                                       prefHeight="30.0"
+                                                                                       prefWidth="260.0"
+                                                                                       styleClass="editable-column"
+                                                                                       text="Artist"
+                                                                                       GridPane.columnIndex="0"
+                                                                                       GridPane.rowIndex="0">
+                                                                                <GridPane.margin>
+                                                                                    <Insets left="10.0"/>
+                                                                                </GridPane.margin>
+                                                                            </TextField>
+                                                                            <TextField editable="false" maxHeight="30.0"
+                                                                                       minHeight="30.0"
+                                                                                       prefHeight="30.0"
+                                                                                       prefWidth="315.0"
+                                                                                       styleClass="editable-column"
+                                                                                       text="Song title"
+                                                                                       GridPane.columnIndex="1"
+                                                                                       GridPane.rowIndex="0">
+                                                                                <GridPane.margin>
+                                                                                    <Insets left="10.0"/>
+                                                                                </GridPane.margin>
+                                                                            </TextField>
+                                                                            <Label alignment="CENTER" maxHeight="30.0"
+                                                                                   minHeight="30.0" prefHeight="30.0"
+                                                                                   prefWidth="48.0"
+                                                                                   styleClass="time-column" text="00:00"
+                                                                                   GridPane.columnIndex="2"
+                                                                                   GridPane.rowIndex="0"/>
+                                                                            <HBox alignment="CENTER" maxHeight="30.0"
+                                                                                  maxWidth="555.0" minHeight="30.0"
+                                                                                  minWidth="555.0" prefHeight="30.0"
+                                                                                  prefWidth="555.0"
+                                                                                  GridPane.columnIndex="3"
+                                                                                  GridPane.rowIndex="0">
+                                                                                <RangeSlider maxHeight="30.0" minHeight="30.0" prefHeight="30.0"
+                                                                                             prefWidth="500.0" maxWidth="500.0" minWidth="500.0"
+                                                                                             lowValue="0" highValue="100"
+                                                                                             showTickLabels="false"
+                                                                                             showTickMarks="false"
+                                                                                             majorTickUnit="60"
+                                                                                             blockIncrement="5"/>
+                                                                            </HBox>
+                                                                            <Label alignment="CENTER" maxHeight="30.0"
+                                                                                   minHeight="30.0" prefHeight="30.0"
+                                                                                   prefWidth="48.0"
+                                                                                   styleClass="time-column" text="00:00"
+                                                                                   GridPane.columnIndex="4"
+                                                                                   GridPane.rowIndex="0"/>
+                                                                            <Label alignment="CENTER" maxHeight="30.0"
+                                                                                   minHeight="30.0" prefHeight="30.0"
+                                                                                   prefWidth="84.0"
+                                                                                   styleClass="time-column"
+                                                                                   text="00:00/00:00"
+                                                                                   GridPane.columnIndex="5"
+                                                                                   GridPane.rowIndex="0"/>
+                                                                            <HBox maxHeight="30.0" maxWidth="25.0"
+                                                                                  minHeight="30.0" minWidth="25.0"
+                                                                                  prefHeight="30.0" prefWidth="25.0"
+                                                                                  GridPane.columnIndex="6"
+                                                                                  GridPane.rowIndex="0">
+                                                                                <padding>
+                                                                                    <Insets bottom="2.0"/>
+                                                                                </padding>
+                                                                            </HBox>
+                                                                            <HBox maxHeight="30.0" maxWidth="25.0"
+                                                                                  minHeight="30.0" minWidth="25.0"
+                                                                                  prefHeight="30.0" prefWidth="25.0"
+                                                                                  GridPane.columnIndex="7"
+                                                                                  GridPane.rowIndex="0"/>
+                                                                            <HBox maxHeight="30.0" maxWidth="25.0"
+                                                                                  minHeight="30.0" minWidth="25.0"
+                                                                                  prefHeight="30.0" prefWidth="25.0"
+                                                                                  GridPane.columnIndex="8"
+                                                                                  GridPane.rowIndex="0"/>
+                                                                            <HBox maxHeight="30.0" maxWidth="25.0"
+                                                                                  minHeight="30.0" minWidth="25.0"
+                                                                                  prefHeight="30.0" prefWidth="25.0"
+                                                                                  GridPane.columnIndex="9"
+                                                                                  GridPane.rowIndex="0"/>
+<!--                                                                            </HBox>-->
+                                                                        </children>
+                                                                    </GridPane>
+                                                                </ScrollPane>
+                                                            </children>
+                                                        </VBox>
+                                                    </children>
+                                                </AnchorPane>
+                                            </items>
+                                            <!--                        <opaqueInsets>
+                                                                       <Insets top="1.0" />
+                                                                    </opaqueInsets>-->
+                                        </SplitPane>
+                                    </content>
+                                </Tab>
+                                <!--              </fx:define>-->
+                            </tabs>
+                        </TabPane>
+                        <HBox prefHeight="56.0" prefWidth="1177.0">
+                            <children>
+                                <Button fx:id="saveGame" alignment="CENTER" contentDisplay="CENTER"
+                                        mnemonicParsing="false" onAction="#saveNewGame" text="Save">
+                                    <HBox.margin>
+                                        <Insets right="10.0"/>
+                                    </HBox.margin>
+                                </Button>
+                                <Button fx:id="cancelCreation" mnemonicParsing="false" onAction="#cancelCreation"
+                                        text="Cancel"/>
+                            </children>
+                            <VBox.margin>
+                                <Insets top="10.0"/>
+                            </VBox.margin>
+                        </HBox>
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
     </content>
 </ScrollPane>

@@ -46,7 +46,7 @@ public class BlankService {
                 Blank blank = Blank.builder()
                         .id(UUID.randomUUID())
                         .blankItems(prepareBlankItems(roundArtists, blankWidth, blankHeight))
-                        .progress(0)
+                        .progress(0.0)
                         .height(blankHeight)
                         .width(blankWidth)
                         .number(generateBlankNumber(rounds.indexOf(round)))

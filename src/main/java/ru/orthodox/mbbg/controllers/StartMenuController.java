@@ -16,10 +16,8 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 import ru.orthodox.mbbg.model.Game;
 import ru.orthodox.mbbg.repositories.GamesRepository;
-import ru.orthodox.mbbg.services.BlankService;
-import ru.orthodox.mbbg.services.GameService;
-import ru.orthodox.mbbg.services.ScreenService;
-import ru.orthodox.mbbg.services.StartMenuService;
+import ru.orthodox.mbbg.repositories.RoundRepository;
+import ru.orthodox.mbbg.services.*;
 import ru.orthodox.mbbg.ui.modelExtensions.startMenuScene.GridItemService;
 import ru.orthodox.mbbg.ui.PopupAlerter;
 
@@ -61,6 +59,8 @@ public class StartMenuController {
     private PopupAlerter popupAlerter;
     @Autowired
     private GamesRepository gamesRepository;
+    @Autowired
+    private RoundRepository roundRepository;
 
     private StartMenuService startMenuService;
 
@@ -89,6 +89,7 @@ public class StartMenuController {
         Button source = (Button) actionEvent.getSource();
         AnchorPane gameGridItem = findParentAnchorPane(source);
         Game targetGame = GridItemService.findByEventTarget(StartMenuService.getAvailableGames(), gameGridItem);
+        targetGame.setRounds(roundRepository.findByIds(targetGame.getRoundIds()));
         PlayController controller = applicationContext.getBean(PlayController.class);
         controller.setGame(targetGame);
         controller.render();

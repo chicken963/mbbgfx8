@@ -56,5 +56,11 @@ public class Round implements MarkedWithId {
     @JsonIgnore
     private List<Blank> blanks = new ArrayList<>();
 
+    @JsonIgnore
+    private List<AudioTrack> playedAudiotracks = new ArrayList<>();
+
+    @JsonIgnore
+    private WinCondition currentTargetWinCondition = WinCondition.ONE_LINE_STRIKE;
+
 
 }

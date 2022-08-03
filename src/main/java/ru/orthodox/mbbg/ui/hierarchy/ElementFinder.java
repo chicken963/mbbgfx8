@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ru.orthodox.mbbg.ui.hierarchy.HierarchyUtils.flattenStructure;
+
 public class ElementFinder {
 
     public static<T> T findTabElementByTypeAndStyleclass(Tab tab, String styleClass) {
@@ -40,25 +42,25 @@ public class ElementFinder {
     }
 
     public static List<Node> findRecursivelyByIdInTemplate(Parent parent, String id) {
-        return HierarchyUtils.flattenStructure(parent).stream()
+        return flattenStructure(parent).stream()
                 .filter(node -> id.equals(node.getId()))
                 .collect(Collectors.toList());
     }
 
     public static List<Node> findRecursivelyByStyle(Parent parent, String style) {
-        return HierarchyUtils.flattenStructure(parent).stream()
+        return flattenStructure(parent).stream()
                 .filter(node -> style.equals(node.getStyle()))
                 .collect(Collectors.toList());
     }
 
     public static Set<Node> findRecursivelyByStyleClass(Parent parent, String styleClass) {
-        return HierarchyUtils.flattenStructure(parent).stream()
+        return flattenStructure(parent).stream()
                 .filter(node -> node.getStyleClass().contains(styleClass))
                 .collect(Collectors.toSet());
     }
 
     public static List<Label> findAllLabelsRecursively(Parent parent) {
-        return HierarchyUtils.flattenStructure(parent).stream()
+        return flattenStructure(parent).stream()
                 .filter(node -> node instanceof Label)
                 .map(node -> (Label) node)
                 .collect(Collectors.toList());

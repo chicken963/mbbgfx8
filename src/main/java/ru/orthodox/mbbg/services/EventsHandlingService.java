@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.events.AudioTrackLengthLoadedEvent;
 import ru.orthodox.mbbg.model.AudioTrack;
 import ru.orthodox.mbbg.ui.modelExtensions.newGameScene.AudioTrackGridRow;
+import ru.orthodox.mbbg.ui.modelExtensions.newGameScene.AudioTrackUIMapper;
 
 import java.util.List;
 
@@ -17,20 +18,20 @@ import static ru.orthodox.mbbg.utils.TimeRepresentationConverter.toStringFormat;
 @Service
 public class EventsHandlingService implements ApplicationListener<AudioTrackLengthLoadedEvent> {
     @Setter
-    private List<AudioTrackGridRow> gridRows;
+    private List<AudioTrackUIMapper> gridRows;
 
     @Override
     public void onApplicationEvent(AudioTrackLengthLoadedEvent audioTrackLengthLoadedEvent) {
         AudioTrack audioTrack = audioTrackLengthLoadedEvent.getAudioTrack();
-        AudioTrackGridRow rowToUpdate = gridRows.stream()
+        AudioTrackUIMapper rowToUpdate = gridRows.stream()
                 .filter(row -> row.getAudioTrack().equals(audioTrack))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("AudioTrack not found in the grid"));
         RangeSlider rangeSlider = (RangeSlider) rowToUpdate.getRangeSliderContainer().getChildren().get(0);
         rangeSlider.setMin(0);
         rangeSlider.setMax(audioTrack.getLengthInSeconds());
-        rangeSlider.setLowValue(audioTrack.getStartInSeconds());
         rangeSlider.setHighValue(audioTrack.getFinishInSeconds());
+        rangeSlider.setLowValue(audioTrack.getStartInSeconds());
         rangeSlider.highValueProperty().addListener((observable, oldValue, newValue) -> {
             String currentTrackFinish = toStringFormat(newValue.doubleValue());
             rowToUpdate.getEndTimeLabel().setText(currentTrackFinish);

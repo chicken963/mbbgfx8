@@ -6,11 +6,12 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Lazy;
 import ru.orthodox.mbbg.services.ScreenService;
 
 @Lazy
-@SpringBootApplication
+@SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
 public class Application extends AbstractJavaFxApplication {
 
     @Value("${ui.title:JavaFX приложение}")//
@@ -24,7 +25,7 @@ public class Application extends AbstractJavaFxApplication {
         stage.setTitle(windowTitle);
         stage.getIcons().add(new Image(Application.class.getResourceAsStream("/icon.png")));
         Scene startScene = screenService.activate("startMenu");
-        startScene.getStylesheets().add("styleSheets/start-scene.css");
+//        startScene.getStylesheets().add("styleSheets/start-scene.css");
         stage.setScene(startScene);
         stage.setResizable(true);
         stage.centerOnScreen();

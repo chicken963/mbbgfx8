@@ -28,4 +28,12 @@ public class RoundService {
     public List<AudioTrack> getAudioTracks(Round round) {
         return audioTrackService.findByIds(round.getTracksIds());
     }
+
+    public void shiftCurrentTargetWinCondition(Round round) {
+        if (round.getCurrentTargetWinCondition().equals(round.getFirstStrikeCondition())) {
+            round.setCurrentTargetWinCondition(round.getSecondStrikeCondition());
+        } else if (round.getCurrentTargetWinCondition().equals(round.getSecondStrikeCondition())) {
+            round.setCurrentTargetWinCondition(round.getThirdStrikeCondition());
+        }
+    }
 }

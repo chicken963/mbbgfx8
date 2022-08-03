@@ -4,9 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import lombok.Data;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +14,11 @@ import ru.orthodox.mbbg.model.AudioTrack;
 import ru.orthodox.mbbg.model.Game;
 import ru.orthodox.mbbg.model.Round;
 import ru.orthodox.mbbg.repositories.AudioTrackRepository;
+import ru.orthodox.mbbg.repositories.BlankRepository;
 import ru.orthodox.mbbg.repositories.GamesRepository;
 import ru.orthodox.mbbg.repositories.RoundRepository;
-import ru.orthodox.mbbg.services.PlayService;
-import ru.orthodox.mbbg.services.ScreenService;
+import ru.orthodox.mbbg.services.*;
+import ru.orthodox.mbbg.ui.modelExtensions.playGameScene.AudioTracksStackManager;
 
 import javax.annotation.PostConstruct;
 import java.text.DecimalFormat;
@@ -33,6 +33,16 @@ import static ru.orthodox.mbbg.ui.CustomFontDealer.setDefaultFont;
 @Configurable
 public class PlayController {
     @FXML
+    private Label blankPreviewPlaceholder;
+    @FXML
+    private AnchorPane blankPreview;
+    @FXML
+    private Label blankItem;
+    @FXML
+    private GridPane miniaturesProgressGrid;
+    @FXML
+    private RowConstraints progressRowsConstraints;
+    @FXML
     private Label songTitle;
     @FXML
     private Label songProgressInSeconds;
@@ -43,13 +53,7 @@ public class PlayController {
     @FXML
     private ProgressBar songProgressBar;
     @FXML
-    private TableView<AudioTrack> playlistTable;
-    @FXML
-    private TableColumn<AudioTrack, String> numberInPlaylist;
-    @FXML
-    private TableColumn<AudioTrack, String> artistInPlaylist;
-    @FXML
-    private TableColumn<AudioTrack, String> titleInPlaylist;
+    private VBox audioTracksTable;
     @FXML
     private Button nextRound;
     @FXML
@@ -61,20 +65,32 @@ public class PlayController {
     @FXML
     private HBox nextRoundButtonContainer;
     @FXML
+    private Button blankMiniature;
+    @FXML
+    private Button changeWinCondition;
+    @FXML
     private Button nextButton;
     private AudioTrack currentTrack;
     private int currentTrackNumber = 1;
     private List<AudioTracksTableRow> audioTracksTableRows;
+    private AudioTracksStackManager tableManager;
+    private ViewRoundBlanksInGameService viewRoundBlanksInGameService;
 
     @Autowired
     private ScreenService screenService;
+    @Autowired
+    private RoundService roundService;
     @Autowired
     private AudioTrackRepository audioTrackRepository;
     @Autowired
     private GamesRepository gameService;
     @Autowired
     private RoundRepository roundRepository;
+    @Autowired
+    private BlankRepository blankRepository;
 
+    @Autowired
+    private BlanksProgressService blanksProgressService;
     private PlayService playService;
     private List<Round> rounds = new ArrayList<>();
     private Round currentRound;
@@ -90,24 +106,39 @@ public class PlayController {
     public void initialize() {
         setDefaultFont(songTitle, songProgressInSeconds, roundNameLabel);
         preconfigureDecimalFormatForCss();
+        if (blanksProgressService != null) {
+            initializeBlankProgressService();
+        }
     }
 
     public void render() {
-
+        this.tableManager = new AudioTracksStackManager(audioTracksTable);
         startTrackingTitle();
         if (audioTrackRepository != null && game != null) {
             rounds = gameService.findRoundsByGame(game);
             currentRound = rounds.get(0);
+            currentRound.setCurrentTargetWinCondition(currentRound.getFirstStrikeCondition());
+            currentRound.setAudioTracks(audioTrackRepository.findByIds(currentRound.getTracksIds()));
+            currentRound.setPlayedAudiotracks(new ArrayList<>());
+            currentRound.setBlanks(blankRepository.findByIds(currentRound.getBlanksIds()));
             renderRound(currentRound);
+            this.viewRoundBlanksInGameService = new ViewRoundBlanksInGameService(blankPreview, blankItem, blanksProgressService);
         }
     }
 
     private void renderRound(Round round) {
+        blanksProgressService.render(round);
         roundNameLabel.setText(round.getName());
         List<AudioTrack> roundQueue = roundRepository.findAudioTracksByRound(round);
         this.playService = new PlayService(roundQueue);
         songTitle.setText(this.playService.getQueue().get(0).getTitle());
-        fillPlaylistTable();
+        fillPlaylistTable(roundQueue);
+    }
+
+    private void initializeBlankProgressService() {
+        blanksProgressService.setProgressRowsConstraints(progressRowsConstraints);
+        blanksProgressService.setMiniaturesProgressGrid(miniaturesProgressGrid);
+        blanksProgressService.setBlankMiniature(blankMiniature);
     }
 
     public void startPlaying() {
@@ -121,8 +152,13 @@ public class PlayController {
     }
 
     public void nextTrack() {
+        currentRound.getPlayedAudiotracks().add(currentTrack);
         currentTrack = playService.next();
         recalculateProgressBarBackgroundRange();
+        double currentMaxProgress = blanksProgressService.recalculateProgress(currentRound.getCurrentTargetWinCondition());
+        if (currentMaxProgress == 1.0) {
+            changeWinCondition.setDisable(false);
+        }
         updateActiveRow();
     }
 
@@ -165,9 +201,7 @@ public class PlayController {
             double end = currentTrack.getFinishInSeconds();
 
             if (current / end >= 1) {
-                currentTrack = playService.next();
-                recalculateProgressBarBackgroundRange();
-                updateActiveRow();
+                nextTrack();
                 playService.setVolume(volumeSlider.getValue());
             }
         }
@@ -178,14 +212,8 @@ public class PlayController {
         runTaskInSeparateThread(this::checkAudioTrackSwitching);
     }
 
-    private void fillPlaylistTable() {
-        numberInPlaylist.setCellValueFactory(
-                new PropertyValueFactory<AudioTrack, String>(String.valueOf(++currentTrackNumber)));
-        titleInPlaylist.setCellValueFactory(
-                new PropertyValueFactory<AudioTrack, String>("title"));
-        artistInPlaylist.setCellValueFactory(
-                new PropertyValueFactory<AudioTrack, String>("artist"));
-        playlistTable.getItems().setAll(playService.getQueue());
+    private void fillPlaylistTable(List<AudioTrack> roundQueue) {
+        tableManager.populateWithAudioTracks(roundQueue);
     }
 
     public void backToMenu(ActionEvent actionEvent) {
@@ -251,11 +279,27 @@ public class PlayController {
     }
 
     private void updateActiveRow() {
-        playlistTable.lookupAll(".table-row-cell").forEach(row -> row.getStyleClass().remove("highlighted"));
-        playlistTable.lookupAll(".table-row-cell").stream()
-                .map(node -> (TableRow<AudioTrack>) node)
-                .filter(row -> currentTrack.equals(row.getItem()))
-                .forEach(row -> row.getStyleClass().add("highlighted"));
+        tableManager.updateActiveRow(currentTrack);
+    }
+
+    @FXML
+    private void increaseWinLevel(ActionEvent event) {
+        roundService.shiftCurrentTargetWinCondition(currentRound);
+        blanksProgressService.recalculateProgress(currentRound.getCurrentTargetWinCondition());
+        changeWinCondition.setDisable(true);
+    }
+
+    @FXML
+    private void showBlankWithProgress(MouseEvent event) {
+        blankPreviewPlaceholder.setVisible(false);
+        viewRoundBlanksInGameService.renderBlankByMiniature((Button) event.getSource(), currentRound);
+        blankPreview.setVisible(true);
+    }
+
+    @FXML
+    private void emptyBlankPreview(MouseEvent mouseEvent) {
+        blankPreview.setVisible(false);
+        blankPreviewPlaceholder.setVisible(true);
     }
 
     @Data

@@ -65,6 +65,7 @@
     -fx-border-color: white;
     -fx-background-radius: 2px;
     -fx-text-fill: white;
+    -fx-font-color: white;
 }
 
 .table-cell .tab .split-pane .anchor-pane {
@@ -72,7 +73,7 @@
 }
 
 .choice-box .arrow{
--fx-background-color: #789;
+-fx-background-color: white;
 }
 
 .tab-pane:focused>.tab-header-area>.headers-region>.tab:selected .focus-indicator {
@@ -84,7 +85,7 @@
   -fx-background-insets:0;
 }
 
-.table-view .grid-pane {
+.grid-pane {
     -fx-border-width: 3px;
     -fx-border-color: orange;
     -fx-background-radius: 5px;
@@ -112,19 +113,19 @@
 
 .editable-column:readonly {
     -fx-opacity: 1.0;
-    -fx-pref-height: 25px;
-    -fx-min-height: 25px;
-    -fx-max-height: 25px;
+    -fx-pref-height: 30px;
+    -fx-min-height: 30px;
+    -fx-max-height: 30px;
     -fx-border-style: solid hidden solid hidden;
     -fx-background-color: inherit;
-    -fx-font-size: 13px;
-    -fx-margin-bottom: 2px;
 }
 
 .editable-column:hover {
-    -fx-pref-height: 25px;
-    -fx-min-height: 25px;
-    -fx-max-height: 25px;
+    -fx-pref-height: 30px;
+    -fx-min-height: 30px;
+    -fx-max-height: 30px;
+    -fx-background-color: #333;
+    -fx-text-fill: orange;
 }
 
 .editable-column:readonly, .time-column {
@@ -139,11 +140,19 @@
     -fx-background-color: orange;
 }
 
-.tracksGrid {
+.tracks-grid {
+
+    -fx-background-color: #111;
+}
+
+.tracks-grid-scroll-pane {
+    -fx-border-style: solid;
+    -fx-background-color: black;
     -fx-border-color: orange;
     -fx-border-width: 3px;
-    -fx-background-radius: 5px;
-    -fx-border-radius: 5px;
+    -fx-background-radius: 0 0 5px 5px;
+    -fx-border-radius: 0 0 5px 5px;
+    -fx-background-insets: 3;
 }
 
 .button {
@@ -156,7 +165,95 @@
     -fx-background-color: rgb(255,202,105);
 }
 
-.grid-row-hovered {
-    -fx-border-style: solid hidden solid hidden;
-    -fx-border-color: white;
+.grid-row:hover {
+    /*-fx-border-style: solid hidden solid hidden;
+    -fx-border-color: white;*/
+    -fx-background-color: #333;
+    -fx-text-fill: orange;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color :transparent;
+    -fx-border-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-border-radius :1.0em;
+}
+
+
+.scroll-bar:horizontal .increment-button ,
+.scroll-bar:horizontal .decrement-button {
+    -fx-background-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-padding :0.0 0.0 10.0 0.0;
+
+}
+
+.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-padding :0.0 10.0 0.0 0.0;
+
+}
+
+ .scroll-bar .increment-arrow,
+ .scroll-bar .decrement-arrow{
+    -fx-shape : " ";
+    -fx-padding :0.15em 0.0;
+}
+
+ .scroll-bar:vertical .increment-arrow,
+ .scroll-bar:vertical .decrement-arrow{
+    -fx-shape : " ";
+    -fx-padding :0.0 0.15em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color :derive(black,90.0%);
+    -fx-background-insets : 1.0, 0.0, 0.0;
+    -fx-background-radius : 1.0em;
+}
+
+.scroll-bar:horizontal .thumb:hover,
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color :derive(orange,10.0%);
+    -fx-background-insets : 1.0, 0.0, 0.0;
+    -fx-background-radius : 1.0em;
+}
+
+.grid-header-line: {
+    -fx-border-width: 3px;
+    -fx-background-radius: 5px 5px 0 0;
+    -fx-border-radius: 5px 5px 0 0;
+}
+
+.grid-header-first {
+    -fx-background-color: orange;
+     -fx-background-radius: 5px 0 0 0;
+     -fx-border-radius: 5px 0 0 0;
+}
+
+.grid-header-last {
+    -fx-background-color: orange;
+     -fx-background-radius: 0 5px 0 0;
+     -fx-border-radius: 0 5px 0 0;
+}
+
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color:orange;
+    -fx-border-radius: 1px;
+    -fx-max-height: 10px;
+    -fx-min-width: 10px;
+}
+
+.check-box:selected .mark {
+    -fx-background-color: black;
+}
+
+.check-box {
+    -fx-text-color: orange;
+    -fx-text-fill: orange;
 }

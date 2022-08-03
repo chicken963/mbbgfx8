@@ -28,13 +28,13 @@ public class RangeSliderService {
             decimalFormatSymbols.setDecimalSeparator('.');
             return new DecimalFormat("#0.00", decimalFormatSymbols);
     }
-    public static void updateRangeSlider(PlayService playService, List<AudioTrackGridRow> gridRows) {
+    public static void updateRangeSlider(PlayService playService, List<AudioTrackUIMapper> gridRows) {
         if (playService == null) {
             return;
         }
 
         AudioTrack currentTrack = playService.getCurrentTrack();
-        AudioTrackGridRow currentRow = GridRowUtils.findByAudioTrack(gridRows, currentTrack);
+        AudioTrackUIMapper currentRow = GridRowUtils.findByAudioTrack(gridRows, currentTrack);
         RangeSlider rangeSlider = currentRow.getRangeSlider();
         Label progressLabel = currentRow.getProgressLabel();
         if (rangeSlider != null) {

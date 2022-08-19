@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.orthodox.mbbg.configuration.ControllersConfig;
 
+import java.util.Arrays;
+
 @Configuration
 public class ScreenConfiguration {
     @Autowired
@@ -40,12 +42,16 @@ public class ScreenConfiguration {
 
     @Bean
     public ScreenViewResource playGameScene() {
-        return new ScreenViewResource("play", playView, "styleSheets/play-game.css");
+        return new ScreenViewResource(
+                "play",
+                playView,
+                Arrays.asList("styleSheets/play-game.css", "styleSheets/scrollable-table.css"));
     }
 
     @Bean
     public ScreenViewResource newGameScene() {
-        return new ScreenViewResource("newGame", newGameView, "styleSheets/new-game.css");
+        return new ScreenViewResource("newGame", newGameView,
+                Arrays.asList("styleSheets/new-game.css", "styleSheets/scrollable-table.css"));
     }
 
     @Bean

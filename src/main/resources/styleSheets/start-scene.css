@@ -52,30 +52,6 @@
     -fx-prompt-text-fill: #ff0000;
 }
 
-.playerButton {
-    /*-fx-border-color: rgba(100, 100, 100, 0.9);
-    -fx-border-width: 1px;*/
-    -fx-background-radius: 20px;
-    -fx-border-radius: 20px;
-    -fx-margin-right: 2px;
-    -fx-background-color: #eee;
-    -fx-cursor: hand;
-}
-.playerButton:hover {
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
-}
-
-.exitPlayMode {
-    -fx-border-color: transparent;
-    -fx-background-color: linear-gradient(#D8785B, #DC4A1D);
-    -fx-cursor: hand;
-}
-
-.exitPlayMode:hover {
-    -fx-background-color: linear-gradient(#E8886B, #EC5A2D);
-}
-
 .slider .thumb {
     -fx-background-image :url("playModeIcons/slider.png");
 }

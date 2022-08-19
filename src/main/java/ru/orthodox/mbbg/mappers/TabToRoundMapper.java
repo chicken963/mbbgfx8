@@ -1,10 +1,9 @@
 package ru.orthodox.mbbg.mappers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.model.Round;
-import ru.orthodox.mbbg.ui.modelExtensions.newGameScene.RoundDimensionsDealer;
-import ru.orthodox.mbbg.ui.modelExtensions.newGameScene.RoundTab;
+import ru.orthodox.mbbg.model.basic.Round;
+import ru.orthodox.mbbg.services.create.RoundDimensionsDealer;
+import ru.orthodox.mbbg.model.proxy.play.RoundTab;
 
 import java.util.UUID;
 

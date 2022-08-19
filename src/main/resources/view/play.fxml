@@ -1,210 +1,287 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<AnchorPane minHeight="600.0" minWidth="800.0" prefHeight="1000.0" prefWidth="1920.0" styleClass="root" stylesheets="@../styleSheets/play-game.css" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.PlayController">
-    <HBox alignment="CENTER" minWidth="572.0" styleClass="workbench" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="0" HBox.hgrow="ALWAYS">
-        <children>
-            <VBox alignment="TOP_CENTER" prefWidth="880.0" styleClass="workbench" HBox.hgrow="ALWAYS">
-                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="841.0" styleClass="workbench">
-                    <children>
-                        <HBox fx:id="roundsNavigator" alignment="CENTER" prefHeight="200.0" prefWidth="830.0">
+<ScrollPane fitToHeight="true" fitToWidth="true" minWidth="1420.0" style="-fx-background-color: #111;"
+            xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.orthodox.mbbg.controllers.PlayController">
+    <content>
+        <AnchorPane cacheShape="false" minWidth="1420.0" styleClass="root" stylesheets="@../styleSheets/play-game.css">
+            <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent"
+                        hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                        AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="0.0">
+                <HBox alignment="CENTER">
+                    <VBox alignment="TOP_CENTER" styleClass="workbench">
+                        <HBox alignment="CENTER" prefHeight="100.0" styleClass="workbench">
                             <children>
-                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="155.0">
-                                    <Button fx:id="changeWinCondition" onAction="#increaseWinLevel" styleClass="harden-condition" disable="true">Harden win
-                                        condition
+                                <HBox fx:id="roundsNavigator" alignment="CENTER" prefHeight="200.0" prefWidth="830.0">
+                                    <children>
+                                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="155.0">
+                                            <children>
+                                                <Button fx:id="prevRound" maxWidth="130.0" minWidth="130.0"
+                                                        mnemonicParsing="false" onAction="#switchToPrevRound"
+                                                        prefWidth="130.0" text="Previous round">
+                                                    <styleClass>
+                                                        <String fx:value="switchRound"/>
+                                                        <String fx:value="previous"/>
+                                                    </styleClass>
+                                                </Button>
+                                            </children>
+                                        </HBox>
+                                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="396.0">
+                                            <children>
+                                                <Label fx:id="roundNameLabel" text="Round 1" textFill="WHITE">
+                                                    <font>
+                                                        <Font size="36.0"/>
+                                                    </font>
+                                                </Label>
+                                            </children>
+                                        </HBox>
+                                        <HBox fx:id="nextRoundButtonContainer" alignment="CENTER" prefHeight="100.0"
+                                              prefWidth="155.0">
+                                            <children>
+                                                <Button fx:id="nextRound" contentDisplay="RIGHT" maxWidth="130.0"
+                                                        minWidth="130.0" mnemonicParsing="false"
+                                                        onAction="#switchToNextRound" prefWidth="130.0"
+                                                        text="Next round">
+                                                    <styleClass>
+                                                        <String fx:value="switchRound"/>
+                                                        <String fx:value="next"/>
+                                                    </styleClass>
+                                                </Button>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                    <HBox.margin>
+                                        <Insets left="71.0"/>
+                                    </HBox.margin>
+                                </HBox>
+                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="34.0">
+                                    <Button onAction="#backToMenu" styleClass="exitPlayMode">
+                                        <graphic>
+                                            <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true"
+                                                       preserveRatio="true">
+                                                <image>
+                                                    <Image url="/playModeIcons/exit-iconwhite.png"/>
+                                                </image>
+                                            </ImageView>
+                                        </graphic>
+                                        <tooltip>
+                                            <Tooltip text="Back to main menu"/>
+                                        </tooltip>
+                                        <HBox.margin>
+                                            <Insets right="30.0"/>
+                                        </HBox.margin>
                                     </Button>
                                 </HBox>
-                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="155.0">
-                                    <children>
-                                        <Button fx:id="prevRound" mnemonicParsing="false" onAction="#switchToPrevRound" text="Previous round">
-                                            <styleClass>
-                                                <String fx:value="switchRound" />
-                                                <String fx:value="previous" />
-                                            </styleClass>
-                                        </Button>
-                                    </children>
-                                </HBox>
-                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="396.0">
-                                    <children>
-                                        <Label fx:id="roundNameLabel" text="Round 1" textFill="WHITE">
-                                            <font>
-                                                <Font size="36.0" />
-                                            </font>
-                                        </Label>
-                                    </children>
-                                </HBox>
-                                <HBox fx:id="nextRoundButtonContainer" alignment="CENTER" prefHeight="100.0" prefWidth="155.0">
-                                    <children>
-                                        <Button fx:id="nextRound" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#switchToNextRound" prefWidth="100.0" text="Next round">
-                                            <styleClass>
-                                                <String fx:value="switchRound" />
-                                                <String fx:value="next" />
-                                            </styleClass>
-                                        </Button>
-                                    </children>
-                                </HBox>
                             </children>
-                            <HBox.margin>
-                                <Insets left="71.0" />
-                            </HBox.margin>
                         </HBox>
-                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="34.0">
-                            <Button onAction="#backToMenu" styleClass="exitPlayMode">
-                                <graphic>
-                                    <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
-                                        <image>
-                                            <Image url="/playModeIcons/exit-icon.png" />
-                                        </image>
-                                    </ImageView>
-                                </graphic>
-                                <tooltip>
-                                    <Tooltip text="Back to main menu" />
-                                </tooltip>
-                                <HBox.margin>
-                                    <Insets right="30.0" />
-                                </HBox.margin>
-                            </Button>
-                        </HBox>
-                    </children>
-                </HBox>
-                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-                    <children>
-                        <Label fx:id="songTitle" alignment="CENTER" contentDisplay="CENTER" text="Hello world!" textFill="ORANGE">
+                        <Label fx:id="songTitle" alignment="CENTER" contentDisplay="CENTER" text="Hello world!"
+                               textFill="ORANGE">
                             <font>
-                                <Font size="36.0" />
+                                <Font size="36.0"/>
                             </font>
                             <opaqueInsets>
-                                <Insets />
+                                <Insets/>
                             </opaqueInsets>
                             <VBox.margin>
-                                <Insets bottom="10.0" />
+                                <Insets bottom="10.0"/>
                             </VBox.margin>
                         </Label>
-                        <HBox alignment="TOP_CENTER" minHeight="60.0" prefHeight="60.0" prefWidth="572.0">
+                        <HBox alignment="TOP_CENTER" minHeight="60.0" prefHeight="60.0">
                             <children>
-                                <ProgressBar fx:id="songProgressBar" prefHeight="18.0" prefWidth="416.0" progress="0.0" style="-fx-accent: #ffa500;">
+                                <ProgressBar fx:id="songProgressBar" prefHeight="18.0" prefWidth="416.0" progress="0.0"
+                                             style="-fx-accent: #ffa500;">
                                     <opaqueInsets>
-                                        <Insets />
+                                        <Insets/>
                                     </opaqueInsets>
                                     <HBox.margin>
-                                        <Insets top="28.0" />
+                                        <Insets top="28.0"/>
                                     </HBox.margin>
                                 </ProgressBar>
-                                <Label fx:id="songProgressInSeconds" prefHeight="32.0" prefWidth="120.0" text="00:00/00:00" textFill="ORANGE">
+                                <Label fx:id="songProgressInSeconds" prefHeight="32.0" prefWidth="120.0"
+                                       text="00:00/00:00" textFill="ORANGE">
                                     <HBox.margin>
-                                        <Insets left="5.0" top="22.0" />
+                                        <Insets left="5.0" top="22.0"/>
                                     </HBox.margin>
                                     <font>
-                                        <Font size="22.0" />
+                                        <Font size="22.0"/>
                                     </font>
                                 </Label>
                             </children>
                             <VBox.margin>
-                                <Insets left="30.0" right="30.0" />
+                                <Insets left="30.0" right="30.0"/>
                             </VBox.margin>
                         </HBox>
-                        <HBox alignment="CENTER" prefHeight="75.0" prefWidth="632.0">
-                            <Button fx:id="previousButton" onAction="#previousTrack" styleClass="playerButton">
+                        <HBox alignment="CENTER" minWidth="905.0" prefHeight="75.0">
+                            <Button fx:id="previousButton" onAction="#switchToPreviousTrack" styleClass="playerButton">
                                 <graphic>
-                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-color: orange;">
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true"
+                                               preserveRatio="true"
+                                               style="-fx-background-color: orange;">
                                         <image>
-                                            <Image url="/mediaplayerIcons/previous.png" />
+                                            <Image url="/mediaplayerIcons/previous.png"/>
                                         </image>
                                     </ImageView>
                                 </graphic>
                             </Button>
-                            <Button onAction="#startPlaying" styleClass="playerButton">
+                            <Button onAction="#play" styleClass="playerButton">
                                 <graphic>
-                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true"
+                                               preserveRatio="true">
                                         <image>
-                                            <Image url="/mediaplayerIcons/play2.png" />
+                                            <Image url="/mediaplayerIcons/play2.png"/>
                                         </image>
                                     </ImageView>
                                 </graphic>
                             </Button>
                             <Button onAction="#pausePlaying" styleClass="playerButton">
                                 <graphic>
-                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true"
+                                               preserveRatio="true">
                                         <image>
-                                            <Image url="/mediaplayerIcons/pause.png" />
+                                            <Image url="/mediaplayerIcons/pause.png"/>
                                         </image>
                                     </ImageView>
                                 </graphic>
                             </Button>
-                            <Button fx:id="nextButton" onAction="#nextTrack" styleClass="playerButton">
+                            <Button fx:id="nextButton" onAction="#switchToNextTrack" styleClass="playerButton">
                                 <graphic>
-                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true"
+                                               preserveRatio="true">
                                         <image>
-                                            <Image url="/mediaplayerIcons/next.png" />
+                                            <Image url="/mediaplayerIcons/next.png"/>
                                         </image>
                                     </ImageView>
                                 </graphic>
                             </Button>
                             <Button onAction="#switchMute" styleClass="playerButton">
                                 <graphic>
-                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true"
+                                               preserveRatio="true">
                                         <image>
-                                            <Image url="/mediaplayerIcons/mute-button.png" />
+                                            <Image url="/mediaplayerIcons/mute-button.png"/>
                                         </image>
                                     </ImageView>
                                 </graphic>
                             </Button>
-                            <Slider fx:id="volumeSlider" max="100.0" minHeight="103.0" onMouseReleased="#updateVolume" prefHeight="103.0" prefWidth="118.0" value="100.0">
+                            <Slider fx:id="volumeSlider" max="100.0" minHeight="103.0" onMouseReleased="#updateVolume"
+                                    prefHeight="103.0" prefWidth="118.0" value="100.0">
                                 <HBox.margin>
-                                    <Insets left="20.0" />
+                                    <Insets left="20.0"/>
                                 </HBox.margin>
                             </Slider>
-                        </HBox>
-                        <HBox>
                             <VBox.margin>
-                                <Insets bottom="40.0" left="40.0" right="40.0" />
+                                <Insets left="30.0" right="30.0"/>
                             </VBox.margin>
+                        </HBox>
+                        <HBox alignment="TOP_CENTER" maxHeight="570.0" minHeight="570.0" minWidth="995.0"
+                              prefHeight="570.0">
                             <children>
-                                <ScrollPane hbarPolicy="NEVER" maxHeight="410.0" minHeight="510.0" prefHeight="410.0" prefWidth="570.0" style="-fx-background-color: #111;">
-                                    <GridPane fx:id="miniaturesProgressGrid" alignment="CENTER" minHeight="40.0" minWidth="550.0" prefWidth="550.0">
-                                        <columnConstraints>
-                                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="110.0" prefWidth="110.0" />
-                                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="110.0" prefWidth="110.0" />
-                                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="110.0" prefWidth="110.0" />
-                                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="110.0" prefWidth="110.0" />
-                                            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="110.0" prefWidth="110.0" />
-                                        </columnConstraints>
-                                        <rowConstraints>
-                                            <RowConstraints fx:id="progressRowsConstraints" minHeight="50.0" prefHeight="50.0" valignment="CENTER" vgrow="SOMETIMES" />
-                                        </rowConstraints>
-                                        <fx:define>
-                                            <Button fx:id="blankMiniature" alignment="CENTER" mnemonicParsing="false" prefHeight="30.0" prefWidth="100.0" styleClass="blank-miniature" textAlignment="CENTER" onMouseEntered="#showBlankWithProgress" onMouseExited="#emptyBlankPreview">
-                                                <font>
-                                                    <Font size="16.0" />
-                                                </font>
-                                            </Button>
-                                        </fx:define>
-                                    </GridPane>
-                                </ScrollPane>
-                                <AnchorPane minHeight="510.0" minWidth="380.0" prefHeight="510.0" prefWidth="380.0" styleClass="blank-preview">
+                                <VBox maxHeight="570.0" minHeight="570.0" prefHeight="570.0">
+                                    <HBox alignment="CENTER" maxWidth="550.0" minWidth="550.0" prefHeight="55.0"
+                                          prefWidth="550.0">
+                                        <Button fx:id="changeWinCondition" disable="true" maxHeight="40.0"
+                                                minHeight="40.0" onAction="#increaseWinLevel" prefHeight="40.0"
+                                                styleClass="harden-condition">Harden win
+                                            condition
+                                            <font>
+                                                <Font size="21.0"/>
+                                            </font>
+                                            <graphic>
+                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true"
+                                                           preserveRatio="true">
+                                                    <image>
+                                                        <Image url="/playModeIcons/harden-white.png"/>
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                            <padding>
+                                                <Insets right="16.0"/>
+                                            </padding>
+                                        </Button>
+                                    </HBox>
+                                    <ScrollPane hbarPolicy="NEVER" maxHeight="410.0" minHeight="510.0"
+                                                prefHeight="410.0" prefWidth="570.0"
+                                                style="-fx-background-color: #111;">
+                                        <GridPane fx:id="miniaturesProgressGrid" alignment="CENTER" minHeight="40.0"
+                                                  minWidth="550.0" prefWidth="550.0">
+                                            <columnConstraints>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES"
+                                                                   minWidth="110.0" prefWidth="110.0"/>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES"
+                                                                   minWidth="110.0" prefWidth="110.0"/>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES"
+                                                                   minWidth="110.0" prefWidth="110.0"/>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES"
+                                                                   minWidth="110.0" prefWidth="110.0"/>
+                                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES"
+                                                                   minWidth="110.0" prefWidth="110.0"/>
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints fx:id="progressRowsConstraints" minHeight="50.0"
+                                                                prefHeight="50.0" valignment="CENTER"
+                                                                vgrow="SOMETIMES"/>
+                                            </rowConstraints>
+                                            <fx:define>
+                                                <Button fx:id="blankMiniature" alignment="CENTER"
+                                                        mnemonicParsing="false" onMouseEntered="#showBlankWithProgress"
+                                                        onMouseExited="#emptyBlankPreview" prefHeight="30.0"
+                                                        prefWidth="100.0" styleClass="blank-miniature"
+                                                        textAlignment="CENTER">
+                                                    <font>
+                                                        <Font size="16.0"/>
+                                                    </font>
+                                                </Button>
+                                            </fx:define>
+                                        </GridPane>
+                                    </ScrollPane>
+                                </VBox>
+                                <AnchorPane minHeight="565.0" minWidth="400.0" prefHeight="565.0" prefWidth="400.0"
+                                            styleClass="blank-preview">
                                     <HBox.margin>
-                                        <Insets left="20.0" />
+                                        <Insets bottom="47.5" left="20.0" top="7.5"/>
                                     </HBox.margin>
                                     <children>
-                                        <Label fx:id="blankPreviewPlaceholder" text="Hover the Blank number in the list to the left and the preview with a current progress will be shown." textAlignment="CENTER" textFill="#ffb700" wrapText="true" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="250.0">Hover the Blank number in the list to the
+                                        <Label fx:id="blankPreviewPlaceholder"
+                                               text="Hover the Blank number in the list to the left and the preview with a current progress will be shown."
+                                               textAlignment="CENTER" textFill="#ffb700" wrapText="true"
+                                               AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0"
+                                               AnchorPane.topAnchor="250.0">Hover the Blank number in the
+                                            list to the
                                             left and the preview will be shown.
                                         </Label>
-                                        <AnchorPane fx:id="blankPreview" visible="false" prefHeight="520.0" prefWidth="380.0" styleClass="blank-preview-background">
+                                        <AnchorPane fx:id="blankPreview" maxHeight="565.0" maxWidth="400.0"
+                                                    minHeight="565.0" minWidth="400.0" prefHeight="565.0"
+                                                    prefWidth="400.0" styleClass="blank-preview-background"
+                                                    visible="false">
                                             <children>
-                                                <VBox prefHeight="520.0" prefWidth="380.0">
+                                                <VBox maxWidth="400.0" minWidth="400.0" prefHeight="565.0"
+                                                      prefWidth="400.0">
                                                     <children>
-                                                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                                                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0"
+                                                              prefWidth="200.0">
                                                             <children>
                                                                 <Label alignment="CENTER" contentDisplay="CENTER"
-                                                                       prefHeight="49.0" prefWidth="89.0" style="blankNumber"
-                                                                       styleClass="blankNumber" text="A108" textFill="#111">
+                                                                       prefHeight="49.0" prefWidth="89.0"
+                                                                       style="blankNumber" styleClass="blankNumber"
+                                                                       text="A108" textFill="#111">
                                                                     <HBox.margin>
                                                                         <Insets right="20.0"/>
                                                                     </HBox.margin>
@@ -216,8 +293,8 @@
                                                         </HBox>
                                                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                                             <children>
-                                                                <Label fx:id="roundName" contentDisplay="CENTER" style="roundName"
-                                                                       textFill="#a67c07">
+                                                                <Label fx:id="roundName" contentDisplay="CENTER"
+                                                                       style="roundName" textFill="#a67c07">
                                                                     <font>
                                                                         <Font size="26.0"/>
                                                                     </font>
@@ -225,74 +302,164 @@
                                                             </children>
                                                         </HBox>
                                                         <HBox prefHeight="100.0" prefWidth="200.0"/>
-                                                        <GridPane fx:id="gridContent" alignment="CENTER" prefHeight="300.0" prefWidth="325.0"
-                                                                  style="gridPane" styleClass="gridPane">
-                                                            <columnConstraints/>
-                                                            <rowConstraints/>
+                                                        <GridPane fx:id="gridContent" alignment="CENTER"
+                                                                  prefHeight="300.0" prefWidth="325.0" style="gridPane"
+                                                                  styleClass="gridPane">
+                                                            <columnConstraints>
+                                                                <ColumnConstraints/>
+                                                            </columnConstraints>
+                                                            <rowConstraints>
+                                                                <RowConstraints/>
+                                                            </rowConstraints>
                                                             <VBox.margin>
                                                                 <Insets bottom="20.0" left="20.0" right="20.0"/>
                                                             </VBox.margin>
-                                                            <children>
-                                                                <fx:define>
-                                                                    <Label fx:id="blankItem" alignment="CENTER" contentDisplay="CENTER"
-                                                                           prefHeight="68.0" prefWidth="89.5" style="blankItem"
-                                                                           text="Evanescence" textAlignment="CENTER">
-                                                                        <font>
-                                                                            <Font size="11.0"/>
-                                                                        </font>
-                                                                        <opaqueInsets>
-                                                                            <Insets/>
-                                                                        </opaqueInsets>
-                                                                        <GridPane.margin>
-                                                                            <Insets top="1.0"/>
-                                                                        </GridPane.margin>
-                                                                    </Label>
-                                                                </fx:define>
-                                                            </children>
+                                                            <fx:define>
+                                                                <Label fx:id="blankItem" alignment="CENTER"
+                                                                       contentDisplay="CENTER" prefHeight="68.0"
+                                                                       prefWidth="89.5"
+                                                                       text="Evanescence" textAlignment="CENTER">
+                                                                    <font>
+                                                                        <Font size="11.0"/>
+                                                                    </font>
+                                                                    <opaqueInsets>
+                                                                        <Insets/>
+                                                                    </opaqueInsets>
+                                                                    <GridPane.margin>
+                                                                        <Insets top="1.0"/>
+                                                                    </GridPane.margin>
+                                                                </Label>
+                                                                <Label alignment="CENTER"
+                                                                       contentDisplay="CENTER" prefHeight="68.0"
+                                                                       prefWidth="89.5"
+                                                                       text="Evanescence" textAlignment="CENTER">
+                                                                    <font>
+                                                                        <Font size="11.0"/>
+                                                                    </font>
+                                                                    <opaqueInsets>
+                                                                        <Insets/>
+                                                                    </opaqueInsets>
+                                                                    <GridPane.margin>
+                                                                        <Insets top="1.0"/>
+                                                                    </GridPane.margin>
+                                                                </Label>
+                                                            </fx:define>
                                                         </GridPane>
                                                     </children>
                                                 </VBox>
                                             </children>
+                                            <VBox.margin>
+                                                <Insets/>
+                                            </VBox.margin>
+                                            <padding>
+                                                <Insets bottom="55.0" left="55.0" right="55.0"/>
+                                            </padding>
                                         </AnchorPane>
                                     </children>
+                                    <VBox.margin>
+                                        <Insets top="55.0"/>
+                                    </VBox.margin>
                                 </AnchorPane>
                             </children>
                         </HBox>
-                    </children>
-                </VBox>
-                <HBox.margin>
-                    <Insets top="70.0" />
-                </HBox.margin>
+                    </VBox>
+                </HBox>
+            </ScrollPane>
+            <VBox prefWidth="400.0"
+                  style="-fx-background-radius: 5px 5px 0 0; -fx-border-color: orange; -fx-border-radius: 10px;"
+                  AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
+                <HBox maxWidth="397.6" style="-fx-background-radius: 10px 10px 0 0;" styleClass="grid-header">
+                    <Button maxHeight="30.0" maxWidth="32.0" minHeight="30.0" minWidth="32.0" prefHeight="30.0"
+                            prefWidth="32.0" style="-fx-background-color: transparent;" styleClass="grid-header-first"
+                            visible="false">
+                        <HBox.margin>
+                            <Insets right="10.0"/>
+                        </HBox.margin>
+                    </Button>
+                    <Label fx:id="artistHeader" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="150.0"
+                           styleClass="grid-header" text="Artist">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <Label fx:id="titleHeader" maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="170.0"
+                           styleClass="grid-header-last" text="Song title">
+                        <HBox.margin>
+                            <Insets left="10.0"/>
+                        </HBox.margin>
+                    </Label>
+                    <VBox.margin>
+                        <Insets left="1.0"/>
+                    </VBox.margin>
+                </HBox>
+                <ScrollPane hbarPolicy="NEVER" minWidth="380.0" maxHeight="950" prefWidth="380.0"
+                            style="-fx-background-color: transparent;" styleClass="tracks-grid-scroll-pane">
+                    <VBox fx:id="audioTracksTable" minHeight="30.0" minWidth="397.6" prefWidth="377.6"
+                          styleClass="tracks-grid">
+                        <fx:define>
+                            <HBox fx:id="audioTracksTableRowTemplate" prefWidth="377.6" styleClass="audio-tracks-row">
+                                <Button maxHeight="30.0" maxWidth="32.0" minHeight="30.0" minWidth="32.0"
+                                        onMouseClicked="#setRoundNextTrack" prefHeight="30.0" prefWidth="32.0"
+                                        styleClass="next-track-icon">
+                                    <graphic>
+                                        <ImageView fitHeight="24.0" fitWidth="32.0" pickOnBounds="true"
+                                                   preserveRatio="true">
+                                            <image>
+                                                <Image url="/playModeIcons/next-arrow-blue.png"/>
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <HBox.margin>
+                                        <Insets right="13.0"/>
+                                    </HBox.margin>
+                                </Button>
+                                <Label maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="150.0"
+                                       styleClass="artist-label" text="Artist">
+                                    <HBox.margin>
+                                        <Insets/>
+                                    </HBox.margin>
+                                    <padding>
+                                        <Insets left="10.0"/>
+                                    </padding>
+                                </Label>
+                                <Label maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="205.0"
+                                       styleClass="song-title-label" text="Song title">
+                                    <HBox.margin>
+                                        <Insets/>
+                                    </HBox.margin>
+                                    <padding>
+                                        <Insets left="10.0"/>
+                                    </padding>
+                                </Label>
+                                <VBox.margin>
+                                    <Insets/>
+                                </VBox.margin>
+                                <padding>
+                                    <Insets right="20.0"/>
+                                </padding>
+                            </HBox>
+                        </fx:define>
+                        <HBox.margin>
+                            <Insets right="10.0"/>
+                        </HBox.margin>
+                        <VBox.margin>
+                            <Insets top="10.0"/>
+                        </VBox.margin>
+                        <VBox.margin>
+                            <Insets bottom="10.0"/>
+                        </VBox.margin>
+                    </VBox>
+                    <opaqueInsets>
+                        <Insets/>
+                    </opaqueInsets>
+                    <VBox.margin>
+                        <Insets right="2.0"/>
+                    </VBox.margin>
+                </ScrollPane>
+                <padding>
+                    <Insets bottom="10.0"/>
+                </padding>
             </VBox>
-        </children>
-    </HBox>
-    <ScrollPane fitToHeight="true" hbarPolicy="NEVER" maxHeight="900.0" minHeight="900.0" prefWidth="350.0" AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-        <VBox fx:id="audioTracksTable" prefWidth="350.0" styleClass="tracks-grid">
-            <HBox prefWidth="350.0" styleClass="audio-tracks-header-row">
-                <Label maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="150.0" styleClass="artist-label" text="Artist">
-                    <HBox.margin>
-                        <Insets left="10.0" />
-                    </HBox.margin>
-                </Label>
-                <Label maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0" styleClass="song-title-label" text="Song title">
-                    <HBox.margin>
-                        <Insets left="10.0" />
-                    </HBox.margin>
-                </Label>
-            </HBox>
-            <HBox prefWidth="350.0" styleClass="audio-tracks-row">
-                <Label maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="150.0" styleClass="artist-label" text="Artist">
-                    <HBox.margin>
-                        <Insets left="10.0" />
-                    </HBox.margin>
-                </Label>
-                <Label maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="200.0" styleClass="song-title-label" text="Song title">
-                    <HBox.margin>
-                        <Insets left="10.0" />
-                    </HBox.margin>
-                </Label>
-            </HBox>
-        </VBox>
-    </ScrollPane>
-
-</AnchorPane>
+        </AnchorPane>
+    </content>
+</ScrollPane>

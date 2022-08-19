@@ -127,7 +127,7 @@
                                     <children>
                                         <fx:define>
                                             <Label fx:id="blankItem" alignment="CENTER" contentDisplay="CENTER"
-                                                   prefHeight="68.0" prefWidth="89.5" style="blankItem"
+                                                   prefHeight="68.0" prefWidth="89.5"
                                                    text="Evanescence" textAlignment="CENTER">
                                                 <font>
                                                     <Font size="11.0"/>

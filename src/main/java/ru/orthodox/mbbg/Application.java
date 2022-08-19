@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Lazy;
-import ru.orthodox.mbbg.services.ScreenService;
+import ru.orthodox.mbbg.utils.screen.ScreenService;
 
 @Lazy
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})

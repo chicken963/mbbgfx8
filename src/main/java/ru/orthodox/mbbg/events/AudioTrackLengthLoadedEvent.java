@@ -1,7 +1,7 @@
 package ru.orthodox.mbbg.events;
 
 import org.springframework.context.ApplicationEvent;
-import ru.orthodox.mbbg.model.AudioTrack;
+import ru.orthodox.mbbg.model.basic.AudioTrack;
 
 public class AudioTrackLengthLoadedEvent extends ApplicationEvent {
     private final AudioTrack audioTrack;

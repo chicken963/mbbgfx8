@@ -4,10 +4,10 @@ import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.controllers.NewGameController;
-import ru.orthodox.mbbg.model.Game;
-import ru.orthodox.mbbg.model.Round;
-import ru.orthodox.mbbg.ui.modelExtensions.newGameScene.RoundTab;
-import ru.orthodox.mbbg.ui.modelExtensions.newGameScene.RoundsTabPane;
+import ru.orthodox.mbbg.model.basic.Game;
+import ru.orthodox.mbbg.model.basic.Round;
+import ru.orthodox.mbbg.model.proxy.play.RoundTab;
+import ru.orthodox.mbbg.model.proxy.play.RoundsTabPane;
 
 import java.util.UUID;
 

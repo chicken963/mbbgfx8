@@ -4,17 +4,27 @@ import javafx.scene.Parent;
 import lombok.Data;
 import ru.orthodox.mbbg.configuration.ControllersConfig;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 @Data
 public class ScreenViewResource {
 
     private String name;
     private ControllersConfig.View view;
-    private String styleSheetUrl;
+    private List<String> styleSheetUrls;
 
     public ScreenViewResource(String name, ControllersConfig.View view, String styleSheetUrl) {
         this.name = name;
         this.view = view;
-        this.styleSheetUrl = styleSheetUrl;
+        this.styleSheetUrls = Collections.singletonList(styleSheetUrl);
+    }
+
+    public ScreenViewResource(String name, ControllersConfig.View view, List<String> styleSheetUrls) {
+        this.name = name;
+        this.view = view;
+        this.styleSheetUrls = new ArrayList<>(styleSheetUrls);
     }
 
     public Parent getParentNode() {

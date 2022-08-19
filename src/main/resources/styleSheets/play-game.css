@@ -1,18 +1,28 @@
 .audio-tracks-row .artist-label.active {
     -fx-text-fill: black;
+    -fx-background-color: orange;
 }
 
 .audio-tracks-row .song-title-label.active {
     -fx-text-fill: black;
+    -fx-background-color: orange;
 }
 
 .audio-tracks-row.active {
     -fx-background-color: orange;
 }
 
-.audio-tracks-row {
-    -fx-background-color: #111;
+.next-track-icon.active {
+    visibility: hidden
 }
+
+.audio-tracks-row .next-track-icon {
+ -fx-background-color: transparent;
+}
+
+/*.audio-tracks-row {
+    -fx-background-color: #111;
+}*/
 
 .audio-tracks-row:hover {
     -fx-background-color: #333;
@@ -25,12 +35,35 @@
     /*-fx-background-color: linear-gradient(to bottom right, #008080, black)*/
 }
 
+.playerButton {
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-margin-right: 2px;
+    -fx-background-color: #eee;
+    -fx-cursor: hand;
+}
+.playerButton:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.exitPlayMode {
+    -fx-border-color: transparent;
+    -fx-background-color: rgb(208,32,34);
+    -fx-cursor: hand;
+}
+
+.exitPlayMode:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
 .workbench {
     -fx-background-color: #111;
 }
 
 .audio-tracks-header-row {
- -fx-background-color: orange;
+ -fx-background-color: white;
  -fx-font-weight: bold;
 }
 
@@ -79,7 +112,7 @@
 
 .blank-miniature {
     -fx-background-color: white;
-    -fx-border-color: orange;
+    -fx-border-color: white;
     -fx-border-style: solid;
     -fx-text-fill: #111;
     -fx-background-radius: 10px;
@@ -102,7 +135,7 @@
 .gridPane {
     -fx-border-radius: 10;
     -fx-border-color: #444;
-    -fx-background-color: #bbb;
+    -fx-background-color: white;
     -fx-background-radius: 10;
 }
 
@@ -124,11 +157,23 @@
 .blank-item.left.lower {
     -fx-border-style: hidden;
     -fx-border-color: #444;
+    -fx-background-radius: 0 0 0 10px;
+}
+
+.blank-item.left.upper {
+    -fx-background-radius: 10px 0 0 0;
+}
+
+.blank-item.right.upper {
+    -fx-background-radius: 0 10px 0 0;
+}
+
+.blank-item.right.lower {
+    -fx-background-radius: 0 0 10px 0;
 }
 
 .blank-item.passed {
     -fx-background-color: orange;
-    -fx-border-color: #444;
 }
 
 .blank-preview-background {
@@ -141,6 +186,15 @@
 
 .harden-condition {
   -fx-background-radius: 15px;
-  -fx-background-color: #F43558;
-  -fx-margin-right: 40px;
+  -fx-background-color: rgb(208,32,34);
+  -fx-text-fill: #fff;
+
+  -fx-pref-width: 540px;
+  -fx-pref-height: 45px;
+}
+
+.harden-condition:hover {
+  -fx-cursor: hand;
+  -fx-scale-x: 1.05;
+  -fx-scale-y: 1.05;
 }

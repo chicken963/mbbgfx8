@@ -5,8 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.model.AudioTrack;
-import ru.orthodox.mbbg.services.LocalFilesService;
+import ru.orthodox.mbbg.model.basic.AudioTrack;
+import ru.orthodox.mbbg.services.common.LocalFilesService;
 
 import javax.annotation.PostConstruct;
 import java.io.File;

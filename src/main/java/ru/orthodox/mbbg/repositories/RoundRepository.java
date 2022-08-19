@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.model.AudioTrack;
-import ru.orthodox.mbbg.model.Round;
-import ru.orthodox.mbbg.services.LocalFilesService;
+import ru.orthodox.mbbg.model.basic.AudioTrack;
+import ru.orthodox.mbbg.model.basic.Round;
+import ru.orthodox.mbbg.services.common.LocalFilesService;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -55,14 +55,4 @@ public class RoundRepository {
         localFilesService.write(round, roundsFile);
     }
 
-    public List<AudioTrack> findAudioTracksByRoundId(UUID roundId) {
-        Round round = this.findById(roundId);
-        return round != null
-                ? audioTrackRepository.findByIds(round.getTracksIds())
-                : null;
-    }
-
-    public List<AudioTrack> findAudioTracksByRound(Round round) {
-        return audioTrackRepository.findByIds(round.getTracksIds());
-    }
 }

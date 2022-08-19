@@ -3,8 +3,8 @@ package ru.orthodox.mbbg.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.orthodox.mbbg.model.AudioTrack;
-import ru.orthodox.mbbg.services.AudioTrackService;
+import ru.orthodox.mbbg.model.basic.AudioTrack;
+import ru.orthodox.mbbg.services.model.AudioTrackService;
 
 import java.util.List;
 

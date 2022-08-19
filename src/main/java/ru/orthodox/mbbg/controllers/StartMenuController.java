@@ -9,22 +9,25 @@ import javafx.scene.control.Pagination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
-import ru.orthodox.mbbg.model.Game;
+import ru.orthodox.mbbg.model.basic.Game;
 import ru.orthodox.mbbg.repositories.GamesRepository;
 import ru.orthodox.mbbg.repositories.RoundRepository;
-import ru.orthodox.mbbg.services.*;
-import ru.orthodox.mbbg.ui.modelExtensions.startMenuScene.GridItemService;
-import ru.orthodox.mbbg.ui.PopupAlerter;
+import ru.orthodox.mbbg.services.play.blank.BlankService;
+import ru.orthodox.mbbg.model.proxy.RGBColor;
+import ru.orthodox.mbbg.services.model.GameService;
+import ru.orthodox.mbbg.services.start.GridItemService;
+import ru.orthodox.mbbg.services.popup.PopupAlerter;
+import ru.orthodox.mbbg.services.start.StartMenuService;
+import ru.orthodox.mbbg.utils.screen.ScreenService;
 
 import javax.annotation.PostConstruct;
 
-import static ru.orthodox.mbbg.ui.CustomFontDealer.setDefaultFont;
-import static ru.orthodox.mbbg.ui.hierarchy.ElementFinder.findParentAnchorPane;
+import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
+import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findParentAnchorPane;
 
 @Slf4j
 @Configurable
@@ -91,19 +94,18 @@ public class StartMenuController {
         Game targetGame = GridItemService.findByEventTarget(StartMenuService.getAvailableGames(), gameGridItem);
         targetGame.setRounds(roundRepository.findByIds(targetGame.getRoundIds()));
         PlayController controller = applicationContext.getBean(PlayController.class);
-        controller.setGame(targetGame);
-        controller.render();
+        controller.renderNewGame(targetGame);
         screenService.activate("play");
     }
 
     @FXML
     private void whiteTextColor(MouseEvent mouseEvent) {
-        gameLabel.setTextFill(new Color(215.0/255, 235.0/255, 235.0/255, 0.8));
+        gameLabel.setTextFill(RGBColor.of(215, 235, 235, 0.8));
     }
 
     @FXML
     private void defaultTextColor(MouseEvent mouseEvent) {
-        gameLabel.setTextFill(new Color(1, 165.0/255.0, 0, 1));
+        gameLabel.setTextFill(RGBColor.of(255, 165, 0));
     }
 
     @FXML

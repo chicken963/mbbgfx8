@@ -6,9 +6,6 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -20,22 +17,27 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import ru.orthodox.mbbg.exceptions.GameInputsValidationException;
 import ru.orthodox.mbbg.mappers.SceneToGameMapper;
-import ru.orthodox.mbbg.model.AudioTrack;
-import ru.orthodox.mbbg.model.Game;
-import ru.orthodox.mbbg.services.AudiotracksLibraryService;
-import ru.orthodox.mbbg.services.EventsHandlingService;
-import ru.orthodox.mbbg.services.GameService;
-import ru.orthodox.mbbg.services.ScreenService;
-import ru.orthodox.mbbg.ui.modelExtensions.newGameScene.*;
+import ru.orthodox.mbbg.model.basic.AudioTrack;
+import ru.orthodox.mbbg.model.basic.Game;
+import ru.orthodox.mbbg.model.proxy.AudioTracksView;
+import ru.orthodox.mbbg.model.proxy.create.AudioTracksGrid;
+import ru.orthodox.mbbg.model.proxy.create.AudioTracksLibraryGrid;
+import ru.orthodox.mbbg.model.proxy.play.*;
+import ru.orthodox.mbbg.services.common.PlayMediaService;
+import ru.orthodox.mbbg.services.create.library.AudiotracksLibraryService;
+import ru.orthodox.mbbg.services.common.EventsHandlingService;
+import ru.orthodox.mbbg.services.model.GameService;
+import ru.orthodox.mbbg.utils.screen.ScreenService;
+import ru.orthodox.mbbg.services.create.FileChooserDealer;
+import ru.orthodox.mbbg.services.create.validator.GameValidator;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.orthodox.mbbg.ui.CustomFontDealer.setDefaultFont;
-import static ru.orthodox.mbbg.ui.hierarchy.ElementFinder.*;
-import static ru.orthodox.mbbg.ui.hierarchy.NodeDeepCopyProvider.createDeepCopy;
+import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
+import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
 @Configurable
 @Scope("prototype")
@@ -78,7 +80,9 @@ public class NewGameController {
     @Autowired
     private EventsHandlingService eventsHandlingService;
     @Autowired
-    AudiotracksLibraryService audiotracksLibraryService;
+    private AudiotracksLibraryService audiotracksLibraryService;
+    @Autowired
+    private PlayMediaService playMediaService;
 
 
     private Scene audioTracksLibraryScene;
@@ -116,6 +120,7 @@ public class NewGameController {
         List<AudioTrack> audioTracks = fileChooserDealer.mapFilesToAudioTracks(selectedFiles);
         RoundTab currentTab = roundsTabPane.findTabByChild((Node) e.getSource());
         AudioTracksView roundTable = currentTab.getAudioTracksTable();
+        roundTable.setPlayMediaService(playMediaService);
         roundTable.addAudioTracks(audioTracks);
     }
 

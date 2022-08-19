@@ -13,16 +13,16 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import ru.orthodox.mbbg.model.Game;
+import ru.orthodox.mbbg.model.basic.Game;
 import ru.orthodox.mbbg.repositories.BlankRepository;
 import ru.orthodox.mbbg.repositories.RoundRepository;
-import ru.orthodox.mbbg.services.ViewBlanksService;
+import ru.orthodox.mbbg.services.viewGameBlanks.ViewBlanksService;
 
 import javax.annotation.PostConstruct;
 import java.awt.print.PrinterException;
 
-import static ru.orthodox.mbbg.ui.CustomFontDealer.setDefaultFont;
-import static ru.orthodox.mbbg.ui.hierarchy.ElementFinder.findAllLabeledRecursively;
+import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
+import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findAllLabeledRecursively;
 
 @Slf4j
 @Configurable

@@ -1,7 +1,16 @@
+@import "./scrollable-table.css";
+
+* {
+   -main-color: orange;
+   -second-main-color: white;
+   -main-background-color: #111;
+   -active-row-color: #333;
+}
+
 .split-pane {
-    -fx-background-color: black;
+    -fx-background-color: -main-background-color;
     -fx-border-width: 4px;
-    -fx-border-color: orange;
+    -fx-border-color: -main-color;
     -fx-background-radius: 5px;
     -fx-border-radius: 5px;
 }
@@ -18,10 +27,10 @@
     -fx-alignment: CENTER;
     -fx-background-radius: 5px 5px 0 0;
     -fx-border-radius: 5px 5px 0 0;
-    -fx-background-color: orange;
-    -fx-border-color: orange;
+    -fx-background-color: -main-color;
+    -fx-border-color: -main-color;
     -fx-border-width: 0 0 1px 0;
-    -fx-filltext: #ffA100;
+    -fx-filltext: -main-color;
 }
 
 .tab:hover {
@@ -32,7 +41,7 @@
 
 .button {
  -fx-background-radius: 1px;
- -fx-background-color: orange;
+ -fx-background-color: -main-color;
  -fx-text-fill: black;
 }
 
@@ -45,15 +54,15 @@
 }
 
 .choice-box .context-menu {
-    -fx-background-color: black;
+    -fx-background-color: -main-background-color;
 }
 
 .choice-box .menu-item:focused {
-    -fx-background-color: orange;
+    -fx-background-color: -main-color;
 }
 
 .choice-box .menu-item > .label {
-    -fx-text-fill: white;
+    -fx-text-fill: -second-main-color;
 }
 
 .choice-box .menu-item:focused > .label {
@@ -61,11 +70,11 @@
 }
 
 .choice-box {
-    -fx-background-color: black;
-    -fx-border-color: white;
+    -fx-background-color: -main-background-color;
+    -fx-border-color: -second-main-color;
     -fx-background-radius: 2px;
-    -fx-text-fill: white;
-    -fx-font-color: white;
+    -fx-text-fill: -second-main-color;
+    -fx-font-color: -second-main-color;
 }
 
 .table-cell .tab .split-pane .anchor-pane {
@@ -73,11 +82,11 @@
 }
 
 .choice-box .arrow{
--fx-background-color: white;
+-fx-background-color: -second-main-color;
 }
 
 .tab-pane:focused>.tab-header-area>.headers-region>.tab:selected .focus-indicator {
-   -fx-border-color: white;
+   -fx-border-color: -second-main-color;
 }
 
 .tab-pane>*.tab-header-area>*.tab-header-background {
@@ -87,24 +96,24 @@
 
 .grid-pane {
     -fx-border-width: 3px;
-    -fx-border-color: orange;
+    -fx-border-color: -main-color;
     -fx-background-radius: 5px;
     -fx-border-radius: 5px;
 }
 .table-row-cell {
     -fx-background-color: transparent;
-    -fx-table-cell-border-color: white;
+    -fx-table-cell-border-color: -second-main-color;
 }
 .table-row-cell .table-cell {
     -fx-background-color: transparent;
     -fx-border-width: 1px;
-    -fx-border-color: black;
+    -fx-border-color: -main-background-color;
     -fx-padding: 1 1 1 1;
 }
 .table-view .column-header,
 .table-view .column-header .filler,
 .table-view .column-header-background .filler {
-    -fx-background-color: orange;
+    -fx-background-color: -main-color;
 }
 
 .range-bar {
@@ -124,31 +133,22 @@
     -fx-pref-height: 30px;
     -fx-min-height: 30px;
     -fx-max-height: 30px;
-    -fx-background-color: #333;
-    -fx-text-fill: orange;
+    -fx-background-color: -active-row-color;
+    -fx-text-fill: -main-color;
 }
 
 .editable-column:readonly, .time-column {
-    -fx-text-fill: white;
+    -fx-text-fill: -second-main-color;
 }
 
 .main-anchor-pane {
-    -fx-background-color: #111;
-}
-
-.grid-header {
-    -fx-background-color: orange;
-}
-
-.tracks-grid {
-
-    -fx-background-color: #111;
+    -fx-background-color: -main-background-color;
 }
 
 .tracks-grid-scroll-pane {
     -fx-border-style: solid;
-    -fx-background-color: black;
-    -fx-border-color: orange;
+    -fx-background-color: -main-background-color;
+    -fx-border-color: -main-color;
     -fx-border-width: 3px;
     -fx-background-radius: 0 0 5px 5px;
     -fx-border-radius: 0 0 5px 5px;
@@ -167,93 +167,25 @@
 
 .grid-row:hover {
     /*-fx-border-style: solid hidden solid hidden;
-    -fx-border-color: white;*/
-    -fx-background-color: #333;
-    -fx-text-fill: orange;
-}
-
-.scroll-bar:horizontal .track,
-.scroll-bar:vertical .track{
-    -fx-background-color :transparent;
-    -fx-border-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-border-radius :1.0em;
-}
-
-
-.scroll-bar:horizontal .increment-button ,
-.scroll-bar:horizontal .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 0.0 10.0 0.0;
-
-}
-
-.scroll-bar:vertical .increment-button ,
-.scroll-bar:vertical .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 10.0 0.0 0.0;
-
-}
-
- .scroll-bar .increment-arrow,
- .scroll-bar .decrement-arrow{
-    -fx-shape : " ";
-    -fx-padding :0.15em 0.0;
-}
-
- .scroll-bar:vertical .increment-arrow,
- .scroll-bar:vertical .decrement-arrow{
-    -fx-shape : " ";
-    -fx-padding :0.0 0.15em;
-}
-
-.scroll-bar:horizontal .thumb,
-.scroll-bar:vertical .thumb {
-    -fx-background-color :derive(black,90.0%);
-    -fx-background-insets : 1.0, 0.0, 0.0;
-    -fx-background-radius : 1.0em;
-}
-
-.scroll-bar:horizontal .thumb:hover,
-.scroll-bar:vertical .thumb:hover {
-    -fx-background-color :derive(orange,10.0%);
-    -fx-background-insets : 1.0, 0.0, 0.0;
-    -fx-background-radius : 1.0em;
-}
-
-.grid-header-line: {
-    -fx-border-width: 3px;
-    -fx-background-radius: 5px 5px 0 0;
-    -fx-border-radius: 5px 5px 0 0;
-}
-
-.grid-header-first {
-    -fx-background-color: orange;
-     -fx-background-radius: 5px 0 0 0;
-     -fx-border-radius: 5px 0 0 0;
-}
-
-.grid-header-last {
-    -fx-background-color: orange;
-     -fx-background-radius: 0 5px 0 0;
-     -fx-border-radius: 0 5px 0 0;
+    -fx-border-color: -second-main-color;*/
+    -fx-background-color: -active-row-color;
+    -fx-text-fill: -main-color;
 }
 
 .check-box .box {
-    -fx-background-color: white;
-    -fx-border-color:orange;
+    -fx-background-color: -second-main-color;
+    -fx-border-color:-main-color;
     -fx-border-radius: 1px;
     -fx-max-height: 10px;
     -fx-min-width: 10px;
 }
 
 .check-box:selected .mark {
-    -fx-background-color: black;
+    -fx-background-color: -main-background-color;
+    -fx-text-fill: -main-color;
 }
 
 .check-box {
-    -fx-text-color: orange;
-    -fx-text-fill: orange;
+    -fx-text-color: -main-color;
+    -fx-text-fill: -main-color;
 }

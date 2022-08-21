@@ -23,9 +23,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.*;
 import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
-import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findRecursivelyByStyleClass;
-import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findTabElementByTypeAndStyleclass;
 
 @Builder
 public class ViewBlanksService {
@@ -99,7 +98,7 @@ public class ViewBlanksService {
                 .stream()
                 .map(Blank::getNumber)
                 .map(blankNumber -> {
-                    Button button = createDeepCopy(blankMiniature);
+                    Button button = (Button) createDeepCopy(blankMiniature);
                     button.setText(blankNumber);
                     GridPane.setColumnIndex(button, counter.get() % 3);
                     GridPane.setRowIndex(button, counter.get() / 3);
@@ -127,10 +126,7 @@ public class ViewBlanksService {
             if (!roundDirectory.exists()){
                 roundDirectory.mkdir();
             }
-            List<Button> blankMiniatures = findRecursivelyByStyleClass(((Parent) tab.getContent()), "blank-miniature")
-                    .stream()
-                    .map(node -> (Button) node)
-                    .collect(Collectors.toList());
+            List<Button> blankMiniatures = findElementsByTypeAndStyleclass(((Parent) tab.getContent()), "blank-miniature");
             for (Button blankMiniature: blankMiniatures) {
                 this.renderBlankByMiniature(blankMiniature);
                 File pictureFile = new File(roundDirectory.getAbsolutePath() + "\\" + blankMiniature.getText() + ".png");

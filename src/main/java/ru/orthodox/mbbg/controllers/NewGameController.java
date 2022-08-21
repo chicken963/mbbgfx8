@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -19,25 +20,24 @@ import ru.orthodox.mbbg.exceptions.GameInputsValidationException;
 import ru.orthodox.mbbg.mappers.SceneToGameMapper;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.basic.Game;
-import ru.orthodox.mbbg.model.proxy.AudioTracksView;
-import ru.orthodox.mbbg.model.proxy.create.AudioTracksGrid;
+import ru.orthodox.mbbg.model.proxy.create.EditAudioTracksTable;
 import ru.orthodox.mbbg.model.proxy.create.AudioTracksLibraryGrid;
-import ru.orthodox.mbbg.model.proxy.play.*;
-import ru.orthodox.mbbg.services.common.PlayMediaService;
+import ru.orthodox.mbbg.model.proxy.play.RoundTab;
+import ru.orthodox.mbbg.model.proxy.play.RoundsTabPane;
+import ru.orthodox.mbbg.services.common.AudioTrackAsyncLengthLoadService;
+import ru.orthodox.mbbg.services.create.AudioTrackUIViewService;
+import ru.orthodox.mbbg.services.create.FileChooserDealer;
+import ru.orthodox.mbbg.services.create.RangeSliderService;
 import ru.orthodox.mbbg.services.create.library.AudiotracksLibraryService;
-import ru.orthodox.mbbg.services.common.EventsHandlingService;
+import ru.orthodox.mbbg.services.create.validator.GameValidator;
 import ru.orthodox.mbbg.services.model.GameService;
 import ru.orthodox.mbbg.utils.screen.ScreenService;
-import ru.orthodox.mbbg.services.create.FileChooserDealer;
-import ru.orthodox.mbbg.services.create.validator.GameValidator;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
-import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
 @Configurable
 @Scope("prototype")
@@ -65,6 +65,10 @@ public class NewGameController {
     private Tab tabSample;
     @FXML
     private TabPane tabPane;
+    @FXML
+    private HBox audioTracksGridRowTemplate;
+    @Autowired
+    private RoundsTabPane roundsTabPane;
     @Autowired
     private ApplicationContext applicationContext;
     @Autowired
@@ -78,18 +82,19 @@ public class NewGameController {
     @Autowired
     private GameValidator gameValidator;
     @Autowired
-    private EventsHandlingService eventsHandlingService;
+    private AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService;
     @Autowired
     private AudiotracksLibraryService audiotracksLibraryService;
     @Autowired
-    private PlayMediaService playMediaService;
+    private RangeSliderService rangeSliderService;
+    @Autowired
+    private AudioTrackUIViewService audioTrackUIViewService;
 
 
     private Scene audioTracksLibraryScene;
-    private RoundsTabPane roundsTabPane;
 
     @PostConstruct
-    private void setUp() {
+    private void configureUIElements() {
         setDefaultFont(
                 newGameLabel,
                 enterNewGameNameLabel,
@@ -99,14 +104,11 @@ public class NewGameController {
                 importTracksButton);
         audioTracksLibraryScene = new Scene(screenService.getParentNode("audioTracksLibrary"));
         audioTracksLibraryScene.getStylesheets().add("styleSheets/new-game.css");
+        roundsTabPane.configureUIElements(tabPane, tabSample, audioTracksGridRowTemplate);
     }
 
-    public void render() {
-        RoundTab firstTab = new RoundTab(createDeepCopy(tabSample), eventsHandlingService, 0);
-        List<RoundTab> roundTabs = new ArrayList<RoundTab>() {{
-            add(firstTab);
-        }};
-        this.roundsTabPane = new RoundsTabPane(tabPane, tabSample, roundTabs, eventsHandlingService);
+    public void renderNewGameForm() {
+        this.roundsTabPane.renderEmpty();
         //saveGame.setDisable(true);
     }
 
@@ -119,8 +121,7 @@ public class NewGameController {
         }
         List<AudioTrack> audioTracks = fileChooserDealer.mapFilesToAudioTracks(selectedFiles);
         RoundTab currentTab = roundsTabPane.findTabByChild((Node) e.getSource());
-        AudioTracksView roundTable = currentTab.getAudioTracksTable();
-        roundTable.setPlayMediaService(playMediaService);
+        EditAudioTracksTable roundTable = currentTab.getEditAudioTracksTable();
         roundTable.addAudioTracks(audioTracks);
     }
 
@@ -150,20 +151,6 @@ public class NewGameController {
         screenService.activate("startMenu");
     }
 
-
-    @FXML
-    private void deleteRound(ActionEvent actionEvent) {
-        RoundTab tabToDelete = roundsTabPane.findTabByChild((Node) actionEvent.getSource());
-        roundsTabPane.removeRoundTab(tabToDelete);
-    }
-
-    @FXML
-    private void addRound() {
-        RoundTab newTab = new RoundTab(createDeepCopy(tabSample), eventsHandlingService, roundsTabPane.getTabsCount());
-        roundsTabPane.addRoundTab(1, newTab);
-        roundsTabPane.getTabPane().setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
-    }
-
     @FXML
     private void onFirstConditionChosen(ActionEvent actionEvent) {
         RoundTab sourceTab = roundsTabPane.findTabByChild((Node) actionEvent.getSource());
@@ -191,7 +178,7 @@ public class NewGameController {
         popupStage.setScene(audioTracksLibraryScene);
 
         RoundTab currentTab = roundsTabPane.findTabByChild((Node) event.getSource());
-        AudioTracksGrid roundTableToAddSelected = (AudioTracksGrid) currentTab.getAudioTracksTable();
+        EditAudioTracksTable roundTableToAddSelected = (EditAudioTracksTable) currentTab.getEditAudioTracksTable();
         AudioTracksLibraryGrid audioTracksLibraryGrid = audiotracksLibraryService.populateTableWithAllAudioTracks((AnchorPane)audioTracksLibraryScene.getRoot());
 
         Button addSelectedLibraryTracksToRound = audiotracksLibraryService.getAddLibraryTracksButtonFromUI((AnchorPane) audioTracksLibraryScene.getRoot());
@@ -201,7 +188,7 @@ public class NewGameController {
 
     @Getter
     @AllArgsConstructor
-    public class GameScene {
+    public static class GameScene {
         private TextField gameNameInput;
         private RoundsTabPane roundsTabPane;
     }

@@ -20,7 +20,7 @@ public class TabToRoundMapper {
                 .width(RoundDimensionsDealer.getBlankDimension(roundTab.getBlankDimensions()))
                 .height(RoundDimensionsDealer.getBlankDimension(roundTab.getBlankDimensions()))
                 .numberOfBlanks(Integer.parseInt(roundTab.getNumberOfBlanks().getText()))
-                .audioTracks(roundTab.getAudioTracksTable().getAudioTracks())
+                .audioTracks(roundTab.getEditAudioTracksTable().getAudioTracks())
                 .build();
     }
 }

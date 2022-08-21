@@ -82,9 +82,9 @@ public class StartMenuController {
         startMenuService.fillGridWithAllGames();
     }
 
-    public void openNewGameForm(ActionEvent actionEvent) {
+    public void openNewGameForm() {
         NewGameController controller = applicationContext.getBean(NewGameController.class);
-        controller.render();
+        controller.renderNewGameForm();
         screenService.activate("newGame");
     }
 

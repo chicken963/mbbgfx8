@@ -6,12 +6,16 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.Setter;
 import org.controlsfx.control.RangeSlider;
 import ru.orthodox.mbbg.enums.ButtonType;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
+import ru.orthodox.mbbg.services.create.RangeSliderService;
 import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
 import ru.orthodox.mbbg.utils.common.ThreadUtils;
 
@@ -21,7 +25,6 @@ import java.util.stream.Collectors;
 
 import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 import static ru.orthodox.mbbg.services.create.AudioTrackCreateModeButtonsService.prepareButtonView;
-import static ru.orthodox.mbbg.services.create.RangeSliderService.updateRangeSlider;
 import static ru.orthodox.mbbg.utils.common.TimeRepresentationConverter.getSongProgressAsString;
 import static ru.orthodox.mbbg.utils.common.TimeRepresentationConverter.toStringFormat;
 
@@ -42,10 +45,10 @@ public class AudioTracksLibraryGrid {
 
     private HBox checkBoxContainerTemplate;
     private final GridPane audioTracksGridPane;
-    private List<AudioTrack> audioTracks;
     @Setter
     private PlayMediaService playMediaService;
-    private final List<AudioTrackUIView> gridRows = new ArrayList<>();
+    private RangeSliderService rangeSliderService;
+    private final List<AudioTrackEditUIView> gridRows = new ArrayList<>();
     private final RowConstraints templateRowConstraints;
     private Label artistTemplate;
     private Label songTitleTemplate;
@@ -59,7 +62,8 @@ public class AudioTracksLibraryGrid {
     private HBox stopButtonContainerTemplate;
     private final CheckBox checkBoxTemplate;
 
-    public AudioTracksLibraryGrid(GridPane audioTracksGridPane){
+    public AudioTracksLibraryGrid(GridPane audioTracksGridPane, RangeSliderService rangeSliderService){
+        this.rangeSliderService = rangeSliderService;
         this.audioTracksGridPane = audioTracksGridPane;
         this.templateRowConstraints = audioTracksGridPane.getRowConstraints().get(0);
         initiateTemplatesFromTemplateRowInUI();
@@ -67,7 +71,7 @@ public class AudioTracksLibraryGrid {
         this.rangeSliderTemplate = (RangeSlider) timelineContainerTemplate.getChildren().get(0);
         this.checkBoxTemplate = (CheckBox) checkBoxContainerTemplate.getChildren().get(0);
 
-        ThreadUtils.runTaskInSeparateThread(() -> updateRangeSlider(playMediaService, gridRows), "newGamePlayInfo" + this.hashCode());
+        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderService.updateRangeSlider(playMediaService, gridRows), "newGamePlayInfo" + this.hashCode());
     }
 
     private void initiateTemplatesFromTemplateRowInUI() {
@@ -111,7 +115,7 @@ public class AudioTracksLibraryGrid {
 
     private AudioTrackLibraryGridRow createUIRowElementsFromTemplates(AudioTrack audioTrack, int rowIndex) {
         HBox checkBoxContainer = createDeepCopy(checkBoxContainerTemplate);
-        CheckBox checkBox = createDeepCopy(checkBoxTemplate);
+        CheckBox checkBox = (CheckBox) createDeepCopy(checkBoxTemplate);
         checkBoxContainer.getChildren().add(checkBox);
         audioTracksGridPane.add(checkBoxContainer, CHECKBOX_COLUMN_INDEX, rowIndex);
 
@@ -202,7 +206,7 @@ public class AudioTracksLibraryGrid {
         return gridRows.stream()
                 .map(row -> (AudioTrackLibraryGridRow) row)
                 .filter(AudioTrackLibraryGridRow::isSelected)
-                .map(AudioTrackUIView::getAudioTrack)
+                .map(AudioTrackEditUIView::getAudioTrack)
                 .collect(Collectors.toList());
     }
 
@@ -215,5 +219,60 @@ public class AudioTracksLibraryGrid {
         audioTracksGridPane.getChildren()
                 .subList(NUMBER_OF_COLUMNS * TEMPLATE_ROW_INDEX, NUMBER_OF_COLUMNS * (TEMPLATE_ROW_INDEX + 1))
                 .forEach(elem -> elem.setVisible(false));
+    }
+
+    @Getter
+    @Builder
+    private static class AudioTrackLibraryGridRow implements AudioTrackEditUIView {
+        @Setter
+        private AudioTrack audioTrack;
+        private RowConstraints rowConstraints;
+        private HBox rowContainer;
+        private Label artistLabel;
+        private Label songTitleLabel;
+        private Label startTimeLabel;
+        private Label endTimeLabel;
+        private Label progressLabel;
+        private HBox rangeSliderContainer;
+        private HBox playButtonContainer;
+        private HBox pauseButtonContainer;
+        private HBox stopButtonContainer;
+        private HBox checkBoxContainer;
+
+        public List<Region> getUIElements() {
+            List<Region> result = new ArrayList<>();
+            result.add(artistLabel);
+            result.add(songTitleLabel);
+            result.add(startTimeLabel);
+            result.add(endTimeLabel);
+            result.add(progressLabel);
+            result.add(rangeSliderContainer);
+            result.add(playButtonContainer);
+            result.add(pauseButtonContainer);
+            result.add(stopButtonContainer);
+            result.add(checkBoxContainer);
+            return result;
+        }
+
+        public RangeSlider getRangeSlider() {
+            return (RangeSlider) getRangeSliderContainer().getChildren().get(0);
+        }
+
+        @Override
+        public HBox getDeleteButtonContainer() {
+            return null;
+        }
+
+        public void definSubmitLogic(){
+
+        }
+
+        public boolean isSelected(){
+            return getCheckBox().isSelected();
+        }
+
+        private CheckBox getCheckBox() {
+            return (CheckBox) this.getCheckBoxContainer().getChildren().get(0);
+        }
     }
 }

@@ -34,7 +34,7 @@ public class PlayMediaService {
         if (switchingFromAnotherTrack(audioTrack)) {
             mediaPlayer.stop();
         }
-        if (audioTrack != currentTrack) {
+        if (audioTrack != currentTrack || !isCurrentStopInPlayableRange()) {
             currentTrack = audioTrack;
             generateMediaPlayer(audioTrack);
         }
@@ -45,7 +45,7 @@ public class PlayMediaService {
     }
 
     private boolean thisTrackIsAlreadyBeingPlayed(AudioTrack audioTrack) {
-        return currentTrack == audioTrack && !isPaused;
+        return currentTrack == audioTrack && !isPaused && !isStopped;
     }
 
     private boolean switchingFromAnotherTrack(AudioTrack audioTrack) {

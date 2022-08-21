@@ -75,7 +75,7 @@ public class MiniaturesGridService implements ApplicationListener<NextTrackChang
         blankMiniatures = round.getBlanks().stream()
             .map(blank -> {
                 String blankNumber = blank.getNumber();
-                Button button = createDeepCopy(blankMiniatureTemplate);
+                Button button = (Button) createDeepCopy(blankMiniatureTemplate);
                 button.setText(blankNumber);
                 GridPane.setColumnIndex(button, counter.get() % (int) GRID_WIDTH);
                 GridPane.setRowIndex(button, counter.get() / (int) GRID_WIDTH);

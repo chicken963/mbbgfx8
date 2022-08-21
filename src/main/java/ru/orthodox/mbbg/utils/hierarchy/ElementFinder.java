@@ -14,6 +14,21 @@ import java.util.stream.Collectors;
 
 public class ElementFinder {
 
+    public static<T> T findElementByTypeAndStyleclass(Parent parent, String styleClass) {
+        return findRecursivelyByStyleClass(parent, styleClass)
+                .stream()
+                .map(node -> (T) node)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(String.format("Failed to find element with style class '%s'", styleClass)));
+    }
+
+    public static<T> List<T> findElementsByTypeAndStyleclass(Parent parent, String styleClass) {
+        return findRecursivelyByStyleClass(parent, styleClass)
+                .stream()
+                .map(node -> (T) node)
+                .collect(Collectors.toList());
+    }
+
     public static<T> T findTabElementByTypeAndStyleclass(Tab tab, String styleClass) {
         return findRecursivelyByStyleClass((Parent) tab.getContent(), styleClass)
                 .stream()

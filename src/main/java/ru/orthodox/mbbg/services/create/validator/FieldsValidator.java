@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.enums.WinCondition;
 import ru.orthodox.mbbg.exceptions.GameInputsValidationException;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
-import ru.orthodox.mbbg.model.proxy.AudioTracksView;
+import ru.orthodox.mbbg.model.proxy.create.EditAudioTracksTable;
 import ru.orthodox.mbbg.model.proxy.play.RoundTab;
 import ru.orthodox.mbbg.model.proxy.play.RoundsTabPane;
 import ru.orthodox.mbbg.services.popup.PopupAlerter;
@@ -65,7 +65,7 @@ public class FieldsValidator {
 
 
         try {
-            AudioTracksView table = tab.getAudioTracksTable();
+            EditAudioTracksTable table = tab.getEditAudioTracksTable();
             validateAudiotracksTable(table);
         } catch (GameInputsValidationException ex) {
             tabIsValid = false;
@@ -153,9 +153,10 @@ public class FieldsValidator {
         }
     }
 
-    private void validateAudiotracksTable(AudioTracksView table){
+    private void validateAudiotracksTable(EditAudioTracksTable table){
         Label tablePlaceHolder = table.getPlaceholder();
         if (table.isEmpty()) {
+            tablePlaceHolder.setText("Please add any tracks");
             tablePlaceHolder.setVisible(true);
             throw new GameInputsValidationException();
         }

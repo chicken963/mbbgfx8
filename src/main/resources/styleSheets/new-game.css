@@ -19,23 +19,41 @@
  -fx-background-color: transparent;
 }
 
+.tab:selected {
+    -fx-background-color: -main-color;
+    -fx-border-color: -main-color;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
 .tab:selected .tab-label {
+    -fx-text-fill: -main-background-color;
+}
+
+.tab .tab-label {
     -fx-alignment: CENTER;
+    -fx-text-fill: -second-main-color;
 }
 
 .tab {
     -fx-alignment: CENTER;
     -fx-background-radius: 5px 5px 0 0;
     -fx-border-radius: 5px 5px 0 0;
-    -fx-background-color: -main-color;
+    -fx-background-color: -main-background-color;
     -fx-border-color: -main-color;
-    -fx-border-width: 0 0 1px 0;
+    -fx-border-width: 1px;
     -fx-filltext: -main-color;
 }
 
 .tab:hover {
     -fx-scale-y: 1.05;
     -fx-scale-x: 1.05;
+    -fx-background-radius: 5px 5px 0 0;
+    -fx-border-radius: 5px 5px 0 0;
     -fx-background-color: rgb(255,202,105);
 }
 
@@ -55,6 +73,8 @@
 
 .choice-box .context-menu {
     -fx-background-color: -main-background-color;
+    -fx-border-color: -main-color;
+    -fx-border-radius: 15px 0 15px 0;
 }
 
 .choice-box .menu-item:focused {
@@ -72,21 +92,20 @@
 .choice-box {
     -fx-background-color: -main-background-color;
     -fx-border-color: -second-main-color;
-    -fx-background-radius: 2px;
-    -fx-text-fill: -second-main-color;
-    -fx-font-color: -second-main-color;
+    -fx-background-radius: 15px;
+    -fx-border-radius: 15px;
 }
 
 .table-cell .tab .split-pane .anchor-pane {
     -fx-background-color: transparent;
 }
 
-.choice-box .arrow{
--fx-background-color: -second-main-color;
+.choice-box .label {
+    -fx-text-fill: -second-main-color;
 }
 
-.tab-pane:focused>.tab-header-area>.headers-region>.tab:selected .focus-indicator {
-   -fx-border-color: -second-main-color;
+.choice-box .arrow{
+-fx-background-color: -second-main-color;
 }
 
 .tab-pane>*.tab-header-area>*.tab-header-background {
@@ -110,6 +129,7 @@
     -fx-border-color: -main-background-color;
     -fx-padding: 1 1 1 1;
 }
+
 .table-view .column-header,
 .table-view .column-header .filler,
 .table-view .column-header-background .filler {
@@ -133,12 +153,15 @@
     -fx-pref-height: 30px;
     -fx-min-height: 30px;
     -fx-max-height: 30px;
-    -fx-background-color: -active-row-color;
-    -fx-text-fill: -main-color;
 }
 
 .editable-column:readonly, .time-column {
     -fx-text-fill: -second-main-color;
+}
+
+.text-field:focused{
+    -fx-faint-focus-color: transparent;
+    -fx-focus-color:-main-color;
 }
 
 .main-anchor-pane {
@@ -165,11 +188,13 @@
     -fx-background-color: rgb(255,202,105);
 }
 
-.grid-row:hover {
-    /*-fx-border-style: solid hidden solid hidden;
-    -fx-border-color: -second-main-color;*/
-    -fx-background-color: -active-row-color;
+.grid-row {
+    -fx-background-color: -main-background-color;
     -fx-text-fill: -main-color;
+}
+
+.grid-row:hover {
+    -fx-background-color: -active-row-color;
 }
 
 .check-box .box {
@@ -188,4 +213,13 @@
 .check-box {
     -fx-text-color: -main-color;
     -fx-text-fill: -main-color;
+}
+
+.tracks-grid-placeholder {
+    -fx-background-color: -main-background-color;
+    -fx-text-fill: -second-main-color;
+}
+
+.tracks-grid {
+    -fx-background-color: -main-background-color;
 }

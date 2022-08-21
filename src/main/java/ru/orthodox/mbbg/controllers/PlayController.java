@@ -21,6 +21,10 @@ import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
 @Configurable
 public class PlayController {
     @FXML
+    private Button prevRound;
+    @FXML
+    private Button nextRound;
+    @FXML
     private Label artistHeader;
     @FXML
     private Label titleHeader;
@@ -64,7 +68,15 @@ public class PlayController {
 
     @PostConstruct
     public void initialize() {
-        setDefaultFont(songTitle, songProgressInSeconds, roundNameLabel, changeWinCondition, artistHeader, titleHeader);
+        setDefaultFont(
+                prevRound,
+                nextRound,
+                songTitle,
+                songProgressInSeconds,
+                roundNameLabel,
+                changeWinCondition,
+                artistHeader,
+                titleHeader);
         if (playGameService != null) {
             playGameService.configureUIElements(
                     roundNameLabel,

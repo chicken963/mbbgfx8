@@ -3,10 +3,17 @@ package ru.orthodox.mbbg.model.proxy.play;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import lombok.Getter;
-import ru.orthodox.mbbg.services.common.EventsHandlingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.orthodox.mbbg.services.common.AudioTrackAsyncLengthLoadService;
+import ru.orthodox.mbbg.services.common.PlayMediaService;
+import ru.orthodox.mbbg.services.create.AudioTrackUIViewService;
+import ru.orthodox.mbbg.services.create.RangeSliderService;
 import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,24 +21,49 @@ import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
 import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
 @Getter
+@Component
 public class RoundsTabPane {
-    private final TabPane tabPane;
-    private final List<RoundTab> roundTabs;
-    private boolean allRoundsAreFilled;
-    private EventsHandlingService eventsHandlingService;
+    private TabPane tabPane;
+    private Tab tabSample;
+    private HBox audioTracksGridRowTemplate;
 
-    public RoundsTabPane (TabPane tabPane, Tab tabSample, List<RoundTab> roundTabs, EventsHandlingService eventsHandlingService) {
+    private List<RoundTab> roundTabs;
+    private boolean allRoundsAreFilled;
+    @Autowired
+    private AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService;
+    @Autowired
+    private AudioTrackUIViewService audioTrackUIViewService;
+    @Autowired
+    private RangeSliderService rangeSliderService;
+    @Autowired
+    private PlayMediaService playMediaService;
+
+    public void configureUIElements(TabPane tabPane, Tab tabSample, HBox audioTracksGridRowTemplate) {
         this.tabPane = tabPane;
-        this.roundTabs = roundTabs;
+        this.tabSample = tabSample;
+        this.audioTracksGridRowTemplate = audioTracksGridRowTemplate;
+        setDefaultFont(
+//                ElementFinder.findAllLabelsRecursively(tabPane).toArray(new Labeled[0])
+                ElementFinder.findAllLabelsRecursively((Parent) tabSample.getContent()).toArray(new Labeled[0])
+        );
+    }
+
+    public void renderEmpty() {
+        RoundTab firstTab = new RoundTab(createDeepCopy(tabSample),
+                audioTracksGridRowTemplate,
+                audioTrackAsyncLengthLoadService,
+                rangeSliderService,
+                audioTrackUIViewService,
+                playMediaService,
+                0);
+        this.roundTabs = new ArrayList<RoundTab>() {{
+            add(firstTab);
+        }};
         this.allRoundsAreFilled = false;
-        this.eventsHandlingService = eventsHandlingService;
-        tabPane.getTabs().clear();
-        tabPane.getTabs().addAll(roundTabs.stream().map(RoundTab::getTab).collect(Collectors.toList()));
+        tabPane.getTabs().setAll(roundTabs.stream().map(RoundTab::getTab).collect(Collectors.toList()));
         tabPane.getTabs().add(newTabButton(tabPane, tabSample));
         setDefaultTabNamesToUnnamedRounds();
-        setDefaultFont(
-            ElementFinder.findAllLabelsRecursively(tabPane).toArray(new Labeled[0])
-        );
+
     }
 
     public RoundTab findTabByChild(Node child) {
@@ -76,7 +108,14 @@ public class RoundsTabPane {
         addTab.setTooltip(new Tooltip("Add round"));
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if(newTab == addTab) {
-                RoundTab newTab1 = new RoundTab(createDeepCopy(tabSample), eventsHandlingService, this.getTabsCount() - 1);
+                RoundTab newTab1 = new RoundTab(
+                        createDeepCopy(tabSample),
+                        audioTracksGridRowTemplate,
+                        audioTrackAsyncLengthLoadService,
+                        rangeSliderService,
+                        audioTrackUIViewService,
+                        playMediaService,
+                        this.getTabsCount() - 1);
                 this.addRoundTab(this.getTabsCount() - 1, newTab1);
                 tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
                 tabPane.getSelectionModel().select(tabPane.getTabs().size() - 2); // Selecting the tab before the button, which is the newly created one

@@ -1,21 +1,21 @@
 package ru.orthodox.mbbg.model.proxy.play;
 
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import lombok.Getter;
 import ru.orthodox.mbbg.enums.WinCondition;
-import ru.orthodox.mbbg.model.proxy.AudioTracksView;
-import ru.orthodox.mbbg.model.proxy.create.AudioTracksGrid;
-import ru.orthodox.mbbg.services.common.EventsHandlingService;
+import ru.orthodox.mbbg.model.proxy.create.EditAudioTracksTable;
+import ru.orthodox.mbbg.services.common.AudioTrackAsyncLengthLoadService;
+import ru.orthodox.mbbg.services.common.PlayMediaService;
+import ru.orthodox.mbbg.services.create.AudioTrackUIViewService;
+import ru.orthodox.mbbg.services.create.PrizeConditionsDealer;
+import ru.orthodox.mbbg.services.create.RangeSliderService;
+import ru.orthodox.mbbg.services.create.RoundDimensionsDealer;
 import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
 import ru.orthodox.mbbg.utils.hierarchy.HierarchyUtils;
-import ru.orthodox.mbbg.services.create.PrizeConditionsDealer;
-import ru.orthodox.mbbg.services.create.RoundDimensionsDealer;
 
 import java.util.stream.Stream;
 
@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 public class RoundTab {
     private final Tab tab;
 
-    private AudioTracksView audioTracksTable;
+    private EditAudioTracksTable editAudioTracksTable;
 
     private final int index;
 
@@ -38,22 +38,31 @@ public class RoundTab {
 
     private PrizeConditionsDealer prizeConditionsDealer;
 
-    private EventsHandlingService eventsHandlingService;
+    private AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService;
+    private PlayMediaService playMediaService;
 
-    public RoundTab(Tab tab, EventsHandlingService eventsHandlingService, int index) {
+    public RoundTab(Tab tab,
+                    HBox audioTracksGridRowTemplate,
+                    AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService,
+                    RangeSliderService rangeSliderService,
+                    AudioTrackUIViewService audioTrackUIViewService,
+                    PlayMediaService playMediaService,
+                    int index) {
         this.tab = tab;
-        this.eventsHandlingService = eventsHandlingService;
+        this.audioTrackAsyncLengthLoadService = audioTrackAsyncLengthLoadService;
         this.index = index;
-        this.audioTracksTable = Stream.of(ElementFinder.<GridPane>findTabElementByTypeAndStyleclass(tab, "tracks-grid"))
-                .map(gridPane -> new AudioTracksGrid(gridPane, eventsHandlingService))
+
+        defineAudioTracksGridStaticMembers(
+                audioTracksGridRowTemplate,
+                audioTrackAsyncLengthLoadService,
+                rangeSliderService,
+                audioTrackUIViewService,
+                playMediaService);
+
+        this.editAudioTracksTable = Stream.of(ElementFinder.<VBox>findTabElementByTypeAndStyleclass(tab, "tracks-grid"))
+                .map(EditAudioTracksTable::new)
                 .findFirst()
                 .orElse(null);
-        /*
-        this.audioTracksTable = Stream.of(ElementFinder.<TableView<AudioTrack>>findTabElementByTypeAndStyleclass(tab, "tracksTable"))
-                .map(AudioTracksTable::new)
-                .findFirst()
-                .orElse(null);
-        */
 
         this.firstPrizeCondition = getFirstPrizeCondition();
         this.secondPrizeCondition = getSecondPrizeCondition();
@@ -69,16 +78,16 @@ public class RoundTab {
         this.roundNameTextField = getNewRoundNameTextField();
 
         this.bindRoundNameToTabName();
-        EventHandler<Event> defaultTabCloseBehaviour = tab.getOnClosed();
-/*        tab.setOnClosed(event -> {
-            if (defaultTabCloseBehaviour != null ) {
-                defaultTabCloseBehaviour.handle(event);
-            }
-            TabPane parentTabPane = tab.getTabPane();
-            if (parentTabPane.getTabs().size() == 1) {
-                parentTabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-            }
-        });*/
+    }
+
+    private void defineAudioTracksGridStaticMembers(HBox audioTracksGridRowTemplate, AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService, RangeSliderService rangeSliderService, AudioTrackUIViewService audioTrackUIViewService, PlayMediaService playMediaService) {
+        EditAudioTracksTable.setPlayMediaService(playMediaService);
+        EditAudioTracksTable.setRangeSliderService(rangeSliderService);
+
+        EditAudioTracksTable.setAudioTrackUIViewService(audioTrackUIViewService);
+        EditAudioTracksTable.setAudioTrackAsyncLengthLoadService(audioTrackAsyncLengthLoadService);
+
+        EditAudioTracksTable.setAudioTracksTableRowTemplate(audioTracksGridRowTemplate);
     }
 
     public boolean containsChild(Node child) {
@@ -192,7 +201,7 @@ public class RoundTab {
             && !blankDimensions.getValue().equals(null)
             && !numberOfBlanks.getText().isEmpty()
             && !roundNameTextField.getText().isEmpty()
-            && audioTracksTable.isFilled();
+            && editAudioTracksTable.isFilled();
 
     }
 }

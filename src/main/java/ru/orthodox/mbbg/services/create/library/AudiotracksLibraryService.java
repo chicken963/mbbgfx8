@@ -10,12 +10,17 @@ import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.events.AudioTrackLengthLoadedEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.repositories.AudioTrackRepository;
-import ru.orthodox.mbbg.model.proxy.create.AudioTracksGrid;
+import ru.orthodox.mbbg.model.proxy.create.EditAudioTracksTable;
 import ru.orthodox.mbbg.model.proxy.create.AudioTracksLibraryGrid;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
+import ru.orthodox.mbbg.services.create.AudioTrackUIViewService;
+import ru.orthodox.mbbg.services.create.RangeSliderService;
+import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
 
 import java.util.List;
+import java.util.stream.Stream;
 
+import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findElementByTypeAndStyleclass;
 import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findRecursivelyByStyleClass;
 
 @Service
@@ -26,6 +31,10 @@ public class AudiotracksLibraryService {
     private ApplicationEventPublisher eventPublisher;
     @Autowired
     private PlayMediaService playMediaService;
+    @Autowired
+    private RangeSliderService rangeSliderService;
+    @Autowired
+    private AudioTrackUIViewService audioTrackUIViewService;
 
     public AudioTracksLibraryGrid populateTableWithAllAudioTracks(Pane libraryPopupContent) {
         AudioTracksLibraryGrid libraryTable = getAudioTracksLibraryGridFromUI(libraryPopupContent);
@@ -35,7 +44,7 @@ public class AudiotracksLibraryService {
     }
 
 
-    public void addSelectedTracksToRound(AudioTracksLibraryGrid libraryGrid, AudioTracksGrid roundTableToSendTheSelectedAudiotracks, Stage stage) {
+    public void addSelectedTracksToRound(AudioTracksLibraryGrid libraryGrid, EditAudioTracksTable roundTableToSendTheSelectedAudiotracks, Stage stage) {
         List<AudioTrack> selectedAudioTracks = libraryGrid.getSelectedAudiotracks();
         roundTableToSendTheSelectedAudiotracks.addAudioTracks(selectedAudioTracks);
         for (AudioTrack audioTrack: selectedAudioTracks) {
@@ -45,19 +54,14 @@ public class AudiotracksLibraryService {
     }
 
     private AudioTracksLibraryGrid getAudioTracksLibraryGridFromUI(Pane libraryPopupContent) {
-        return findRecursivelyByStyleClass(libraryPopupContent, "tracks-grid")
-                .stream()
+        return Stream.of(findElementByTypeAndStyleclass(libraryPopupContent, "tracks-grid"))
                 .map(node -> (GridPane) node)
-                .map(AudioTracksLibraryGrid::new)
+                .map(gridPane -> new AudioTracksLibraryGrid(gridPane, rangeSliderService))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("There is no grid pane found by style class 'tracks-grid'"));
     }
 
     public Button getAddLibraryTracksButtonFromUI(Pane libraryPopupContent) {
-        return findRecursivelyByStyleClass(libraryPopupContent, "add-selected-tracks")
-                .stream()
-                .map(node -> (Button) node)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("There is no grid pane found by style class 'tracks-grid'"));
+        return ElementFinder.findElementByTypeAndStyleclass(libraryPopupContent, "add-selected-tracks");
     }
 }

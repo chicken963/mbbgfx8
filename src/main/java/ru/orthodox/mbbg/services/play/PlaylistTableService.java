@@ -1,24 +1,23 @@
 package ru.orthodox.mbbg.services.play;
 
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.events.CurrentTrackChangedEvent;
 import ru.orthodox.mbbg.events.NextTrackChangeRequestedByUserEvent;
 import ru.orthodox.mbbg.events.NextTrackChangedEvent;
-import ru.orthodox.mbbg.events.PreviousTrackChangedEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.basic.Round;
+import ru.orthodox.mbbg.model.proxy.create.AudioTrackUIView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +56,7 @@ public class PlaylistTableService  {
     public void configureUIElements(VBox audioTracksTable, HBox audioTracksTableRowTemplate) {
         this.audioTracksTable = audioTracksTable;
         this.rowTemplate = createDeepCopy(audioTracksTableRowTemplate);
-        this.nextIconTemplate = createDeepCopy((Button) (audioTracksTableRowTemplate.getChildren().get(0)));
+        this.nextIconTemplate = (Button) createDeepCopy((Parent) audioTracksTableRowTemplate.getChildren().get(0));
         this.artistTemplate = createDeepCopy((Label) (audioTracksTableRowTemplate.getChildren().get(1)));
         this.songTitleTemplate = createDeepCopy((Label) (audioTracksTableRowTemplate.getChildren().get(2)));
     }
@@ -80,7 +79,7 @@ public class PlaylistTableService  {
 
     private void addRow(AudioTrack audioTrack) {
 
-        Button nextIcon = createDeepCopy(nextIconTemplate);
+        Button nextIcon = (Button) createDeepCopy(nextIconTemplate);
         nextIcon.getGraphic().setVisible(false);
 
         Label artistLabel = createDeepCopy(artistTemplate);
@@ -162,7 +161,7 @@ public class PlaylistTableService  {
 
     @Getter
     @Builder
-    public static class PlaylistTableRow {
+    public static class PlaylistTableRow implements AudioTrackUIView {
         private static final String DISABLED_STYLECLASS = "disabled";
         private static final String ACTIVE_STYLECLASS = "active";
         private static final String NEXT_STYLECLASS = "next";

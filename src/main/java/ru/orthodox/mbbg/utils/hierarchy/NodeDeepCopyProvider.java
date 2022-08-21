@@ -2,6 +2,7 @@ package ru.orthodox.mbbg.utils.hierarchy;
 
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.effect.DisplacementMap;
 import javafx.scene.effect.FloatMap;
@@ -14,11 +15,37 @@ import ru.orthodox.mbbg.utils.common.CustomFontDealer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class NodeDeepCopyProvider {
 
-    public static Pane createDeepCopy(Pane region) {
+    public static Parent createDeepCopy(Parent node) {
+        Parent nodeCopy;
+        List<Node> children = new ArrayList<>();
+
+        if (node instanceof Pane) {
+            nodeCopy = createDeepCopy((Pane) node);
+            children = ((Pane) node).getChildren();
+        } else if (node instanceof Control) {
+            nodeCopy = createDeepCopy((Control) node);
+        } else {
+            throw new ClassCastException(String.format("Class %s was met among the familiar", node.getClass()));
+        }
+
+        if (node.getParent() != null && node.getParent() instanceof GridPane) {
+            GridPane.setColumnIndex(nodeCopy, GridPane.getColumnIndex(node));
+            GridPane.setRowIndex(nodeCopy, GridPane.getRowIndex(node));
+        }
+
+        for (Node child : children) {
+            Parent childCopy = createDeepCopy((Parent) child);
+            ((Pane) nodeCopy).getChildren().add(childCopy);
+        }
+        return nodeCopy;
+    }
+
+    private static Pane createDeepCopy(Pane region) {
         Pane copy;
         if (region instanceof HBox) {
             copy = createDeepCopy((HBox) region);
@@ -51,7 +78,7 @@ public class NodeDeepCopyProvider {
         return copy;
     }
 
-    public static Control createDeepCopy(Control control) {
+    private static Control createDeepCopy(Control control) {
         Control copy;
         if (control instanceof Label) {
             copy = createDeepCopy((Label) control);
@@ -78,7 +105,7 @@ public class NodeDeepCopyProvider {
         return copy;
     }
 
-    public static Pagination createDeepCopy(Pagination pagination) {
+    private static Pagination createDeepCopy(Pagination pagination) {
         Pagination copy = new Pagination();
         copy.setCursor(pagination.getCursor());
         copy.setLayoutX(pagination.getLayoutX());
@@ -93,7 +120,7 @@ public class NodeDeepCopyProvider {
         return copy;
     }
 
-    public static Button createDeepCopy(Button sourceButton) {
+    private static Button createDeepCopy(Button sourceButton) {
         Button copy = new Button();
 
         HBox.setMargin(copy, createDeepCopy(HBox.getMargin(sourceButton)));
@@ -113,7 +140,7 @@ public class NodeDeepCopyProvider {
         return copy;
     }
 
-    public static CheckBox createDeepCopy(CheckBox sourceCheckbox) {
+    private static CheckBox createDeepCopy(CheckBox sourceCheckbox) {
         CheckBox copy = new CheckBox();
         copy.setMnemonicParsing(sourceCheckbox.isMnemonicParsing());
         copy.getStyleClass().setAll(sourceCheckbox.getStyleClass());
@@ -127,10 +154,11 @@ public class NodeDeepCopyProvider {
         return copy;
     }
 
-    public static Label createDeepCopy(Label sourceLabel) {
+    private static Label createDeepCopy(Label sourceLabel) {
         Label copy = new Label();
 
         HBox.setMargin(copy, createDeepCopy(HBox.getMargin(sourceLabel)));
+        copy.setPadding(createDeepCopy(sourceLabel.getPadding()));
         alignCommonRegionProperties(sourceLabel, copy);
         alignCommonLabeledProperties(sourceLabel, copy);
         alignTextProperties(sourceLabel, copy);
@@ -154,7 +182,7 @@ public class NodeDeepCopyProvider {
         );
     }
 
-    public static HBox createDeepCopy(HBox sourceHbox) {
+    private static HBox createDeepCopy(HBox sourceHbox) {
         HBox copy = new HBox();
         HBox.setHgrow(copy, HBox.getHgrow(sourceHbox));
         VBox.setMargin(copy, createDeepCopy(VBox.getMargin(sourceHbox)));

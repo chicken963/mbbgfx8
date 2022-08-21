@@ -48,7 +48,7 @@ public class StartMenuService {
         rowsNumber = gamesField.getRowConstraints().size();
         int pageSize = rowsNumber * columnsNumber;
         if (existingGames.size() >= pageSize) {
-            Pagination pagination = createDeepCopy(templatePagination);
+            Pagination pagination = (Pagination) createDeepCopy(templatePagination);
             pagination.setPageCount(existingGames.size() / pageSize + 1);
             pagination.setPageFactory(pageIndex -> {
                 fillGamesFieldPage(pageIndex);
@@ -68,7 +68,7 @@ public class StartMenuService {
             currentRowIndex = index / columnsNumber;
             currentColumnIndex = index % columnsNumber;
             gameLabel.setText(game.getName());
-            Pane anchorPane = createDeepCopy(templateGameAnchorPane);
+            Pane anchorPane = (Pane) createDeepCopy(templateGameAnchorPane);
             availableGames.add(new GamesGridItem((AnchorPane) anchorPane, game));
             gamesField.add(anchorPane, currentColumnIndex, currentRowIndex);
             incrementIndexes();

@@ -1,21 +1,21 @@
 package ru.orthodox.mbbg.model.proxy.create;
 
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.controlsfx.control.RangeSlider;
-import ru.orthodox.mbbg.enums.ButtonType;
+import ru.orthodox.mbbg.events.TextFieldChangeEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
-import ru.orthodox.mbbg.services.common.PlayMediaService;
+import ru.orthodox.mbbg.services.common.EventPublisherService;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,69 +44,74 @@ public class AudioTrackGridRow implements AudioTrackEditUIView {
 
     @Setter
     private static HBox rowContainerTemplate;
-
-
     @Setter
-    private static PlayMediaService playMediaService;
+    private static EventPublisherService eventPublisherService;
 
     private HBox rowContainer;
-    private Label progressLabel;
-    private Label endTimeLabel;
-    private Label startTimeLabel;
-    private TextField artistLabel;
-    private TextField songTitleLabel;
-    private HBox rangeSliderContainer;
-    private HBox playButtonContainer;
-    private HBox pauseButtonContainer;
-    private HBox stopButtonContainer;
-    private HBox deleteButtonContainer;
 
     public RangeSlider getRangeSlider() {
         return (RangeSlider) getRangeSliderContainer().getChildren().get(0);
     }
 
     public void defineLabelsLogic(){
-        artistLabel.setOnMouseClicked(mouseEvent -> {
+        getArtistLabel().setOnMouseClicked(mouseEvent -> {
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+                VBox tracksTable = (VBox) getArtistLabel().getParent().getParent();
+                List<TextField> allEditableFields = findAllEditableFields(tracksTable);
+
                 if (mouseEvent.getClickCount() == 2) {
-                    VBox tracksTable = (VBox) artistLabel.getParent().getParent();
-                    List<HBox> rows = tracksTable.getChildren().stream()
-                            .filter(child -> child instanceof HBox)
-                            .map(child -> (HBox) child)
-                            .collect(Collectors.toList());
-                    rows.forEach(row ->  row.getChildren().stream()
-                            .filter(child -> child instanceof TextField)
-                            .map(child -> (TextField) child)
-                            .forEach(child -> child.setEditable(false)));
-                    artistLabel.setEditable(true);
-                    artistLabel.setOnKeyPressed(ke -> {
-                        if (ke.getCode().equals(KeyCode.ENTER) || ke.getCode().equals(KeyCode.ESCAPE)) {
-                            String newValue = artistLabel.getText();
+                    String oldValue = getArtistLabel().getText();
+
+                    allEditableFields.forEach(textField -> textField.setEditable(false));
+                    getArtistLabel().setEditable(true);
+
+                    getArtistLabel().setOnKeyPressed(ke -> {
+                        if (ke.getCode().equals(KeyCode.ENTER)) {
+
+                            String newValue = getArtistLabel().getText();
                             this.audioTrack.setArtist(newValue);
-                            artistLabel.setEditable(false);
+                            getArtistLabel().setEditable(false);
+                            eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
+                        } else if (ke.getCode().equals(KeyCode.ESCAPE)) {
+
+                            getArtistLabel().setText(oldValue);
+                            getArtistLabel().setEditable(false);
+
                         }
                     });
                 }
+ /*               else if (mouseEvent.getClickCount() == 1) {
+                    Optional<TextField> editedField = allEditableFields.stream()
+                            .filter(TextInputControl::isEditable)
+                            .findFirst();
+                    if (editedField.isPresent()) {
+
+                    }
+                }*/
             }
         });
-        songTitleLabel.setOnMouseClicked(mouseEvent -> {
+
+        getSongTitleLabel().setOnMouseClicked(mouseEvent -> {
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
                 if (mouseEvent.getClickCount() == 2) {
-                    VBox tracksTable = (VBox) songTitleLabel.getParent().getParent();
-                    List<HBox> rows = tracksTable.getChildren().stream()
-                            .filter(child -> child instanceof HBox)
-                            .map(child -> (HBox) child)
-                            .collect(Collectors.toList());
-                    rows.forEach(row ->  row.getChildren().stream()
-                            .filter(child -> child instanceof TextField)
-                            .map(child -> (TextField) child)
-                            .forEach(child -> child.setEditable(false)));
-                    songTitleLabel.setEditable(true);
-                    songTitleLabel.setOnKeyPressed(ke -> {
-                        if (ke.getCode().equals(KeyCode.ENTER) || ke.getCode().equals(KeyCode.ESCAPE)) {
-                            String newValue = songTitleLabel.getText();
+                    VBox tracksTable = (VBox) getArtistLabel().getParent().getParent();
+                    String oldValue = getSongTitleLabel().getText();
+                    List<TextField> allEditableFields = findAllEditableFields(tracksTable);
+                    allEditableFields.forEach(textField -> textField.setEditable(false));
+
+                    getSongTitleLabel().setEditable(true);
+                    getSongTitleLabel().setOnKeyPressed(ke -> {
+                        if (ke.getCode().equals(KeyCode.ENTER)) {
+
+                            String newValue = getSongTitleLabel().getText();
                             this.audioTrack.setTitle(newValue);
-                            songTitleLabel.setEditable(false);
+                            getSongTitleLabel().setEditable(false);
+                            eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
+                        } else if (ke.getCode().equals(KeyCode.ESCAPE)) {
+
+                            getSongTitleLabel().setText(oldValue);
+                            getSongTitleLabel().setEditable(false);
+
                         }
                     });
                 }
@@ -114,67 +119,86 @@ public class AudioTrackGridRow implements AudioTrackEditUIView {
         });
     }
 
-    public static AudioTrackGridRow of (AudioTrack audioTrack) {
+    public static AudioTrackGridRow of(AudioTrack audioTrack) {
 
         HBox rowContainer = (HBox) createDeepCopy(rowContainerTemplate);
 
-        TextField artist = createDeepCopy((TextField) rowContainerTemplate.getChildren().get(ARTIST_COLUMN_INDEX));
-        artist.setText(audioTrack.getArtist());
-        rowContainer.getChildren().add(artist);
+        ((TextField) rowContainer.getChildren().get(ARTIST_COLUMN_INDEX)).setText(audioTrack.getArtist());
+        ((TextField) rowContainer.getChildren().get(TITLE_COLUMN_INDEX)).setText(audioTrack.getTitle());
+        ((Label) rowContainer.getChildren().get(START_TIME_COLUMN_INDEX)).setText(toStringFormat(audioTrack.getStartInSeconds()));
 
-        TextField songTitle = createDeepCopy((TextField) rowContainerTemplate.getChildren().get(TITLE_COLUMN_INDEX));
-        songTitle.setText(audioTrack.getTitle());
-        rowContainer.getChildren().add(songTitle);
-
-        Label startTime = createDeepCopy((Label) rowContainerTemplate.getChildren().get(START_TIME_COLUMN_INDEX));
-        startTime.setText(toStringFormat(audioTrack.getStartInSeconds()));
-        rowContainer.getChildren().add(startTime);
-
-        HBox rangeSliderContainerTemplate = (HBox) rowContainerTemplate.getChildren().get(TIMELINE_COLUMN_INDEX);
-        HBox rangeSliderContainer = createDeepCopy(rangeSliderContainerTemplate);
-        RangeSlider rangeSlider = createDeepCopy((RangeSlider) rangeSliderContainerTemplate.getChildren().get(0));
-        rangeSlider.highValueProperty().addListener((observable, oldValue, newValue) -> { if (playMediaService != null) playMediaService.pause(audioTrack); });
-        rangeSlider.lowValueProperty().addListener((observable, oldValue, newValue) -> { if (playMediaService != null) playMediaService.pause(audioTrack); });
-
-        rangeSliderContainer.getChildren().setAll(rangeSlider);
-        rowContainer.getChildren().add(rangeSliderContainer);
-
-        Label endTime = createDeepCopy((Label) rowContainerTemplate.getChildren().get(END_TIME_COLUMN_INDEX));
-        endTime.setText(toStringFormat(audioTrack.getFinishInSeconds()));
-        rowContainer.getChildren().add(endTime);
-
-        Label progress = createDeepCopy((Label) rowContainerTemplate.getChildren().get(PROGRESS_COLUMN_INDEX));
-        progress.setText(getSongProgressAsString(0, audioTrack.getLengthInSeconds()));
-        rowContainer.getChildren().add(progress);
-
-        HBox playButtonContainer = createDeepCopy((HBox) rowContainerTemplate.getChildren().get(PLAY_BUTTON_COLUMN_INDEX));
-        rowContainer.getChildren().add(playButtonContainer);
-
-        HBox pauseButtonContainer = createDeepCopy((HBox) rowContainerTemplate.getChildren().get(PAUSE_BUTTON_COLUMN_INDEX));
-        rowContainer.getChildren().add(pauseButtonContainer);
-
-        HBox stopButtonContainer = createDeepCopy((HBox) rowContainerTemplate.getChildren().get(STOP_BUTTON_COLUMN_INDEX));
-        rowContainer.getChildren().add(stopButtonContainer);
-
-        HBox deleteButtonContainer = createDeepCopy((HBox) rowContainerTemplate.getChildren().get(DELETE_BUTTON_COLUMN_INDEX));
-        rowContainer.getChildren().add(deleteButtonContainer);
+        ((Label) rowContainer.getChildren().get(END_TIME_COLUMN_INDEX)).setText(toStringFormat(audioTrack.getFinishInSeconds()));
+        ((Label) rowContainerTemplate.getChildren().get(PROGRESS_COLUMN_INDEX)).setText(getSongProgressAsString(0, audioTrack.getLengthInSeconds()));
 
         AudioTrackGridRow row =  AudioTrackGridRow.builder()
                 .audioTrack(audioTrack)
                 .rowContainer(rowContainer)
-                .artistLabel(artist)
-                .songTitleLabel(songTitle)
-                .startTimeLabel(startTime)
-                .endTimeLabel(endTime)
-                .progressLabel(progress)
-                .rangeSliderContainer(rangeSliderContainer)
-                .playButtonContainer(playButtonContainer)
-                .pauseButtonContainer(pauseButtonContainer)
-                .stopButtonContainer(stopButtonContainer)
-                .deleteButtonContainer(deleteButtonContainer)
                 .build();
 
         row.defineLabelsLogic();
         return row;
+    }
+
+    @Override
+    public TextField getArtistLabel() {
+        return (TextField) rowContainer.getChildren().get(ARTIST_COLUMN_INDEX);
+    }
+
+    @Override
+    public TextField getSongTitleLabel() {
+        return (TextField) rowContainer.getChildren().get(TITLE_COLUMN_INDEX);
+    }
+
+    @Override
+    public Label getStartTimeLabel() {
+        return (Label) rowContainer.getChildren().get(START_TIME_COLUMN_INDEX);
+    }
+
+    @Override
+    public Label getEndTimeLabel() {
+        return (Label) rowContainer.getChildren().get(END_TIME_COLUMN_INDEX);
+    }
+
+    @Override
+    public Label getProgressLabel() {
+        return (Label) rowContainer.getChildren().get(PROGRESS_COLUMN_INDEX);
+    }
+
+    @Override
+    public HBox getRangeSliderContainer() {
+        return (HBox) rowContainer.getChildren().get(TIMELINE_COLUMN_INDEX);
+    }
+
+    @Override
+    public HBox getPlayButtonContainer() {
+        return (HBox) rowContainer.getChildren().get(PLAY_BUTTON_COLUMN_INDEX);
+    }
+
+    @Override
+    public HBox getPauseButtonContainer() {
+        return (HBox) rowContainer.getChildren().get(PAUSE_BUTTON_COLUMN_INDEX);
+    }
+
+    @Override
+    public HBox getStopButtonContainer() {
+        return (HBox) rowContainer.getChildren().get(STOP_BUTTON_COLUMN_INDEX);
+    }
+
+    @Override
+    public HBox getDeleteButtonContainer() {
+        return (HBox) rowContainer.getChildren().get(DELETE_BUTTON_COLUMN_INDEX);
+    }
+
+    private List<TextField> findAllEditableFields(VBox tracksTable) {
+        List<HBox> rows = tracksTable.getChildren().stream()
+                .filter(child -> child instanceof HBox)
+                .map(child -> (HBox) child)
+                .collect(Collectors.toList());
+        return rows.stream()
+                .map(Pane::getChildren)
+                .flatMap(Collection::stream)
+                .filter(child -> child instanceof TextField)
+                .map(child -> (TextField) child)
+                .collect(Collectors.toList());
     }
 }

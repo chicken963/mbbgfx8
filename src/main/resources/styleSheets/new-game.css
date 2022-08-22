@@ -145,7 +145,6 @@
     -fx-pref-height: 30px;
     -fx-min-height: 30px;
     -fx-max-height: 30px;
-    -fx-border-style: solid hidden solid hidden;
     -fx-background-color: inherit;
 }
 

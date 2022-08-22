@@ -8,13 +8,14 @@ import javafx.scene.layout.VBox;
 import lombok.Getter;
 import lombok.Setter;
 import ru.orthodox.mbbg.enums.ButtonType;
+import ru.orthodox.mbbg.events.TextFieldChangeEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.services.common.AudioTrackAsyncLengthLoadService;
+import ru.orthodox.mbbg.services.common.EventPublisherService;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
 import ru.orthodox.mbbg.services.create.AudioTrackUIViewService;
 import ru.orthodox.mbbg.services.create.RangeSliderService;
 import ru.orthodox.mbbg.utils.common.ThreadUtils;
-import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +31,13 @@ public class EditAudioTracksTable {
     @Setter
     private static PlayMediaService playMediaService;
     @Setter
-    private static RangeSliderService rangeSliderService;
-    @Setter
-    private static AudioTrackUIViewService audioTrackUIViewService;
-    @Setter
-    private static AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService;
+    private static EventPublisherService eventPublisherService;
+
+    private final RangeSliderService rangeSliderService;
+
+    private final AudioTrackUIViewService audioTrackUIViewService;
+
+    private AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService;
 
     private final VBox audioTracksTable;
     private final List<AudioTrackEditUIView> gridRows = new ArrayList<>();
@@ -42,14 +45,21 @@ public class EditAudioTracksTable {
     private final Label placeholder;
 
     public EditAudioTracksTable(VBox audioTracksTable) {
+        this.audioTrackUIViewService = new AudioTrackUIViewService();
+        this.rangeSliderService = new RangeSliderService(gridRows, audioTrackUIViewService);
         this.audioTracksTable = audioTracksTable;
         this.placeholder = findElementByTypeAndStyleclass(audioTracksTable, "tracks-grid-placeholder");
         this.placeholder.managedProperty().bind(this.placeholder.visibleProperty());
-        audioTrackAsyncLengthLoadService.getGridRows().addAll(gridRows);
-        AudioTrackGridRow.setRowContainerTemplate(audioTracksTableRowTemplate);
-        AudioTrackGridRow.setPlayMediaService(playMediaService);
 
-        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderService.updateRangeSlider(playMediaService, gridRows), "newGamePlayInfo" + this.hashCode());
+        AudioTrackGridRow.setRowContainerTemplate(audioTracksTableRowTemplate);
+        AudioTrackGridRow.setEventPublisherService(eventPublisherService);
+
+        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderService.updateRangeSlider(playMediaService), "editTable-" + this.hashCode());
+    }
+
+    public void setAudioTrackAsyncLengthLoadService(AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService) {
+        this.audioTrackAsyncLengthLoadService = audioTrackAsyncLengthLoadService;
+        audioTrackAsyncLengthLoadService.setGridRows(gridRows);
     }
 
     public List<AudioTrack> getAudioTracks() {
@@ -74,6 +84,7 @@ public class EditAudioTracksTable {
             placeholder.setVisible(false);
         }
         audioTracks.forEach(this::addTrack);
+        eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
     }
 
     private void addTrack(AudioTrack audioTrack) {
@@ -107,7 +118,7 @@ public class EditAudioTracksTable {
         buttonView.setOnAction(event -> {
             switch (type) {
                 case PLAY:
-                    defineOnPlayLogic(audioTrack);
+                    playMediaService.play(audioTrack);
                     break;
                 case PAUSE:
                     playMediaService.pause(audioTrack);
@@ -123,14 +134,14 @@ public class EditAudioTracksTable {
         return buttonView;
     }
 
-    private void defineOnPlayLogic(AudioTrack audioTrack) {
+/*    private void defineOnPlayLogic(AudioTrack audioTrack) {
         if (playMediaService.getCurrentTrack() != null
                 && playMediaService.getCurrentTrack().equals(audioTrack)
                 && !playMediaService.isCurrentStopInPlayableRange()) {
             playMediaService.stop(audioTrack);
         }
         playMediaService.play(audioTrack);
-    }
+    }*/
 
     private void deleteRow(AudioTrack audioTrack) {
         playMediaService.stop(audioTrack);
@@ -142,6 +153,7 @@ public class EditAudioTracksTable {
         if (audioTracksTable.getChildren().isEmpty()) {
             audioTracksTable.getChildren().add(placeholder);
         }
+        eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
     }
 
 

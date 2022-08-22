@@ -16,18 +16,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
+import ru.orthodox.mbbg.events.ChoiceBoxChangeEvent;
+import ru.orthodox.mbbg.events.TextFieldChangeEvent;
 import ru.orthodox.mbbg.exceptions.GameInputsValidationException;
 import ru.orthodox.mbbg.mappers.SceneToGameMapper;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.basic.Game;
-import ru.orthodox.mbbg.model.proxy.create.EditAudioTracksTable;
 import ru.orthodox.mbbg.model.proxy.create.AudioTracksLibraryGrid;
+import ru.orthodox.mbbg.model.proxy.create.EditAudioTracksTable;
 import ru.orthodox.mbbg.model.proxy.play.RoundTab;
 import ru.orthodox.mbbg.model.proxy.play.RoundsTabPane;
 import ru.orthodox.mbbg.services.common.AudioTrackAsyncLengthLoadService;
+import ru.orthodox.mbbg.services.common.EventPublisherService;
 import ru.orthodox.mbbg.services.create.AudioTrackUIViewService;
 import ru.orthodox.mbbg.services.create.FileChooserDealer;
-import ru.orthodox.mbbg.services.create.RangeSliderService;
 import ru.orthodox.mbbg.services.create.library.AudiotracksLibraryService;
 import ru.orthodox.mbbg.services.create.validator.GameValidator;
 import ru.orthodox.mbbg.services.model.GameService;
@@ -43,6 +45,7 @@ import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
 @Scope("prototype")
 public class NewGameController {
 
+    public ChoiceBox blankDimensions;
     @FXML
     private Label enterNewGameNameLabel;
     @FXML
@@ -86,9 +89,11 @@ public class NewGameController {
     @Autowired
     private AudiotracksLibraryService audiotracksLibraryService;
     @Autowired
-    private RangeSliderService rangeSliderService;
-    @Autowired
     private AudioTrackUIViewService audioTrackUIViewService;
+    @Autowired
+    private EventPublisherService eventPublisherService;
+
+    private Game game;
 
 
     private Scene audioTracksLibraryScene;
@@ -155,18 +160,21 @@ public class NewGameController {
     private void onFirstConditionChosen(ActionEvent actionEvent) {
         RoundTab sourceTab = roundsTabPane.findTabByChild((Node) actionEvent.getSource());
         sourceTab.validateConditions(1);
+        eventPublisherService.publishEvent(new ChoiceBoxChangeEvent(this));
     }
 
     @FXML
     private void onSecondConditionChosen(ActionEvent actionEvent) {
         RoundTab sourceTab = roundsTabPane.findTabByChild((Node) actionEvent.getSource());
         sourceTab.validateConditions(2);
+        eventPublisherService.publishEvent(new ChoiceBoxChangeEvent(this));
     }
 
     @FXML
     private void onThirdConditionChosen(ActionEvent actionEvent) {
         RoundTab sourceTab = roundsTabPane.findTabByChild((Node) actionEvent.getSource());
         sourceTab.validateConditions(3);
+        eventPublisherService.publishEvent(new ChoiceBoxChangeEvent(this));
     }
 
     @FXML
@@ -184,6 +192,25 @@ public class NewGameController {
         Button addSelectedLibraryTracksToRound = audiotracksLibraryService.getAddLibraryTracksButtonFromUI((AnchorPane) audioTracksLibraryScene.getRoot());
         addSelectedLibraryTracksToRound.setOnAction(e -> audiotracksLibraryService.addSelectedTracksToRound(audioTracksLibraryGrid, roundTableToAddSelected, popupStage));
         popupStage.show();
+    }
+
+    @FXML
+    private void onBlankDimensionsChosen() {
+        eventPublisherService.publishEvent(new ChoiceBoxChangeEvent(this));
+    }
+
+    @FXML
+    private void onGameNameChanged() {
+        eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
+    }
+
+    @FXML
+    private void onRoundNameChanged() {
+        eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
+    }
+
+    public void onNumberOfBlanksEntered() {
+        eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
     }
 
     @Getter

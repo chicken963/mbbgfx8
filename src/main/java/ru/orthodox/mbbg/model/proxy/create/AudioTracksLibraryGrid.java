@@ -6,7 +6,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.RowConstraints;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,18 +14,19 @@ import org.controlsfx.control.RangeSlider;
 import ru.orthodox.mbbg.enums.ButtonType;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
+import ru.orthodox.mbbg.services.create.AudioTrackUIViewService;
 import ru.orthodox.mbbg.services.create.RangeSliderService;
-import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
 import ru.orthodox.mbbg.utils.common.ThreadUtils;
+import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 import static ru.orthodox.mbbg.services.create.AudioTrackCreateModeButtonsService.prepareButtonView;
 import static ru.orthodox.mbbg.utils.common.TimeRepresentationConverter.getSongProgressAsString;
 import static ru.orthodox.mbbg.utils.common.TimeRepresentationConverter.toStringFormat;
+import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
 public class AudioTracksLibraryGrid {
 
@@ -62,8 +62,8 @@ public class AudioTracksLibraryGrid {
     private HBox stopButtonContainerTemplate;
     private final CheckBox checkBoxTemplate;
 
-    public AudioTracksLibraryGrid(GridPane audioTracksGridPane, RangeSliderService rangeSliderService){
-        this.rangeSliderService = rangeSliderService;
+    public AudioTracksLibraryGrid(GridPane audioTracksGridPane){
+        this.rangeSliderService = new RangeSliderService(gridRows, new AudioTrackUIViewService());
         this.audioTracksGridPane = audioTracksGridPane;
         this.templateRowConstraints = audioTracksGridPane.getRowConstraints().get(0);
         initiateTemplatesFromTemplateRowInUI();
@@ -71,7 +71,7 @@ public class AudioTracksLibraryGrid {
         this.rangeSliderTemplate = (RangeSlider) timelineContainerTemplate.getChildren().get(0);
         this.checkBoxTemplate = (CheckBox) checkBoxContainerTemplate.getChildren().get(0);
 
-        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderService.updateRangeSlider(playMediaService, gridRows), "newGamePlayInfo" + this.hashCode());
+        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderService.updateRangeSlider(playMediaService), "newGamePlayInfo" + this.hashCode());
     }
 
     private void initiateTemplatesFromTemplateRowInUI() {
@@ -114,49 +114,46 @@ public class AudioTracksLibraryGrid {
     }
 
     private AudioTrackLibraryGridRow createUIRowElementsFromTemplates(AudioTrack audioTrack, int rowIndex) {
-        HBox checkBoxContainer = createDeepCopy(checkBoxContainerTemplate);
-        CheckBox checkBox = (CheckBox) createDeepCopy(checkBoxTemplate);
-        checkBoxContainer.getChildren().add(checkBox);
+        HBox checkBoxContainer = (HBox) createDeepCopy(checkBoxContainerTemplate);
         audioTracksGridPane.add(checkBoxContainer, CHECKBOX_COLUMN_INDEX, rowIndex);
 
-        Label artist = createDeepCopy(artistTemplate);
+        Label artist = (Label) createDeepCopy(artistTemplate);
         artist.setText(audioTrack.getArtist());
         audioTracksGridPane.add(artist, ARTIST_COLUMN_INDEX, rowIndex);
 
-        Label songTitle = createDeepCopy(songTitleTemplate);
+        Label songTitle = (Label) createDeepCopy(songTitleTemplate);
         songTitle.setText(audioTrack.getTitle());
         audioTracksGridPane.add(songTitle, TITLE_COLUMN_INDEX, rowIndex);
 
-        Label startTime = createDeepCopy(startTimeTemplate);
+        Label startTime = (Label) createDeepCopy(startTimeTemplate);
         startTime.setText(toStringFormat(audioTrack.getStartInSeconds()));
         audioTracksGridPane.add(startTime, START_TIME_COLUMN_INDEX, rowIndex);
 
-        HBox rangeSliderContainer = createDeepCopy(timelineContainerTemplate);
-        RangeSlider rangeSlider = createDeepCopy(rangeSliderTemplate);
+        HBox rangeSliderContainer = (HBox) createDeepCopy(timelineContainerTemplate);
+        RangeSlider rangeSlider = (RangeSlider) rangeSliderContainer.getChildren().get(0);
         rangeSlider.setMin(0);
         rangeSlider.setMax(audioTrack.getLengthInSeconds());
         rangeSlider.setHighValue(audioTrack.getFinishInSeconds());
         rangeSlider.setLowValue(audioTrack.getStartInSeconds());
-        rangeSliderContainer.getChildren().add(rangeSlider);
         audioTracksGridPane.add(rangeSliderContainer, TIMELINE_COLUMN_INDEX, rowIndex);
 
-        Label endTime = createDeepCopy(endTimeTemplate);
+        Label endTime = (Label) createDeepCopy(endTimeTemplate);
         endTime.setText(toStringFormat(audioTrack.getFinishInSeconds()));
         audioTracksGridPane.add(endTime, END_TIME_COLUMN_INDEX, rowIndex);
 
-        Label progress = createDeepCopy(progressTemplate);
+        Label progress = (Label) createDeepCopy(progressTemplate);
         progress.setText(getSongProgressAsString(0, audioTrack.getFinishInSeconds() - audioTrack.getStartInSeconds()));
         audioTracksGridPane.add(progress, PROGRESS_COLUMN_INDEX, rowIndex);
 
-        HBox playButtonContainer = createDeepCopy(playButtonContainerTemplate);
+        HBox playButtonContainer = (HBox) createDeepCopy(playButtonContainerTemplate);
         playButtonContainer.getChildren().add(prepareEditPlayerButton("/mediaplayerIcons/play-small2.png", ButtonType.PLAY, audioTrack));
         audioTracksGridPane.add(playButtonContainer, PLAY_BUTTON_COLUMN_INDEX, rowIndex);
 
-        HBox pauseButtonContainer = createDeepCopy(pauseButtonContainerTemplate);
+        HBox pauseButtonContainer = (HBox) createDeepCopy(pauseButtonContainerTemplate);
         pauseButtonContainer.getChildren().add(prepareEditPlayerButton("/mediaplayerIcons/pause-small3.png", ButtonType.PAUSE, audioTrack));
         audioTracksGridPane.add(pauseButtonContainer, PAUSE_BUTTON_COLUMN_INDEX, rowIndex);
 
-        HBox stopButtonContainer = createDeepCopy(stopButtonContainerTemplate);
+        HBox stopButtonContainer = (HBox) createDeepCopy(stopButtonContainerTemplate);
         stopButtonContainer.getChildren().add(prepareEditPlayerButton("/mediaplayerIcons/stop-small2.png", ButtonType.STOP, audioTrack));
         audioTracksGridPane.add(stopButtonContainer, STOP_BUTTON_COLUMN_INDEX, rowIndex);
 
@@ -238,21 +235,6 @@ public class AudioTracksLibraryGrid {
         private HBox pauseButtonContainer;
         private HBox stopButtonContainer;
         private HBox checkBoxContainer;
-
-        public List<Region> getUIElements() {
-            List<Region> result = new ArrayList<>();
-            result.add(artistLabel);
-            result.add(songTitleLabel);
-            result.add(startTimeLabel);
-            result.add(endTimeLabel);
-            result.add(progressLabel);
-            result.add(rangeSliderContainer);
-            result.add(playButtonContainer);
-            result.add(pauseButtonContainer);
-            result.add(stopButtonContainer);
-            result.add(checkBoxContainer);
-            return result;
-        }
 
         public RangeSlider getRangeSlider() {
             return (RangeSlider) getRangeSliderContainer().getChildren().get(0);

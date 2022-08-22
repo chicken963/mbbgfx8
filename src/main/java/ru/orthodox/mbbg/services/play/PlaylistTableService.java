@@ -1,6 +1,5 @@
 package ru.orthodox.mbbg.services.play;
 
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -44,9 +43,6 @@ public class PlaylistTableService  {
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-    private Button nextIconTemplate;
-    private Label artistTemplate;
-    private Label songTitleTemplate;
     private List<PlaylistTableRow> rows;
     private HBox rowTemplate;
     private Round activeRound;
@@ -55,10 +51,7 @@ public class PlaylistTableService  {
 
     public void configureUIElements(VBox audioTracksTable, HBox audioTracksTableRowTemplate) {
         this.audioTracksTable = audioTracksTable;
-        this.rowTemplate = createDeepCopy(audioTracksTableRowTemplate);
-        this.nextIconTemplate = (Button) createDeepCopy((Parent) audioTracksTableRowTemplate.getChildren().get(0));
-        this.artistTemplate = createDeepCopy((Label) (audioTracksTableRowTemplate.getChildren().get(1)));
-        this.songTitleTemplate = createDeepCopy((Label) (audioTracksTableRowTemplate.getChildren().get(2)));
+        this.rowTemplate = (HBox) createDeepCopy(audioTracksTableRowTemplate);
     }
 
     public void setActiveRound(Round round) {
@@ -79,18 +72,16 @@ public class PlaylistTableService  {
 
     private void addRow(AudioTrack audioTrack) {
 
-        Button nextIcon = (Button) createDeepCopy(nextIconTemplate);
+        HBox rowContainer = (HBox) createDeepCopy(rowTemplate);
+
+        Button nextIcon = (Button) rowContainer.getChildren().get(0);
         nextIcon.getGraphic().setVisible(false);
 
-        Label artistLabel = createDeepCopy(artistTemplate);
+        Label artistLabel = (Label) rowContainer.getChildren().get(1);
         artistLabel.setText(audioTrack.getArtist());
 
-        Label titleLabel = createDeepCopy(songTitleTemplate);
+        Label titleLabel = (Label) rowContainer.getChildren().get(2);
         titleLabel.setText(audioTrack.getTitle());
-
-        HBox rowContainer = createDeepCopy(rowTemplate);
-
-        rowContainer.getChildren().setAll(nextIcon, artistLabel, titleLabel);
 
         audioTracksTable.getChildren().add(rowContainer);
 

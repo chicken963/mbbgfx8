@@ -59,22 +59,6 @@ public class NodeDeepCopyProvider {
             throw new ClassCastException(String.format("Class %s is unable to be processed as a Pane",
                     region.getClass()));
         }
-        for (Node child : region.getChildren()) {
-            Node childCopy;
-            if (child instanceof Pane) {
-                childCopy = createDeepCopy((Pane) child);
-            } else if (child instanceof Control) {
-                childCopy = createDeepCopy((Control) child);
-            } else {
-                throw new ClassCastException(String.format("Class %s was met among familiar node children and is " +
-                        "unable to be processed", region.getClass()));
-            }
-            if (region instanceof GridPane) {
-                GridPane.setColumnIndex(childCopy, GridPane.getColumnIndex(child));
-                GridPane.setRowIndex(childCopy, GridPane.getRowIndex(child));
-            }
-            copy.getChildren().add(childCopy);
-        }
         return copy;
     }
 
@@ -249,7 +233,7 @@ public class NodeDeepCopyProvider {
         return copy;
     }
 
-    public static RangeSlider createDeepCopy(RangeSlider origSlider) {
+    private static RangeSlider createDeepCopy(RangeSlider origSlider) {
         RangeSlider copy = new RangeSlider();
         copy.setHighValue(origSlider.getHighValue());
         copy.setLowValue(origSlider.getLowValue());
@@ -272,7 +256,7 @@ public class NodeDeepCopyProvider {
         copy.setHbarPolicy(sourcePane.getHbarPolicy());
         copy.setVbarPolicy(sourcePane.getVbarPolicy());
 
-        Pane scrollPaneContent = (Pane) sourcePane.getContent();
+        Parent scrollPaneContent = (Parent) sourcePane.getContent();
         copy.setContent(createDeepCopy(scrollPaneContent));
 
         return copy;
@@ -310,8 +294,8 @@ public class NodeDeepCopyProvider {
         copy.setPrefWidth(sourcePane.getPrefWidth());
         copy.setStyle(sourcePane.getStyle());
 
-        Pane leftPane = (AnchorPane) sourcePane.getItems().get(0);
-        Pane rightPane = (AnchorPane) sourcePane.getItems().get(1);
+        Parent leftPane = (Parent) sourcePane.getItems().get(0);
+        Parent rightPane = (Parent) sourcePane.getItems().get(1);
 
         copy.getItems().addAll(createDeepCopy(leftPane), createDeepCopy(rightPane));
 
@@ -320,17 +304,7 @@ public class NodeDeepCopyProvider {
 
     public static Tab createDeepCopy(Tab sourceTab) {
         Tab copy = new Tab();
-        Node tabContent = sourceTab.getContent();
-        if (tabContent instanceof SplitPane) {
-            SplitPane sourceTabContent = (SplitPane) sourceTab.getContent();
-            SplitPane tabContentCopy = createDeepCopy(sourceTabContent);
-            copy.setContent(tabContentCopy);
-        } else if (tabContent instanceof Pane) {
-            Pane sourceTabContent = (Pane) sourceTab.getContent();
-            Pane tabContentCopy = createDeepCopy(sourceTabContent);
-            copy.setContent(tabContentCopy);
-        }
-
+        copy.setContent(createDeepCopy((Parent) sourceTab.getContent()));
         return copy;
     }
 
@@ -364,7 +338,7 @@ public class NodeDeepCopyProvider {
         return copy;
     }
 
-    public static TextField createDeepCopy(TextField textField) {
+    private static TextField createDeepCopy(TextField textField) {
         TextField copy = new TextField();
         copy.setAlignment(textField.getAlignment());
         copy.setStyle(textField.getStyle());

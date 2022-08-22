@@ -46,7 +46,7 @@ public class Round implements MarkedWithId {
     private WinCondition thirdStrikeCondition;
 
     @Column(name = "numberOfBlanks")
-    private Integer numberOfBlanks;
+    private Integer numberOfBlanks = 0;
 
     @JsonIgnore
     private List<AudioTrack> audioTracks = new ArrayList<>();

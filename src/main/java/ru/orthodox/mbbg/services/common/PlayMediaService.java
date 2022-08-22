@@ -4,12 +4,9 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.utils.common.NormalizedPathString;
-
-import java.util.List;
 
 
 @Service
@@ -34,14 +31,25 @@ public class PlayMediaService {
         if (switchingFromAnotherTrack(audioTrack)) {
             mediaPlayer.stop();
         }
-        if (audioTrack != currentTrack || !isCurrentStopInPlayableRange()) {
+        if (audioTrack != currentTrack) {
             currentTrack = audioTrack;
             generateMediaPlayer(audioTrack);
+            isStopped = false;
+        } else if (boundsWereChangedOutOfRange()) {
+            mediaPlayer.stop();
+            generateMediaPlayer(audioTrack);
+            isStopped = false;
         }
-        mediaPlayer.setVolume(volumeCache);
+        if (isStopped) {
+            generateMediaPlayer(audioTrack);
+        }
         mediaPlayer.play();
         isPaused = false;
         isStopped = false;
+    }
+
+    private boolean boundsWereChangedOutOfRange() {
+        return isPaused && !isCurrentStopInPlayableRange();
     }
 
     private boolean thisTrackIsAlreadyBeingPlayed(AudioTrack audioTrack) {
@@ -101,7 +109,7 @@ public class PlayMediaService {
 
     public boolean isCurrentStopInPlayableRange() {
         double currentRate = mediaPlayer.getCurrentTime().toSeconds();
-        return currentRate >= currentTrack.getStartInSeconds() && currentRate <= currentTrack.getFinishInSeconds();
+        return currentRate > currentTrack.getStartInSeconds() && currentRate < currentTrack.getFinishInSeconds();
     }
 
     protected void generateMediaPlayer(AudioTrack audioTrack) {

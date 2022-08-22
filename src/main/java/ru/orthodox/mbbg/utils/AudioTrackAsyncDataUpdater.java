@@ -16,7 +16,7 @@ public class AudioTrackAsyncDataUpdater {
     @Autowired
     private ApplicationEventPublisher eventPublisher;
 
-    public double setAudioTrackLength(AudioTrack audioTrack) {
+    public void setAudioTrackLength(AudioTrack audioTrack) {
         Media media = new Media(NormalizedPathString.of(audioTrack.getLocalPath()));
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setOnReady(() -> {
@@ -25,6 +25,5 @@ public class AudioTrackAsyncDataUpdater {
             eventPublisher.publishEvent(new AudioTrackLengthLoadedEvent(this, audioTrack));
 
         });
-        return media.getDuration().toSeconds();
     }
 }

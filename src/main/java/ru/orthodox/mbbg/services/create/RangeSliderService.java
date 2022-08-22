@@ -3,13 +3,10 @@ package ru.orthodox.mbbg.services.create;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import org.controlsfx.control.RangeSlider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.proxy.create.AudioTrackEditUIView;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
 
-import javax.annotation.PostConstruct;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
@@ -20,20 +17,24 @@ import static ru.orthodox.mbbg.utils.common.TimeRepresentationConverter.toString
 /**
  * Manages range slider for audio track on the stage of bounds configuring.
  */
-@Service
+
 public class RangeSliderService {
 
     private DecimalFormat decimalFormat;
-    @Autowired
-    private AudioTrackUIViewService audioTrackUIViewService;
 
-    @PostConstruct
-    public void preconfigureFormatForSliderBarProgressCss() {
-            DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
-            decimalFormatSymbols.setDecimalSeparator('.');
-            this.decimalFormat = new DecimalFormat("#0.00", decimalFormatSymbols);
+    private AudioTrackUIViewService audioTrackUIViewService;
+    private List<AudioTrackEditUIView> gridRows;
+
+    public RangeSliderService(List<AudioTrackEditUIView> gridRows, AudioTrackUIViewService audioTrackUIViewService) {
+        this.gridRows = gridRows;
+        this.audioTrackUIViewService = audioTrackUIViewService;
+
+        DecimalFormatSymbols decimalFormatSymbols = new DecimalFormatSymbols();
+        decimalFormatSymbols.setDecimalSeparator('.');
+        this.decimalFormat = new DecimalFormat("#0.00", decimalFormatSymbols);
     }
-    public void updateRangeSlider(PlayMediaService playMediaService, List<AudioTrackEditUIView> gridRows) {
+
+    public void updateRangeSlider(PlayMediaService playMediaService) {
         if (playMediaService == null || playMediaService.getCurrentTrack() == null) {
             return;
         }

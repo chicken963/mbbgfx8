@@ -79,7 +79,7 @@ public class BlankPreviewAnchorPane {
 
         List<Label> gridItems = blank.getBlankItems().stream()
                 .map(blankItem -> {
-                    Label gridItem = createDeepCopy(templateGridItem);
+                    Label gridItem = (Label) createDeepCopy(templateGridItem);
                     configureGridItemSize(gridItem, gridItemWidthInPixels, gridItemHeightInPixels);
                     GridPane.setColumnIndex(gridItem, blankItem.getXIndex());
                     GridPane.setRowIndex(gridItem, blankItem.getYIndex());

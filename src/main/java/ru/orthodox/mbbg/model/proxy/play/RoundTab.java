@@ -9,10 +9,9 @@ import lombok.Getter;
 import ru.orthodox.mbbg.enums.WinCondition;
 import ru.orthodox.mbbg.model.proxy.create.EditAudioTracksTable;
 import ru.orthodox.mbbg.services.common.AudioTrackAsyncLengthLoadService;
+import ru.orthodox.mbbg.services.common.EventPublisherService;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
-import ru.orthodox.mbbg.services.create.AudioTrackUIViewService;
 import ru.orthodox.mbbg.services.create.PrizeConditionsDealer;
-import ru.orthodox.mbbg.services.create.RangeSliderService;
 import ru.orthodox.mbbg.services.create.RoundDimensionsDealer;
 import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
 import ru.orthodox.mbbg.utils.hierarchy.HierarchyUtils;
@@ -27,6 +26,7 @@ public class RoundTab {
 
     private final int index;
 
+
     private ChoiceBox<WinCondition> firstPrizeCondition;
     private ChoiceBox<WinCondition> secondPrizeCondition;
     private ChoiceBox<WinCondition> thirdPrizeCondition;
@@ -38,31 +38,30 @@ public class RoundTab {
 
     private PrizeConditionsDealer prizeConditionsDealer;
 
-    private AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService;
     private PlayMediaService playMediaService;
 
     public RoundTab(Tab tab,
                     HBox audioTracksGridRowTemplate,
                     AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService,
-                    RangeSliderService rangeSliderService,
-                    AudioTrackUIViewService audioTrackUIViewService,
                     PlayMediaService playMediaService,
+                    EventPublisherService eventPublisherService,
                     int index) {
         this.tab = tab;
-        this.audioTrackAsyncLengthLoadService = audioTrackAsyncLengthLoadService;
         this.index = index;
 
         defineAudioTracksGridStaticMembers(
+                eventPublisherService,
                 audioTracksGridRowTemplate,
-                audioTrackAsyncLengthLoadService,
-                rangeSliderService,
-                audioTrackUIViewService,
                 playMediaService);
+
+
 
         this.editAudioTracksTable = Stream.of(ElementFinder.<VBox>findTabElementByTypeAndStyleclass(tab, "tracks-grid"))
                 .map(EditAudioTracksTable::new)
                 .findFirst()
                 .orElse(null);
+
+        editAudioTracksTable.setAudioTrackAsyncLengthLoadService(audioTrackAsyncLengthLoadService);
 
         this.firstPrizeCondition = getFirstPrizeCondition();
         this.secondPrizeCondition = getSecondPrizeCondition();
@@ -80,12 +79,10 @@ public class RoundTab {
         this.bindRoundNameToTabName();
     }
 
-    private void defineAudioTracksGridStaticMembers(HBox audioTracksGridRowTemplate, AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService, RangeSliderService rangeSliderService, AudioTrackUIViewService audioTrackUIViewService, PlayMediaService playMediaService) {
+    private void defineAudioTracksGridStaticMembers(EventPublisherService eventPublisherService, HBox audioTracksGridRowTemplate, PlayMediaService playMediaService) {
         EditAudioTracksTable.setPlayMediaService(playMediaService);
-        EditAudioTracksTable.setRangeSliderService(rangeSliderService);
 
-        EditAudioTracksTable.setAudioTrackUIViewService(audioTrackUIViewService);
-        EditAudioTracksTable.setAudioTrackAsyncLengthLoadService(audioTrackAsyncLengthLoadService);
+        EditAudioTracksTable.setEventPublisherService(eventPublisherService);
 
         EditAudioTracksTable.setAudioTracksTableRowTemplate(audioTracksGridRowTemplate);
     }
@@ -169,10 +166,11 @@ public class RoundTab {
     }
 
     private void bindRoundNameToTabName() {
-        roundNameTextField.setOnKeyReleased((event) ->
-                tab.setText(roundNameTextField.getText().isEmpty()
-                        ? "Round " + (index + 1)
-                        : roundNameTextField.getText()));
+        roundNameTextField.setOnKeyReleased((event) -> {
+            tab.setText(roundNameTextField.getText().isEmpty()
+                    ? "Round " + (index + 1)
+                    : roundNameTextField.getText());
+                });
     }
 
     public void validateConditions(int sourceConditionNumber) {

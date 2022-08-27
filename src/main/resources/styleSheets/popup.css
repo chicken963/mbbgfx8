@@ -1,0 +1,13 @@
+.container {
+    -fx-background-color: #1b1b1b;
+}
+
+.button {
+    -fx-background-radius: 10px;
+    -fx-background-color: orange;
+    -fx-text-fill: black;
+}
+
+.message-container {
+    -fx-text-fill: white;
+}

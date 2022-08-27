@@ -2,6 +2,7 @@ package ru.orthodox.mbbg.services.model;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.orthodox.mbbg.mappers.RoundEntityFieldsMapper;
 import ru.orthodox.mbbg.model.basic.Game;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.repositories.GamesRepository;
@@ -15,14 +16,16 @@ public class GameService {
     private GamesRepository gamesRepository;
     @Autowired
     private RoundService roundService;
+    @Autowired
+    private RoundEntityFieldsMapper roundEntityFieldsMapper;
 
     public void save(Game game) {
         gamesRepository.save(game);
         game.getRounds().forEach(roundService::save);
     }
 
-    public List<Round> findRoundsOfGame(Game game) {
-        return  gamesRepository.findRoundsByGame(game);
+    public void setModelFields(Game game) {
+        roundEntityFieldsMapper.loadEntityFieldsFromStorage(game);
     }
 
 }

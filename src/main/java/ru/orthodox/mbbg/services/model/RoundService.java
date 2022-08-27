@@ -9,6 +9,7 @@ import ru.orthodox.mbbg.repositories.RoundRepository;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,10 +42,6 @@ public class RoundService {
         }
     }
 
-    public void setModelFields(Round round) {
-        roundEntityFieldsMapper.loadEntityFieldsFromStorage(round);
-    }
-
     public Set<String> getPlayedArtists(Round round) {
         return round.getPlayedAudiotracks().stream()
                 .map(AudioTrack::getArtist)
@@ -56,5 +53,9 @@ public class RoundService {
                 .map(AudioTrack::getArtist)
                 .findFirst()
                 .orElse(null);
+    }
+
+    public List<Round> findInStorageByIds(List<UUID> uuids) {
+        return roundRepository.findByIds(uuids);
     }
 }

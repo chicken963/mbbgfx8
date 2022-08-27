@@ -82,8 +82,8 @@ public class PlayGameService {
     }
     
     public void render(Game game) {
-        rounds = gameService.findRoundsOfGame(game);
-        rounds.forEach(roundService::setModelFields);
+        gameService.setModelFields(game);
+        rounds = game.getRounds();
         currentRound = rounds.get(0);
         renderRound(currentRound);
     }

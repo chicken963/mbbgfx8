@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.RangeSlider?>
+<HBox xmlns="http://javafx.com/javafx/11.0.14-internal">
+    <HBox alignment="CENTER" maxHeight="30.0" maxWidth="25.0" minHeight="30.0"
+          minWidth="25.0" prefHeight="30.0" prefWidth="25.0">
+        <children>
+            <CheckBox alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0"
+                      maxHeight="10.0" maxWidth="10.0" mnemonicParsing="false"
+                      prefHeight="10.0" prefWidth="10.0"/>
+        </children>
+    </HBox>
+    <Label maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="260.0"
+           styleClass="time-column" text="Artist">
+        <GridPane.margin>
+            <Insets left="20.0"/>
+        </GridPane.margin>
+    </Label>
+    <Label maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="315.0"
+           styleClass="time-column" text="Song title">
+        <GridPane.margin>
+            <Insets left="10.0"/>
+        </GridPane.margin>
+    </Label>
+    <Label alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0"
+           prefWidth="48.0" styleClass="time-column" text="00:00"/>
+    <HBox alignment="CENTER" maxHeight="30.0" maxWidth="555.0" minHeight="30.0"
+          minWidth="555.0" prefHeight="30.0" prefWidth="555.0">
+        <RangeSlider maxHeight="30.0" minHeight="30.0" prefHeight="30.0"
+                     prefWidth="500.0" maxWidth="500.0" minWidth="500.0"
+                     lowValue="0" highValue="100"
+                     showTickLabels="false"
+                     showTickMarks="false"
+                     majorTickUnit="60"
+                     blockIncrement="5"
+                     disable="true"/>
+    </HBox>
+    <Label alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0"
+           prefWidth="48.0" styleClass="time-column" text="00:00"/>
+    <Label alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0"
+           prefWidth="84.0" styleClass="time-column" text="00:00/00:00"/>
+    <HBox maxHeight="30.0" maxWidth="25.0" minHeight="30.0" minWidth="25.0"
+          prefHeight="30.0" prefWidth="25.0">
+        <padding>
+            <Insets bottom="2.0"/>
+        </padding>
+    </HBox>
+    <HBox maxHeight="30.0" maxWidth="25.0" minHeight="30.0" minWidth="25.0"
+          prefHeight="30.0" prefWidth="25.0"/>
+    <HBox maxHeight="30.0" maxWidth="25.0" minHeight="30.0" minWidth="25.0"
+          prefHeight="30.0" prefWidth="25.0"/>
+</HBox>
+

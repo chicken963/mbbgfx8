@@ -48,6 +48,11 @@ public class ControllersConfig {
         return loadView("view/audiotracks-library.fxml");
     }
 
+    @Bean(name = "audioTracksLibraryRow")
+    public View getAudioTracksLibraryRow() throws IOException {
+        return loadView("view/audiotracks-library-row.fxml");
+    }
+
     @Bean
     public PlayController getPlayController() throws IOException {
         return (PlayController) getPlayView().getController();

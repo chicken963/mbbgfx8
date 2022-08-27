@@ -1,7 +1,12 @@
 package ru.orthodox.mbbg.utils.screen;
 
+import javafx.event.ActionEvent;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +56,14 @@ public class ScreenService {
                 .filter(screenViewResource -> screenViewResource.isNamedAs(name))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Failed to find screen with a name " + name));
+    }
+
+    public Stage createSeparateStage(Button libraryButton, Scene scene, String title) {
+        final Stage popupStage = new Stage();
+        popupStage.setTitle(title);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.initOwner(libraryButton.getScene().getWindow());
+        popupStage.setScene(scene);
+        return popupStage;
     }
 }

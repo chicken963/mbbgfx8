@@ -84,14 +84,16 @@ public class ViewBlanksService {
     }
 
     private void populateTabWithRoundContent(Tab tab, Round round) {
-        GridPane miniaturesGrid = findTabElementByTypeAndStyleclass(tab, "miniaturesGrid");
+        GridPane miniaturesGrid = findTabElementByTypeAndStyleclass(tab, "miniatures-grid");
         miniaturesGrid.getColumnConstraints().addAll(
                 Stream.generate(() -> createDeepCopy(miniatureGridColumnConstraints))
                         .limit(3)
                         .collect(Collectors.toList()));
+
+        int numberOfRowsToReplicate = (int) Math.ceil(round.getBlanksIds().size() / 3.0);
         miniaturesGrid.getRowConstraints().addAll(
                 Stream.generate(() -> createDeepCopy(miniatureGridRowConstraints))
-                        .limit((int) Math.ceil(round.getBlanksIds().size() / 3.0))
+                        .limit(numberOfRowsToReplicate)
                         .collect(Collectors.toList()));
         AtomicInteger counter = new AtomicInteger(0);
         List<Button> miniatures = blankRepository.findByIds(round.getBlanksIds())

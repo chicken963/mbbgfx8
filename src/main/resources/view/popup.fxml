@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="211.0" prefWidth="361.0" spacing="20.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.PopupController">
-   <children>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="361.0">
-         <VBox.margin>
-            <Insets top="20.0" />
-         </VBox.margin>
-         <children>
-            <Label id="headingLabel" text="Main message" />
-         </children></HBox>
-      <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-         <children>
-            <Label id="detailsLabel" HBox.hgrow="ALWAYS" />
-         </children>
-         <padding>
-            <Insets left="20.0" />
-         </padding></HBox>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-         <children>
-            <Button fx:id="okButton" mnemonicParsing="false" onAction="#close" text="Ok" />
-         </children></HBox>
-   </children>
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="211.0" prefWidth="361.0" spacing="20.0" styleClass="container" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.PopupController">
+    <children>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="361.0">
+            <VBox.margin>
+                <Insets top="20.0" />
+            </VBox.margin>
+            <children>
+                <Label id="headingLabel" styleClass="message-container" text="Main message" />
+            </children>
+        </HBox>
+        <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+            <children>
+                <Label id="detailsLabel" styleClass="message-container" HBox.hgrow="ALWAYS" />
+            </children>
+            <padding>
+                <Insets left="20.0" />
+            </padding>
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+            <children>
+                <Button fx:id="okButton" mnemonicParsing="false" onAction="#close" text="Ok" />
+            </children>
+        </HBox>
+    </children>
 </VBox>

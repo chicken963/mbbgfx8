@@ -34,8 +34,6 @@ import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findParentAnchorPan
 public class StartMenuController {
 
     @FXML
-    public Button openGameButton;
-    @FXML
     public Button newGameButton;
     @FXML
     public Label greetingLabel;
@@ -47,92 +45,50 @@ public class StartMenuController {
     public AnchorPane templateGameAnchorPane;
     @FXML
     public Label gameLabel;
-    @FXML
-    public Pagination templatePagination;
 
     @Autowired
-    private ScreenService screenService;
-    @Autowired
-    private GameService gameService;
-    @Autowired
-    private BlankService blankService;
-    @Autowired
-    private ApplicationContext applicationContext;
-    @Autowired
-    private PopupAlerter popupAlerter;
-    @Autowired
-    private GamesRepository gamesRepository;
-    @Autowired
-    private RoundRepository roundRepository;
-
     private StartMenuService startMenuService;
 
     @PostConstruct
     private void setUp() {
-        setDefaultFont(openGameButton, newGameButton, greetingLabel, gameLabel);
-        startMenuService = StartMenuService.builder()
-                .gamesField(gamesField)
-                .templatePagination(templatePagination)
-                .greetingLabel(greetingLabel)
-                .gameLabel(gameLabel)
-                .templateGameAnchorPane(templateGameAnchorPane)
-                .gamesRepository(gamesRepository)
-                .newGameAnchorPane(newGameAnchorPane)
-                .build();
+        setDefaultFont(newGameButton, greetingLabel, gameLabel);
+        configureUIElements(gamesField, gameLabel, templateGameAnchorPane, newGameAnchorPane);
         startMenuService.fillGridWithAllGames();
     }
 
-    public void openNewGameForm() {
-        NewGameController controller = applicationContext.getBean(NewGameController.class);
-        controller.renderNewGameForm();
-        screenService.activate("newGame");
-    }
-
-    public void openPlayGameForm(ActionEvent actionEvent) {
-        Button source = (Button) actionEvent.getSource();
-        AnchorPane gameGridItem = findParentAnchorPane(source);
-        Game targetGame = GridItemService.findByEventTarget(StartMenuService.getAvailableGames(), gameGridItem);
-        targetGame.setRounds(roundRepository.findByIds(targetGame.getRoundIds()));
-        PlayController controller = applicationContext.getBean(PlayController.class);
-        controller.renderNewGame(targetGame);
-        screenService.activate("play");
+    @FXML
+    private void openNewGameForm() {
+        startMenuService.openNewGameForm();
     }
 
     @FXML
-    private void whiteTextColor(MouseEvent mouseEvent) {
-        gameLabel.setTextFill(RGBColor.of(215, 235, 235, 0.8));
+    private void openPlayGameForm(ActionEvent event) {
+        startMenuService.openPlayGameForm((Button) event.getSource());
     }
 
     @FXML
-    private void defaultTextColor(MouseEvent mouseEvent) {
-        gameLabel.setTextFill(RGBColor.of(255, 165, 0));
-    }
-
-    @FXML
-    private void invokeGameContextMenu(ActionEvent source) {
-        startMenuService.invokeGameContextMenu(source);
+    private void invokeGameContextMenu(ActionEvent event) {
+        startMenuService.invokeGameContextMenu((Button) event.getSource());
     }
 
     @FXML
     private void generateBlanks(ActionEvent event) {
-        Game targetGame = GridItemService.findByRightMenuButton(StartMenuService.getAvailableGames(), event);
-        blankService.generateBlanks(targetGame);
-        popupAlerter.invoke(((Node) event.getSource()).getScene().getWindow(),
-                "Success",
-                "Blanks are generated successfully");
-    }
-
-    public void fillGridWithAllGames() {
-        startMenuService.fillGridWithAllGames();
+        startMenuService.generateBlanks((Button) event.getSource());
     }
 
     @FXML
     private void viewBlanks(ActionEvent event) {
-        Button source = (Button) event.getSource();
-        AnchorPane gameGridItem = findParentAnchorPane(source);
-        Game targetGame = GridItemService.findByEventTarget(StartMenuService.getAvailableGames(), gameGridItem);
-        ViewBlanksController controller = applicationContext.getBean(ViewBlanksController.class);
-        controller.setGame(targetGame);
-        controller.render(event);
+        startMenuService.viewBlanks((Button) event.getSource());
+    }
+
+    private void configureUIElements(
+            GridPane gamesField,
+            Label gameLabel,
+            AnchorPane templateGameAnchorPane,
+            AnchorPane newGameAnchorPane) {
+        startMenuService.setGamesField(gamesField);
+        startMenuService.setGameLabel(gameLabel);
+        startMenuService.setTemplateGameAnchorPane(templateGameAnchorPane);
+        startMenuService.setNewGameAnchorPane(newGameAnchorPane);
     }
 }

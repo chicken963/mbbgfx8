@@ -14,8 +14,7 @@ import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findParentAnchorPan
 @Service
 public class GridItemService {
 
-    public static Game findByRightMenuButton(List<GamesGridItem> availableGames, ActionEvent event) {
-        Button sourceButton = (Button) event.getSource();
+    public static Game findByRightMenuButton(List<GamesGridItem> availableGames, Button sourceButton) {
         AnchorPane gamePane = findParentAnchorPane(sourceButton);
         return findByEventTarget(availableGames, gamePane);
     }

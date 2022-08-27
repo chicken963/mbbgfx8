@@ -114,7 +114,6 @@ public class NodeDeepCopyProvider {
         copy.setOnMouseExited(sourceButton.getOnMouseExited());
         copy.setGraphic(copyImageView((ImageView) sourceButton.getGraphic()));
         copy.setMnemonicParsing(sourceButton.isMnemonicParsing());
-        copy.getStyleClass().setAll(sourceButton.getStyleClass());
 
         alignCommonRegionProperties(sourceButton, copy);
         alignCommonLabeledProperties(sourceButton, copy);

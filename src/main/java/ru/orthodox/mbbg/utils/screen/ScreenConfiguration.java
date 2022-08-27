@@ -35,9 +35,16 @@ public class ScreenConfiguration {
     @Qualifier("audioTracksLibraryView")
     private ControllersConfig.View audioTracksLibraryView;
 
+    @Autowired
+    @Qualifier("audioTracksLibraryRow")
+    private ControllersConfig.View audioTracksLibraryRow;
+
     @Bean
     public ScreenViewResource startMenuScene() {
-        return new ScreenViewResource("startMenu", startMenuView, "styleSheets/start-scene.css");
+        return new ScreenViewResource(
+                "startMenu",
+                startMenuView,
+                Arrays.asList("styleSheets/start-scene.css", "styleSheets/scrollable-table.css"));
     }
 
     @Bean
@@ -51,20 +58,26 @@ public class ScreenConfiguration {
     @Bean
     public ScreenViewResource newGameScene() {
         return new ScreenViewResource("newGame", newGameView,
-                Arrays.asList("styleSheets/new-game.css", "styleSheets/scrollable-table.css"));
+                Arrays.asList("styleSheets/new-game.css", "styleSheets/scrollable-table.css", "styleSheets/tab-pane.css"));
     }
 
     @Bean
     public ScreenViewResource popupScene() {
-        return new ScreenViewResource("popup", popupView, "styleSheets/start-scene.css");
+        return new ScreenViewResource("popup", popupView, "styleSheets/popup.css");
     }
     @Bean
     public ScreenViewResource viewBlanksScene() {
-        return new ScreenViewResource("viewBlanks", viewBlanksView, "styleSheets/start-scene.css");
+        return new ScreenViewResource("viewBlanks", viewBlanksView,
+                Arrays.asList("styleSheets/view-blanks.css", "styleSheets/scrollable-table.css", "styleSheets/tab-pane.css"));
     }
     @Bean
     public ScreenViewResource audioTracksLibraryScene() {
-        return new ScreenViewResource("audioTracksLibrary", audioTracksLibraryView, "styleSheets/new-game.css");
+        return new ScreenViewResource("audioTracksLibrary", audioTracksLibraryView,
+                Arrays.asList("styleSheets/scrollable-table.css", "styleSheets/new-game.css"));
+    }
+    @Bean
+    public ScreenViewResource audioTracksLibraryRowScene() {
+        return new ScreenViewResource("audioTracksLibraryRow", audioTracksLibraryRow, "styleSheets/new-game.css");
     }
 
 }

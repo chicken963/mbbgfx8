@@ -3,6 +3,7 @@ package ru.orthodox.mbbg.services.create.validator;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -19,6 +20,7 @@ import ru.orthodox.mbbg.services.popup.PopupAlerter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,153 +29,45 @@ public class FieldsValidator {
     @Autowired
     private PopupAlerter popupAlerter;
 
-    public void validateTabPane(RoundsTabPane roundsTabPane) {
-        boolean tabPaneIsValid = true;
+    private String messageAboutNotUniqueArtist;
+    private String messageAboutInsufficientNumberOfAudioTracks;
+
+    public void validateTabPane(RoundsTabPane roundsTabPane, Button saveButton) {
+        messageAboutNotUniqueArtist = "";
+        messageAboutInsufficientNumberOfAudioTracks = "";
 
         for (RoundTab roundTab: roundsTabPane.getRoundTabs()) {
-            try {
-                validateRoundTab(roundTab);
-            } catch (GameInputsValidationException ex) {
-                tabPaneIsValid = false;
-            }
+            validateRoundTab(roundTab);
         }
 
-        if (!tabPaneIsValid) {
-            throw new GameInputsValidationException();
+        String messageToShow = messageAboutNotUniqueArtist.isEmpty() ? "" : messageAboutNotUniqueArtist;
+        if (!messageAboutInsufficientNumberOfAudioTracks.isEmpty()) {
+            messageToShow += "\n";
+            messageToShow += messageAboutInsufficientNumberOfAudioTracks;
+        }
+        if (!messageToShow.isEmpty()) {
+            popupAlerter.invoke(saveButton.getScene().getWindow(), "Not valid game data", messageToShow);
         }
     }
 
     private void validateRoundTab(RoundTab tab) {
-        boolean tabIsValid = true;
-
-        try {
-            TextField roundName = tab.getRoundNameTextField();
-            validateTextField(roundName, "Round name field");
-
-            TextField numberOfBlanks = tab.getNumberOfBlanks();
-            validateIntegerTextField(numberOfBlanks, "Number of blanks");
-        } catch (GameInputsValidationException ex) {
-            tabIsValid = false;
+        int blankCapacity = tab.getBlankDimensions().getValue().getCapacity();
+        List<AudioTrack> tabAudioTracks = tab.getEditAudioTracksTable().getAudioTracks();
+        if (tabAudioTracks.size() < blankCapacity) {
+            messageAboutInsufficientNumberOfAudioTracks += "Number of audiotracks in round '" + tab.getTab().getText() + "' (" + tabAudioTracks.size() + ") is less than blank capacity (" + blankCapacity + "). Please add more tracks.\n";
         }
+        Map<String, List<AudioTrack>> artistsOccurences = tabAudioTracks.stream()
+                .collect(Collectors.groupingBy(AudioTrack::getArtist));
 
-        try {
-            Map<ChoiceBox, Label> fieldsAndWarningLabels = findCheckBoxesAndWarningLabels(tab);
-            validateCheckBoxes(fieldsAndWarningLabels);
-        } catch (GameInputsValidationException ex) {
-            tabIsValid = false;
-        }
-
-
-        try {
-            EditAudioTracksTable table = tab.getEditAudioTracksTable();
-            validateAudiotracksTable(table);
-        } catch (GameInputsValidationException ex) {
-            tabIsValid = false;
-        }
-
-        if (!tabIsValid) {
-            throw new GameInputsValidationException();
-        }
-    }
-
-    private Map<ChoiceBox, Label> findCheckBoxesAndWarningLabels(RoundTab tab) {
-        ChoiceBox<WinCondition> firstWinCondition = tab.getFirstPrizeCondition();
-        ChoiceBox<WinCondition> secondWinCondition = tab.getSecondPrizeCondition();
-        ChoiceBox<WinCondition> thirdWinCondition = tab.getThirdPrizeCondition();
-
-        Label firstWinConditionWarning = tab.getFirstPrizeConditionWarning();
-        Label secondWinConditionWarning = tab.getSecondPrizeConditionWarning();
-        Label thirdWinConditionWarning = tab.getThirdPrizeConditionWarning();
-
-        ChoiceBox<String> blankDimensions = tab.getBlankDimensions();
-
-
-        Label dimensionsWarning = tab.getDimensionsWarning();
-
-        return new HashMap<ChoiceBox, Label>(){{
-            put(firstWinCondition, firstWinConditionWarning);
-            put(secondWinCondition, secondWinConditionWarning);
-            put(thirdWinCondition, thirdWinConditionWarning);
-            put(blankDimensions, dimensionsWarning);
-        }};
-    }
-
-    public void validateTextField(TextField textField, String message){
-        if (!(inputIsFilled(textField, message))) {
-            throw new GameInputsValidationException();
-        }
-    }
-
-    public void validateIntegerTextField(TextField textField, String message){
-        if (!(inputIsPositiveInteger(textField, message))) {
-            throw new GameInputsValidationException();
-        }
-    }
-
-    private boolean inputIsFilled(TextField textField, String message){
-        if (textField.getText().trim().isEmpty()) {
-            showMessageUntilInput(textField, message, "should not be empty!");
-            return false;
-        }
-        return true;
-    }
-
-    private boolean inputIsPositiveInteger(TextField textField, String message){
-        int value;
-        try {
-            value = Integer.parseInt(textField.getText().trim());
-        } catch (NumberFormatException ex) {
-            showMessageUntilInput(textField, message, "should be numeric!");
-            return false;
-        }
-        if (value == 0) {
-            showMessageUntilInput(textField, message, "should be greater than zero!");
-            return false;
-        }
-        return true;
-    }
-
-    private void showMessageUntilInput(TextField textField, String message, String details) {
-        textField.getStyleClass().add("warning");
-        textField.setPromptText(message + " " + details);
-        textField.setOnKeyPressed(event -> ((Node) event.getSource()).getStyleClass().remove("warning"));
-    }
-
-    private void validateCheckBoxes(Map<ChoiceBox, Label> fieldsAndWarningLabels) {
-        for (ChoiceBox choiceBox: fieldsAndWarningLabels.keySet()) {
-            if (choiceBox.getValue() == null) {
-                EventHandler<ActionEvent> bufferedOnAction = choiceBox.getOnAction();
-                fieldsAndWarningLabels.get(choiceBox).setVisible(true);
-                choiceBox.setOnAction(event -> {
-                    fieldsAndWarningLabels.get(choiceBox).setVisible(false);
-                    choiceBox.setOnAction(bufferedOnAction);
-                });
-                throw new GameInputsValidationException();
-            }
-        }
-    }
-
-    private void validateAudiotracksTable(EditAudioTracksTable table){
-        Label tablePlaceHolder = table.getPlaceholder();
-        if (table.isEmpty()) {
-            tablePlaceHolder.setText("Please add any tracks");
-            tablePlaceHolder.setVisible(true);
-            throw new GameInputsValidationException();
-        }
-        List<AudioTrack> tracksWithEmptyArtist = table.getAudioTracks().stream()
-                .filter(track -> track.getArtist().isEmpty())
-                .collect(Collectors.toList());
-        if (!tracksWithEmptyArtist.isEmpty()) {
-            String detailedMessage = tracksWithEmptyArtist.stream()
-                    .map(AudioTrack::getTitle)
-                    .map(trackTitle -> "\u2023 " + trackTitle)
-                    .collect(Collectors.joining(",\n"));
-
-            popupAlerter.invoke(tablePlaceHolder.getScene().getWindow(),
-                    "Some of the tracks have empty artist info, here they are:",
-                    detailedMessage, tracksWithEmptyArtist.size());
-
-            throw new GameInputsValidationException();
+        String notUniqueArtistMessageRoundWise = artistsOccurences.entrySet().stream()
+                .filter(artistSet -> artistSet.getValue().size() > 1)
+                .map(artistSet -> "There are " + artistSet.getValue().size() + " audiotracks for artist "
+                        + artistSet.getKey() + " in round '" + tab.getTab().getText() + "' ("
+                        + artistSet.getValue().stream().map(AudioTrack::getTitle).collect(Collectors.joining(", "))
+                        + "). Please leave only one track of this artist in the specified round.")
+                .collect(Collectors.joining("\n"));
+        if (!notUniqueArtistMessageRoundWise.isEmpty()) {
+            messageAboutNotUniqueArtist += notUniqueArtistMessageRoundWise + "\n";
         }
     }
 }

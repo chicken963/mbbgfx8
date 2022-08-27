@@ -8,6 +8,8 @@ import javafx.scene.layout.VBox;
 import lombok.Getter;
 import lombok.Setter;
 import ru.orthodox.mbbg.enums.ButtonType;
+import ru.orthodox.mbbg.enums.EntityUpdateMode;
+import ru.orthodox.mbbg.events.GameAudioTracksListChangedEvent;
 import ru.orthodox.mbbg.events.TextFieldChangeEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.services.common.AudioTrackAsyncLengthLoadService;
@@ -37,8 +39,6 @@ public class EditAudioTracksTable {
 
     private final AudioTrackUIViewService audioTrackUIViewService;
 
-    private AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService;
-
     private final VBox audioTracksTable;
     private final List<AudioTrackEditUIView> gridRows = new ArrayList<>();
     @Getter
@@ -57,10 +57,7 @@ public class EditAudioTracksTable {
         ThreadUtils.runTaskInSeparateThread(() -> rangeSliderService.updateRangeSlider(playMediaService), "editTable-" + this.hashCode());
     }
 
-    public void setAudioTrackAsyncLengthLoadService(AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService) {
-        this.audioTrackAsyncLengthLoadService = audioTrackAsyncLengthLoadService;
-        audioTrackAsyncLengthLoadService.setGridRows(gridRows);
-    }
+
 
     public List<AudioTrack> getAudioTracks() {
         return gridRows.stream()
@@ -68,12 +65,12 @@ public class EditAudioTracksTable {
                 .collect(Collectors.toList());
     }
 
-    public boolean isEmpty() {
+    private boolean isEmpty() {
         return gridRows.isEmpty();
     }
 
     public boolean isFilled() {
-        return gridRows.stream().allMatch(gridRow ->
+        return !isEmpty() && gridRows.stream().allMatch(gridRow ->
                 !((TextField) gridRow.getArtistLabel()).getText().isEmpty()
              && !((TextField) gridRow.getSongTitleLabel()).getText().isEmpty()
         );
@@ -93,6 +90,7 @@ public class EditAudioTracksTable {
 
         audioTracksTable.getChildren().add(row.getRowContainer());
         gridRows.add(row);
+        eventPublisherService.publishEvent(new GameAudioTracksListChangedEvent(this, row, EntityUpdateMode.ADD));
     }
 
     private void populateRowWithButtons(AudioTrackEditUIView row) {
@@ -134,25 +132,17 @@ public class EditAudioTracksTable {
         return buttonView;
     }
 
-/*    private void defineOnPlayLogic(AudioTrack audioTrack) {
-        if (playMediaService.getCurrentTrack() != null
-                && playMediaService.getCurrentTrack().equals(audioTrack)
-                && !playMediaService.isCurrentStopInPlayableRange()) {
-            playMediaService.stop(audioTrack);
-        }
-        playMediaService.play(audioTrack);
-    }*/
-
     private void deleteRow(AudioTrack audioTrack) {
         playMediaService.stop(audioTrack);
         AudioTrackEditUIView rowToDelete = audioTrackUIViewService.findByAudioTrack(gridRows, audioTrack)
                 .orElseThrow(() -> new IllegalArgumentException("There is no row for audiotrack " + audioTrack.getTitle()));
         int rowIndex = gridRows.indexOf(rowToDelete);
         gridRows.remove(rowToDelete);
-        audioTracksTable.getChildren().remove(rowIndex);
-        if (audioTracksTable.getChildren().isEmpty()) {
-            audioTracksTable.getChildren().add(placeholder);
+        audioTracksTable.getChildren().remove(rowIndex + 1);
+        if (audioTracksTable.getChildren().size() == 1) {
+            placeholder.setVisible(true);
         }
+        eventPublisherService.publishEvent(new GameAudioTracksListChangedEvent(this, rowToDelete, EntityUpdateMode.DELETE));
         eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
     }
 

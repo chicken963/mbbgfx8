@@ -20,7 +20,7 @@ public class FileChooserDealer {
     @Value("${music.localpath.startfolder}")
     private String localStartFolder;
 
-    public FileChooser preconfigureFileChooser() {
+    public FileChooser provideFileChooser() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Please select audio files");
         //TODO: uncomment and delete the subsequent line

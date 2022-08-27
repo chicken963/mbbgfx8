@@ -8,6 +8,7 @@ import ru.orthodox.mbbg.model.basic.Game;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.model.proxy.play.RoundTab;
 import ru.orthodox.mbbg.model.proxy.play.RoundsTabPane;
+import ru.orthodox.mbbg.services.create.NewGameService;
 
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public class SceneToGameMapper {
     @Autowired
     private TabToRoundMapper tabToRoundMapper;
 
-    public Game generateFromScene(NewGameController.GameScene gameScene) {
+    public Game generateFromScene(NewGameService.GameScene gameScene) {
         TextField gameNameInput = gameScene.getGameNameInput();
         RoundsTabPane roundsTabPane = gameScene.getRoundsTabPane();
 

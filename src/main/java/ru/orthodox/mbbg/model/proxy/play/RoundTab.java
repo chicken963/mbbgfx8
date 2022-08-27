@@ -1,53 +1,56 @@
 package ru.orthodox.mbbg.model.proxy.play;
 
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
+import lombok.Setter;
+import ru.orthodox.mbbg.enums.BlankSize;
 import ru.orthodox.mbbg.enums.WinCondition;
+import ru.orthodox.mbbg.events.RoundNameChangedEvent;
+import ru.orthodox.mbbg.events.TabClosedEvent;
+import ru.orthodox.mbbg.events.TabCreatedEvent;
+import ru.orthodox.mbbg.events.TextFieldChangeEvent;
+import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.model.proxy.create.EditAudioTracksTable;
-import ru.orthodox.mbbg.services.common.AudioTrackAsyncLengthLoadService;
 import ru.orthodox.mbbg.services.common.EventPublisherService;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
-import ru.orthodox.mbbg.services.create.PrizeConditionsDealer;
-import ru.orthodox.mbbg.services.create.RoundDimensionsDealer;
+import ru.orthodox.mbbg.services.create.RoundDimensionsManager;
 import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
 import ru.orthodox.mbbg.utils.hierarchy.HierarchyUtils;
 
 import java.util.stream.Stream;
 
+import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
+
 @Getter
 public class RoundTab {
     private final Tab tab;
+    @Setter
+    private Round round;
 
     private EditAudioTracksTable editAudioTracksTable;
 
-    private final int index;
+//    private final int index;
 
 
-    private ChoiceBox<WinCondition> firstPrizeCondition;
-    private ChoiceBox<WinCondition> secondPrizeCondition;
-    private ChoiceBox<WinCondition> thirdPrizeCondition;
+    private final ChoiceBox<WinCondition> firstPrizeCondition;
+    private final ChoiceBox<WinCondition> secondPrizeCondition;
+    private final ChoiceBox<WinCondition> thirdPrizeCondition;
 
-    private ChoiceBox<String> blankDimensions;
+    private final ChoiceBox<BlankSize> blankDimensions;
 
-    private TextField roundNameTextField;
-    private TextField numberOfBlanks;
-
-    private PrizeConditionsDealer prizeConditionsDealer;
-
-    private PlayMediaService playMediaService;
+    private final TextField roundNameTextField;
+    private final TextField numberOfBlanks;
 
     public RoundTab(Tab tab,
                     HBox audioTracksGridRowTemplate,
-                    AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService,
                     PlayMediaService playMediaService,
                     EventPublisherService eventPublisherService,
-                    int index) {
+                    Round round) {
         this.tab = tab;
-        this.index = index;
+        this.round = round;
 
         defineAudioTracksGridStaticMembers(
                 eventPublisherService,
@@ -61,22 +64,23 @@ public class RoundTab {
                 .findFirst()
                 .orElse(null);
 
-        editAudioTracksTable.setAudioTrackAsyncLengthLoadService(audioTrackAsyncLengthLoadService);
-
         this.firstPrizeCondition = getFirstPrizeCondition();
         this.secondPrizeCondition = getSecondPrizeCondition();
         this.thirdPrizeCondition = getThirdPrizeCondition();
-        this.prizeConditionsDealer = new PrizeConditionsDealer(firstPrizeCondition, secondPrizeCondition, thirdPrizeCondition);
         this.blankDimensions = getBlankDimensions();
-        RoundDimensionsDealer.populateDimensionsChoiceBox(blankDimensions);
-
 
         this.numberOfBlanks = getNumberOfBlanks();
 
 
         this.roundNameTextField = getNewRoundNameTextField();
 
-        this.bindRoundNameToTabName();
+        getNewRoundNameTextField().setOnKeyReleased(
+                keyEvent -> eventPublisherService.publishEvent(new RoundNameChangedEvent(this)));
+        getNumberOfBlanks().setOnKeyReleased(
+                keyEvent -> eventPublisherService.publishEvent(new TextFieldChangeEvent(this)));
+        tab.setOnClosed(event -> eventPublisherService.publishEvent(new TabClosedEvent(this)));
+
+        eventPublisherService.publishEvent(new TabCreatedEvent(this));
     }
 
     private void defineAudioTracksGridStaticMembers(EventPublisherService eventPublisherService, HBox audioTracksGridRowTemplate, PlayMediaService playMediaService) {
@@ -89,30 +93,6 @@ public class RoundTab {
 
     public boolean containsChild(Node child) {
         return HierarchyUtils.containsNode(child, tab);
-    }
-
-    public Label getCurrentTrackInfoLabel() {
-        return ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentTrackInfo");
-    }
-
-    public Label getCurrentTrackStartLabel() {
-        return ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentTrackStartLabel");
-    }
-
-    public Label getCurrentTrackEndLabel() {
-        return ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentTrackEndLabel");
-    }
-
-    public Label getCurrentSnippetRate() {
-        return ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentSnippetRate");
-    }
-
-    public Label getCurrentSnippetLength() {
-        return ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "currentSnippetLength");
-    }
-
-    public HBox getSliderContainer() {
-        return ElementFinder.<HBox>findTabElementByTypeAndStyleclass(tab, "sliderContainer");
     }
 
     public ChoiceBox<WinCondition> getThirdPrizeCondition() {
@@ -131,8 +111,8 @@ public class RoundTab {
         return ElementFinder.<TextField>findTabElementByTypeAndStyleclass(tab, "newRoundName");
     }
 
-    public ChoiceBox<String> getBlankDimensions() {
-        return ElementFinder.<ChoiceBox<String>>findTabElementByTypeAndStyleclass(tab, "blankDimensions");
+    public ChoiceBox<BlankSize> getBlankDimensions() {
+        return ElementFinder.<ChoiceBox<BlankSize>>findTabElementByTypeAndStyleclass(tab, "blankDimensions");
     }
 
     public TextField getNumberOfBlanks() {
@@ -159,44 +139,11 @@ public class RoundTab {
         return ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "numberOfBlanksWarning");
     }
 
-    private Button findDeleteRoundButton() {
-        return ElementFinder.findRecursivelyByStyle((Parent) tab.getContent(), "deleteRound").stream()
-                .map(item -> (Button) item).findFirst().orElseThrow(() ->
-                        new IllegalArgumentException("Delete round button was not found"));
-    }
-
-    private void bindRoundNameToTabName() {
-        roundNameTextField.setOnKeyReleased((event) -> {
-            tab.setText(roundNameTextField.getText().isEmpty()
-                    ? "Round " + (index + 1)
-                    : roundNameTextField.getText());
-                });
-    }
-
-    public void validateConditions(int sourceConditionNumber) {
-        switch (sourceConditionNumber) {
-            case 1:
-                prizeConditionsDealer.validateThatEasier(firstPrizeCondition, secondPrizeCondition);
-                prizeConditionsDealer.validateThatEasier(firstPrizeCondition, thirdPrizeCondition);
-                break;
-            case 2:
-                prizeConditionsDealer.validateThatHarder(secondPrizeCondition, firstPrizeCondition);
-                prizeConditionsDealer.validateThatEasier(secondPrizeCondition, thirdPrizeCondition);
-                break;
-            case 3:
-                prizeConditionsDealer.validateThatHarder(thirdPrizeCondition, firstPrizeCondition);
-                prizeConditionsDealer.validateThatHarder(thirdPrizeCondition, secondPrizeCondition);
-                break;
-            default:
-                break;
-        }
-    }
-
     public boolean isFilled(){
-        return !firstPrizeCondition.getValue().equals(null)
-            && !secondPrizeCondition.getValue().equals(null)
-            && !thirdPrizeCondition.getValue().equals(null)
-            && !blankDimensions.getValue().equals(null)
+        return firstPrizeCondition.getValue() != null
+            && secondPrizeCondition.getValue() != null
+            && thirdPrizeCondition.getValue() != null
+            && blankDimensions.getValue() != null
             && !numberOfBlanks.getText().isEmpty()
             && !roundNameTextField.getText().isEmpty()
             && editAudioTracksTable.isFilled();

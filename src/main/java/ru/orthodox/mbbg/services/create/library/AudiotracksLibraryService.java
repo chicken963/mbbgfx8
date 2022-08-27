@@ -1,16 +1,20 @@
 package ru.orthodox.mbbg.services.create.library;
 
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.events.AudioTrackLengthLoadedEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
-import ru.orthodox.mbbg.model.proxy.create.AudioTracksLibraryGrid;
+import ru.orthodox.mbbg.model.proxy.create.AudioTracksLibraryTable;
 import ru.orthodox.mbbg.model.proxy.create.EditAudioTracksTable;
+import ru.orthodox.mbbg.model.proxy.play.RoundTab;
 import ru.orthodox.mbbg.repositories.AudioTrackRepository;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
 import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
@@ -29,31 +33,24 @@ public class AudiotracksLibraryService {
     @Autowired
     private PlayMediaService playMediaService;
 
-    public AudioTracksLibraryGrid populateTableWithAllAudioTracks(Pane libraryPopupContent) {
-        AudioTracksLibraryGrid libraryTable = getAudioTracksLibraryGridFromUI(libraryPopupContent);
+
+    public void populateTableWithAllAudioTracks(AudioTracksLibraryTable libraryTable) {
         libraryTable.setPlayMediaService(playMediaService);
         libraryTable.addAudioTracks(audioTrackRepository.findAllAudioTracks());
-        return libraryTable;
     }
 
 
-    public void addSelectedTracksToRound(AudioTracksLibraryGrid libraryGrid, EditAudioTracksTable roundTableToSendTheSelectedAudiotracks, Stage stage) {
-        List<AudioTrack> selectedAudioTracks = libraryGrid.getSelectedAudiotracks();
+    public void defineSubmitProperty(AudioTracksLibraryTable audioTracksLibraryTable, RoundTab currentTab, Stage libraryStage) {
+        audioTracksLibraryTable.getAddSelectedTracksButton()
+                .setOnAction(e -> addSelectedTracksToRound(audioTracksLibraryTable, currentTab.getEditAudioTracksTable(), libraryStage));
+    }
+
+    public void addSelectedTracksToRound(AudioTracksLibraryTable audioTracksLibraryTable, EditAudioTracksTable roundTableToSendTheSelectedAudiotracks, Stage stage) {
+        List<AudioTrack> selectedAudioTracks = audioTracksLibraryTable.getSelectedAudiotracks();
         roundTableToSendTheSelectedAudiotracks.addAudioTracks(selectedAudioTracks);
         for (AudioTrack audioTrack: selectedAudioTracks) {
-           eventPublisher.publishEvent(new AudioTrackLengthLoadedEvent(this, audioTrack));
+            eventPublisher.publishEvent(new AudioTrackLengthLoadedEvent(this, audioTrack));
         }
         stage.close();
-    }
-
-    private AudioTracksLibraryGrid getAudioTracksLibraryGridFromUI(Pane libraryPopupContent) {
-        return Stream.of((GridPane) findElementByTypeAndStyleclass(libraryPopupContent, "tracks-grid"))
-                .map(gridPane -> new AudioTracksLibraryGrid(gridPane))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("There is no grid pane found by style class 'tracks-grid'"));
-    }
-
-    public Button getAddLibraryTracksButtonFromUI(Pane libraryPopupContent) {
-        return ElementFinder.findElementByTypeAndStyleclass(libraryPopupContent, "add-selected-tracks");
     }
 }

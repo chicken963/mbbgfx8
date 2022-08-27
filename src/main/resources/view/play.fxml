@@ -18,7 +18,7 @@
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
-<ScrollPane fitToHeight="true" fitToWidth="true" minWidth="1420.0" style="-fx-background-color: #111;"
+<ScrollPane fitToHeight="true" fitToWidth="true" minWidth="1420.0" style="-fx-background-color: #1b1b1b;"
             xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="ru.orthodox.mbbg.controllers.PlayController">
     <content>
@@ -219,7 +219,7 @@
                                     </HBox>
                                     <ScrollPane hbarPolicy="NEVER" maxHeight="410.0" minHeight="510.0"
                                                 prefHeight="410.0" prefWidth="570.0"
-                                                style="-fx-background-color: #111;">
+                                                style="-fx-background-color: #1b1b1b;">
                                         <GridPane fx:id="miniaturesProgressGrid" alignment="CENTER" minHeight="40.0"
                                                   minWidth="550.0" prefWidth="550.0">
                                             <columnConstraints>
@@ -366,7 +366,7 @@
                 </HBox>
             </ScrollPane>
             <VBox prefWidth="400.0"
-                  style="-fx-background-radius: 5px 5px 0 0; -fx-border-color: orange; -fx-border-radius: 10px;"
+                  styleClass="vbox-containing-scroll-pane"
                   AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
                 <HBox maxWidth="397.6" style="-fx-background-radius: 10px 10px 0 0;" styleClass="grid-header">
                     <Button maxHeight="30.0" maxWidth="32.0" minHeight="30.0" minWidth="32.0" prefHeight="30.0"
@@ -393,7 +393,7 @@
                     </VBox.margin>
                 </HBox>
                 <ScrollPane hbarPolicy="NEVER" minWidth="380.0" maxHeight="950" prefWidth="380.0"
-                            style="-fx-background-color: transparent;" styleClass="tracks-grid-scroll-pane">
+                            styleClass="tracks-grid-scroll-pane">
                     <VBox fx:id="audioTracksTable" minHeight="30.0" minWidth="397.6" prefWidth="377.6"
                           styleClass="tracks-grid">
                         <fx:define>

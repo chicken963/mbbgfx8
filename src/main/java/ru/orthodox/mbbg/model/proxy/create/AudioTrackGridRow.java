@@ -93,13 +93,13 @@ public class AudioTrackGridRow implements AudioTrackEditUIView {
 
         getSongTitleLabel().setOnMouseClicked(mouseEvent -> {
             if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+                VBox tracksTable = (VBox) getArtistLabel().getParent().getParent();
+                List<TextField> allEditableFields = findAllEditableFields(tracksTable);
                 if (mouseEvent.getClickCount() == 2) {
-                    VBox tracksTable = (VBox) getArtistLabel().getParent().getParent();
                     String oldValue = getSongTitleLabel().getText();
-                    List<TextField> allEditableFields = findAllEditableFields(tracksTable);
                     allEditableFields.forEach(textField -> textField.setEditable(false));
-
                     getSongTitleLabel().setEditable(true);
+
                     getSongTitleLabel().setOnKeyPressed(ke -> {
                         if (ke.getCode().equals(KeyCode.ENTER)) {
 
@@ -123,17 +123,16 @@ public class AudioTrackGridRow implements AudioTrackEditUIView {
 
         HBox rowContainer = (HBox) createDeepCopy(rowContainerTemplate);
 
-        ((TextField) rowContainer.getChildren().get(ARTIST_COLUMN_INDEX)).setText(audioTrack.getArtist());
-        ((TextField) rowContainer.getChildren().get(TITLE_COLUMN_INDEX)).setText(audioTrack.getTitle());
-        ((Label) rowContainer.getChildren().get(START_TIME_COLUMN_INDEX)).setText(toStringFormat(audioTrack.getStartInSeconds()));
-
-        ((Label) rowContainer.getChildren().get(END_TIME_COLUMN_INDEX)).setText(toStringFormat(audioTrack.getFinishInSeconds()));
-        ((Label) rowContainerTemplate.getChildren().get(PROGRESS_COLUMN_INDEX)).setText(getSongProgressAsString(0, audioTrack.getLengthInSeconds()));
-
         AudioTrackGridRow row =  AudioTrackGridRow.builder()
                 .audioTrack(audioTrack)
                 .rowContainer(rowContainer)
                 .build();
+
+        row.getArtistLabel().setText(audioTrack.getArtist());
+        row.getSongTitleLabel().setText(audioTrack.getTitle());
+        row.getStartTimeLabel().setText(toStringFormat(audioTrack.getStartInSeconds()));
+        row.getEndTimeLabel().setText(toStringFormat(audioTrack.getFinishInSeconds()));
+        row.getProgressLabel().setText(getSongProgressAsString(0, audioTrack.getLengthInSeconds()));
 
         row.defineLabelsLogic();
         return row;

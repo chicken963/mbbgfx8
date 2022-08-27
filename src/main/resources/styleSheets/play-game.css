@@ -1,15 +1,24 @@
+* {
+   -main-color: orange;
+   -second-main-color: white;
+   -main-background-color: #1b1b1b;
+   -active-row-color: #333;
+   -danger-color: rgb(208,32,34);
+   -info-color: rgb(3,158,211);
+}
+
 .audio-tracks-row .artist-label.active {
     -fx-text-fill: black;
-    -fx-background-color: orange;
+    -fx-background-color: -main-color;
 }
 
 .audio-tracks-row .song-title-label.active {
     -fx-text-fill: black;
-    -fx-background-color: orange;
+    -fx-background-color: -main-color;
 }
 
 .audio-tracks-row.active {
-    -fx-background-color: orange;
+    -fx-background-color: -main-color;
 }
 
 .next-track-icon.active {
@@ -21,18 +30,17 @@
 }
 
 /*.audio-tracks-row {
-    -fx-background-color: #111;
+    -fx-background-color: -main-background-color;
 }*/
 
 .audio-tracks-row:hover {
-    -fx-background-color: #333;
+    -fx-background-color: -active-row-color;
     -fx-cursor: hand;
     -fx-scale-y: 1.08;
 }
 
 .root {
-    -fx-background-color: #111;
-    /*-fx-background-color: linear-gradient(to bottom right, #008080, black)*/
+    -fx-background-color: -main-background-color;
 }
 
 .playerButton {
@@ -49,7 +57,7 @@
 
 .exitPlayMode {
     -fx-border-color: transparent;
-    -fx-background-color: rgb(208,32,34);
+    -fx-background-color: -danger-color;
     -fx-cursor: hand;
 }
 
@@ -59,38 +67,38 @@
 }
 
 .workbench {
-    -fx-background-color: #111;
+    -fx-background-color: -main-background-color;
 }
 
 .audio-tracks-header-row {
- -fx-background-color: white;
+ -fx-background-color: -second-main-color;
  -fx-font-weight: bold;
 }
 
 .audio-tracks-row .artist-label {
-  -fx-text-fill: white;
+  -fx-text-fill: -second-main-color;
 }
 .audio-tracks-row .song-title-label {
-  -fx-text-fill: white;
+  -fx-text-fill: -second-main-color;
 }
 
 .scroll-pane > .viewport {
-   -fx-background-color: #111;
+   -fx-background-color: -main-background-color;
 }
 
 .tracks-grid {
-  -fx-background-color: #111;
+  -fx-background-color: -main-background-color;
 }
 
 .blank-preview {
   -fx-background-radius: 5px;
   -fx-border-radius: 5px;
-  -fx-border-color: orange;
+  -fx-border-color: -main-color;
   -fx-border-style: dashed;
 }
 
 .switchRound {
-    -fx-background-color: orange;
+    -fx-background-color: -main-color;
     -fx-text-fill: black;
     -fx-font-size: 14px;
     -fx-cursor: hand;
@@ -111,10 +119,10 @@
 }
 
 .blank-miniature {
-    -fx-background-color: white;
-    -fx-border-color: white;
+    -fx-background-color: -second-main-color;
+    -fx-border-color: -second-main-color;
     -fx-border-style: solid;
-    -fx-text-fill: #111;
+    -fx-text-fill: -main-background-color;
     -fx-background-radius: 10px;
     -fx-cursor: hand;
     -fx-max-height: 30.0;
@@ -127,7 +135,7 @@
 }
 
 .blankNumber {
-   -fx-background-color: orange;
+   -fx-background-color: -main-color;
    -fx-border-radius: 5px;
    -fx-background-radius: 10px;
 }
@@ -135,7 +143,7 @@
 .gridPane {
     -fx-border-radius: 10;
     -fx-border-color: #444;
-    -fx-background-color: white;
+    -fx-background-color: -second-main-color;
     -fx-background-radius: 10;
 }
 
@@ -173,21 +181,21 @@
 }
 
 .blank-item.passed {
-    -fx-background-color: orange;
+    -fx-background-color: -main-color;
 }
 
 .blank-preview-background {
-  -fx-background-color: #111;
+  -fx-background-color: -main-background-color;
   -fx-background-radius: 5px;
   -fx-border-radius: 5px;
-  -fx-border-color: orange;
+  -fx-border-color: -main-color;
   -fx-border-style: dashed;
 }
 
 .harden-condition {
   -fx-background-radius: 15px;
-  -fx-background-color: rgb(208,32,34);
-  -fx-text-fill: #fff;
+  -fx-background-color: -danger-color;
+  -fx-text-fill: -second-main-color;
 
   -fx-pref-width: 540px;
   -fx-pref-height: 45px;
@@ -197,4 +205,14 @@
   -fx-cursor: hand;
   -fx-scale-x: 1.05;
   -fx-scale-y: 1.05;
+}
+
+.vbox-containing-scroll-pane {
+    -fx-background-radius: 5px 5px 0 0;
+    -fx-border-color: orange;
+    -fx-border-radius: 10px;
+}
+
+.tracks-grid-scroll-pane {
+    -fx-background-color: transparent;
 }

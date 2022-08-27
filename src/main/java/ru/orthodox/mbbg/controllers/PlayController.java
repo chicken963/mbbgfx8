@@ -133,7 +133,7 @@ public class PlayController {
     }
 
     @FXML
-    private void backToMenu(ActionEvent actionEvent) {
+    private void backToMenu() {
         screenService.activate("startMenu");
     }
 

@@ -38,7 +38,8 @@ public class PopupAlerter {
         popupStage.initOwner(sourceWindow);
         Scene dialogScene = null;
         try{
-            dialogScene = new Scene(popup, 350, 140 + Math.max(tracksCount, 3) * 20);
+            dialogScene = new Scene(popup, 450, 140 + Math.max(tracksCount, 3) * 20);
+            dialogScene.getStylesheets().add("styleSheets/popup.css");
 
         } catch (NullPointerException e) {
             log.warn("что-то непонятное с реюзом сцены");
@@ -54,7 +55,7 @@ public class PopupAlerter {
         popupStage.initOwner(sourceWindow);
         Scene dialogScene = null;
         try{
-            dialogScene = new Scene(popup, 350, 140);
+            dialogScene = new Scene(popup, 350, 340);
 
         } catch (NullPointerException e) {
             log.warn("что-то непонятное с реюзом сцены");

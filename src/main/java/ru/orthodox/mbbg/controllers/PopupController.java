@@ -16,7 +16,7 @@ public class PopupController {
     private Button okButton;
 
     @FXML
-    private void close(ActionEvent event){
+    private void close(){
         Scene currentScene = okButton.getScene();
         Stage currentStage = (Stage) currentScene.getWindow();
         currentStage.close();

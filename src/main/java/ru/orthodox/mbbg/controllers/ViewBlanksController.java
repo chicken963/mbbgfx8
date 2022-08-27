@@ -73,11 +73,12 @@ public class ViewBlanksController {
     @PostConstruct
     private void init() {
         dialogScene = new Scene(container, 880, 560);
-        dialogScene.getStylesheets().add("styleSheets/start-scene.css");
+        dialogScene.getStylesheets().addAll("styleSheets/view-blanks.css",
+                "styleSheets/scrollable-table.css", "styleSheets/tab-pane.css");
         blankPreview.setVisible(false);
     }
 
-    public void render(ActionEvent event) {
+    public void render(Button sourceButton) {
         this.viewBlanksService = ViewBlanksService.builder()
                 .blanksMiniatureTabPane(blanksMiniatureTabPane)
                 .blankPreview(blankPreview)
@@ -97,7 +98,7 @@ public class ViewBlanksController {
         final Stage popupStage = new Stage();
         popupStage.setTitle("Вот твои бланки для игры " + game.getName());
         popupStage.initModality(Modality.APPLICATION_MODAL);
-        popupStage.initOwner(((Node) event.getSource()).getScene().getWindow());
+        popupStage.initOwner(sourceButton.getScene().getWindow());
         popupStage.setScene(dialogScene);
         popupStage.show();
     }
@@ -109,7 +110,7 @@ public class ViewBlanksController {
     }
 
     @FXML
-    private void emptyBlanksPreview(MouseEvent mouseEvent) {
+    private void emptyBlanksPreview() {
         blankPreview.setVisible(false);
     }
 

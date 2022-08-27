@@ -1,0 +1,96 @@
+* {
+   -main-color: orange;
+   -second-main-color: white;
+   -main-background-color: #1b1b1b;
+   -active-row-color: #333;
+   -grid-border-color: #444;
+}
+
+.container {
+    -fx-background-color: -main-background-color;
+}
+
+.tab-content-main {
+    -fx-border-color: -main-color;
+        -fx-border-radius: 10px;
+        -fx-background-radius: 10px;
+        -fx-background-color: #1b1b1b;
+}
+
+.blankNumber {
+   -fx-background-color: #bbb;
+   -fx-border-radius: 5px;
+   -fx-background-radius: 10px;
+}
+
+.gridPane {
+    -fx-border-radius: 10;
+    -fx-border-color: -grid-border-color;
+    -fx-background-color: #bbb;
+    -fx-background-radius: 10;
+}
+
+.blank-item {
+    -fx-border-style: hidden hidden solid solid;
+    -fx-border-color: -grid-border-color;
+}
+
+.blank-item.left {
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-color: -grid-border-color;
+}
+
+.blank-item.lower {
+    -fx-border-style: hidden hidden hidden solid;
+    -fx-border-color: -grid-border-color;
+}
+
+.blank-item.left.lower {
+    -fx-border-style: hidden;
+    -fx-border-color: -grid-border-color;
+}
+
+.save-all-to-png:hover {
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+    -fx-cursor: hand;
+}
+
+.save-all-to-png {
+    -fx-background-color: -main-color;
+    -fx-background-radius: 10px;
+    -fx-min-width: 200px;
+    -fx-pref-width: 200px;
+    -fx-max-width: 200px;
+}
+
+.blank-miniature {
+    -fx-background-color: -main-color;
+    -fx-cursor: hand;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+.blank-miniature:hover {
+    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.05;
+}
+
+.vbox-containing-scroll-pane {
+    -fx-background-color: -main-background-color;
+    -fx-border-width: 2px;
+    -fx-border-color: -main-color;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+.grid-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+.miniatures-grid {
+    -fx-background-color: -main-background-color;
+}

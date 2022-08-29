@@ -2,6 +2,7 @@ package ru.orthodox.mbbg.services.play.blank;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.orthodox.mbbg.enums.StrokeType;
 import ru.orthodox.mbbg.model.basic.*;
 import ru.orthodox.mbbg.model.proxy.play.BlankItemStrokeSet;
 import ru.orthodox.mbbg.repositories.BlankRepository;
@@ -89,8 +90,7 @@ public class BlankService {
     }
 
     public boolean isMainDiagonal(BlankItemStrokeSet strokeSet) {
-        return strokeSet.getBlankItems().stream()
-                .allMatch(blankItem -> blankItem.getXIndex() == blankItem.getYIndex());
+        return StrokeType.DIAGONAL.equals(strokeSet.getStrokeType()) && strokeSet.getIndex() == 0;
     }
 
     private String generateBlankNumber(int roundNumber) {

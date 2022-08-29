@@ -10,13 +10,15 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.controlsfx.control.RangeSlider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.orthodox.mbbg.enums.ButtonType;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
-import ru.orthodox.mbbg.services.create.AudioTrackUIViewService;
 import ru.orthodox.mbbg.services.create.RangeSliderService;
 import ru.orthodox.mbbg.utils.common.ThreadUtils;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +29,8 @@ import static ru.orthodox.mbbg.utils.common.TimeRepresentationConverter.toString
 import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findElementByTypeAndStyleclass;
 import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
-public class AudioTracksLibraryTable {
+@Component
+public class AudioTracksLibraryTable implements AudioTracksTable {
 
     private static final int CHECKBOX_COLUMN_INDEX = 0;
     private static final int ARTIST_COLUMN_INDEX = 1;
@@ -40,22 +43,27 @@ public class AudioTracksLibraryTable {
     private static final int PAUSE_BUTTON_COLUMN_INDEX = 8;
     private static final int STOP_BUTTON_COLUMN_INDEX = 9;
 
-    private final VBox audioTracksGrid;
+    private VBox audioTracksGrid;
     @Setter
-    private PlayMediaService playMediaService;
-    private final HBox rowTemplate;
-    private final RangeSliderService rangeSliderService;
+    private HBox rowTemplate;
+
     private final List<AudioTrackEditUIView> gridRows = new ArrayList<>();
     @Getter
-    private final Button addSelectedTracksButton;
+    private Button addSelectedTracksButton;
 
-    public AudioTracksLibraryTable(AnchorPane root, HBox rowTemplate){
+    @Autowired
+    private PlayMediaService playMediaService;
+    @Autowired
+    private RangeSliderService rangeSliderService;
+
+    @PostConstruct
+    public void setup(){
+        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderService.updateRangeSlider(gridRows), "library");
+    }
+
+    public void setRoot(AnchorPane root) {
         this.audioTracksGrid = findElementByTypeAndStyleclass(root, "tracks-grid");
         this.addSelectedTracksButton = findElementByTypeAndStyleclass(root, "add-selected-tracks");
-        this.rowTemplate = rowTemplate;
-
-        this.rangeSliderService = new RangeSliderService(gridRows, new AudioTrackUIViewService());
-        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderService.updateRangeSlider(playMediaService), "library");
     }
 
     public void addAudioTracks(List<AudioTrack> audioTracks) {
@@ -120,6 +128,22 @@ public class AudioTracksLibraryTable {
         return gridRows.stream()
                 .map(row -> (AudioTrackLibraryGridRow) row)
                 .filter(AudioTrackLibraryGridRow::isSelected)
+                .map(AudioTrackEditUIView::getAudioTrack)
+                .collect(Collectors.toList());
+    }
+
+    public void clear() {
+        this.gridRows.clear();
+    }
+
+    @Override
+    public List<AudioTrackEditUIView> getRows() {
+        return gridRows;
+    }
+
+    @Override
+    public List<AudioTrack> getAudioTracks() {
+        return gridRows.stream()
                 .map(AudioTrackEditUIView::getAudioTrack)
                 .collect(Collectors.toList());
     }

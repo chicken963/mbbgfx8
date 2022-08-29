@@ -14,6 +14,7 @@ import org.controlsfx.control.RangeSlider;
 import ru.orthodox.mbbg.events.TextFieldChangeEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.services.common.EventPublisherService;
+import ru.orthodox.mbbg.services.common.PlayMediaService;
 
 import java.util.Collection;
 import java.util.List;
@@ -119,8 +120,24 @@ public class AudioTrackGridRow implements AudioTrackEditUIView {
         });
     }
 
-    public static AudioTrackGridRow of(AudioTrack audioTrack) {
+    public void defineRangeSliderBoundListeners(PlayMediaService playMediaService) {
+        getRangeSlider().highValueProperty().addListener((observable, oldValue, newValue) -> {
+            playMediaService.pause(audioTrack);
+            String currentTrackFinish = toStringFormat(newValue.doubleValue());
+            this.getEndTimeLabel().setText(currentTrackFinish);
+            audioTrack.setFinishInSeconds(newValue.doubleValue());
+            this.getProgressLabel().setText("00:00/" + toStringFormat(audioTrack.getFinishInSeconds() - audioTrack.getStartInSeconds()));
+        });
+        getRangeSlider().lowValueProperty().addListener((observable, oldValue, newValue) -> {
+            playMediaService.pause(audioTrack);
+            String currentTrackStart = toStringFormat(newValue.doubleValue());
+            this.getStartTimeLabel().setText(currentTrackStart);
+            audioTrack.setStartInSeconds(newValue.doubleValue());
+            this.getProgressLabel().setText("00:00/" + toStringFormat(audioTrack.getFinishInSeconds() - audioTrack.getStartInSeconds()));
+        });
+    }
 
+    public static AudioTrackGridRow of(AudioTrack audioTrack, PlayMediaService playMediaService) {
         HBox rowContainer = (HBox) createDeepCopy(rowContainerTemplate);
 
         AudioTrackGridRow row =  AudioTrackGridRow.builder()
@@ -132,9 +149,13 @@ public class AudioTrackGridRow implements AudioTrackEditUIView {
         row.getSongTitleLabel().setText(audioTrack.getTitle());
         row.getStartTimeLabel().setText(toStringFormat(audioTrack.getStartInSeconds()));
         row.getEndTimeLabel().setText(toStringFormat(audioTrack.getFinishInSeconds()));
-        row.getProgressLabel().setText(getSongProgressAsString(0, audioTrack.getLengthInSeconds()));
-
+        row.getProgressLabel().setText(getSongProgressAsString(0, audioTrack.getFinishInSeconds() - audioTrack.getStartInSeconds()));
+        row.getRangeSlider().setMin(0);
+        row.getRangeSlider().setMax(audioTrack.getLengthInSeconds());
+        row.getRangeSlider().setHighValue(audioTrack.getFinishInSeconds());
+        row.getRangeSlider().setLowValue(audioTrack.getStartInSeconds());
         row.defineLabelsLogic();
+        row.defineRangeSliderBoundListeners(playMediaService);
         return row;
     }
 

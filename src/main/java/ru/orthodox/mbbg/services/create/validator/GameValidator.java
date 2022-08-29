@@ -1,20 +1,17 @@
 package ru.orthodox.mbbg.services.create.validator;
 
-import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import lombok.Setter;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.controllers.NewGameController;
-import ru.orthodox.mbbg.events.ChoiceBoxChangeEvent;
+import ru.orthodox.mbbg.events.BlankDimensionsChangedEvent;
 import ru.orthodox.mbbg.events.TabAddedEvent;
 import ru.orthodox.mbbg.events.TextFieldChangeEvent;
 import ru.orthodox.mbbg.events.WinConditionChangedEvent;
-import ru.orthodox.mbbg.model.proxy.create.EditAudioTracksTable;
-import ru.orthodox.mbbg.model.proxy.play.RoundTab;
-import ru.orthodox.mbbg.model.proxy.play.RoundsTabPane;
+import ru.orthodox.mbbg.model.proxy.create.RoundTab;
+import ru.orthodox.mbbg.model.proxy.create.RoundsTabPane;
 import ru.orthodox.mbbg.services.create.NewGameService;
 
 @Service
@@ -33,7 +30,7 @@ public class GameValidator extends FieldsValidator {
     }
 
     @EventListener
-    public void onChoiceBoxValueChanged(ChoiceBoxChangeEvent choiceBoxChangeEvent) {
+    public void onChoiceBoxValueChanged(BlankDimensionsChangedEvent blankDimensionsChangedEvent) {
         saveButton.setDisable(!allFieldsAreFilled());
     }
 

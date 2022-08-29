@@ -2,22 +2,14 @@ package ru.orthodox.mbbg.services.create;
 
 import javafx.scene.control.ChoiceBox;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.enums.WinCondition;
-import ru.orthodox.mbbg.events.TabAddedEvent;
 import ru.orthodox.mbbg.events.TabCreatedEvent;
 import ru.orthodox.mbbg.events.WinConditionChangedEvent;
 import ru.orthodox.mbbg.model.basic.Round;
-import ru.orthodox.mbbg.model.proxy.play.RoundTab;
-import ru.orthodox.mbbg.model.proxy.play.RoundsTabPane;
-
-import javax.annotation.PostConstruct;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import ru.orthodox.mbbg.model.proxy.create.RoundTab;
 
 @Slf4j
 @Service
@@ -30,9 +22,7 @@ public class PrizeConditionsManager {
         RoundTab tabToPopulate = tabCreatedEvent.getRoundTab();
         Round roundToUseDefaultData = tabToPopulate.getRound();
 
-        if (roundToUseDefaultData != null) {
-            setRoundValues(tabToPopulate);
-        } else {
+        if (roundToUseDefaultData == null) {
             setDefaultValues(tabToPopulate);
         }
     }
@@ -41,6 +31,14 @@ public class PrizeConditionsManager {
     @EventListener
     public void onWinConditionChangedEvent(WinConditionChangedEvent winConditionChangedEvent) {
         validateConditions(winConditionChangedEvent.getRoundTab(), winConditionChangedEvent.getNumberOfWinLevel());
+        saveNewValues(winConditionChangedEvent.getRoundTab());
+    }
+
+    private void saveNewValues(RoundTab roundTab) {
+        Round roundToUpdate = roundTab.getRound();
+        roundToUpdate.setFirstStrikeCondition(roundTab.getFirstPrizeCondition().getValue());
+        roundToUpdate.setSecondStrikeCondition(roundTab.getSecondPrizeCondition().getValue());
+        roundToUpdate.setThirdStrikeCondition(roundTab.getThirdPrizeCondition().getValue());
     }
 
     private void validateConditions(RoundTab tab, int sourceConditionNumber) {

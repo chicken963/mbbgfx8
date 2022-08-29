@@ -24,6 +24,8 @@ public class RoundEntityFieldsMapper {
 
     private void loadEntityFieldsFromStorage(Round round) {
         round.setAudioTracks(audioTrackRepository.findByIds(round.getTracksIds()));
-        round.setBlanks(blankRepository.findByIds(round.getBlanksIds()));
+        if (round.getBlanksIds() != null) {
+            round.setBlanks(blankRepository.findByIds(round.getBlanksIds()));
+        }
     }
 }

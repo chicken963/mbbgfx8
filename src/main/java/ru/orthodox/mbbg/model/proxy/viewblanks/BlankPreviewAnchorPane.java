@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
 import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
 @Getter
@@ -35,21 +36,23 @@ public class BlankPreviewAnchorPane {
         this.gridPane = ElementFinder.findElementById(anchorPane, "gridContent");
         this.roundName = roundName;
         this.templateGridItem = blankItem;
-        CustomFontDealer.setDefaultFont();
+        setDefaultFont();
     }
 
     public List<Label> addItemsToPreview() {
-        Label blankNumberLabel = ElementFinder.findRecursivelyByStyle(anchorPane, "blankNumber")
+        Label blankNumberLabel = ElementFinder.findRecursivelyByStyleClass(anchorPane, "blank-number")
                 .stream().map(element -> (Label) element)
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("No element with style class blankId was found"));
         blankNumberLabel.setText(blank.getNumber());
 
-        Label roundNameLabel = ElementFinder.findRecursivelyByStyle(anchorPane, "roundName")
+        Label roundNameLabel = ElementFinder.findRecursivelyByStyleClass(anchorPane, "round-name")
                 .stream().map(element -> (Label) element)
                 .findFirst()
-                .orElseThrow(() -> new NullPointerException("No element with style class blankId was found"));
+                .orElseThrow(() -> new NullPointerException("No element with style class round-name was found"));
         roundNameLabel.setText(roundName);
+
+        setDefaultFont(blankNumberLabel, roundNameLabel);
 
         int blankWidth = blank.getWidth();
         int blankHeight = blank.getHeight();

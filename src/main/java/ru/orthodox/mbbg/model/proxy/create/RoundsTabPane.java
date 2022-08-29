@@ -1,15 +1,18 @@
-package ru.orthodox.mbbg.model.proxy.play;
+package ru.orthodox.mbbg.model.proxy.create;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Labeled;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import ru.orthodox.mbbg.enums.BlankSize;
 import ru.orthodox.mbbg.enums.EntityUpdateMode;
 import ru.orthodox.mbbg.events.GameAudioTracksListChangedEvent;
 import ru.orthodox.mbbg.events.TabAddedEvent;
@@ -17,12 +20,14 @@ import ru.orthodox.mbbg.events.TabClosedEvent;
 import ru.orthodox.mbbg.events.TextFieldChangeEvent;
 import ru.orthodox.mbbg.model.basic.Game;
 import ru.orthodox.mbbg.model.basic.Round;
-import ru.orthodox.mbbg.model.proxy.create.AudioTrackEditUIView;
 import ru.orthodox.mbbg.services.common.AudioTrackAsyncLengthLoadService;
 import ru.orthodox.mbbg.services.common.EventPublisherService;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
+import ru.orthodox.mbbg.services.create.RangeSliderService;
+import ru.orthodox.mbbg.utils.common.ThreadUtils;
 import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,11 +42,12 @@ public class RoundsTabPane {
     private TabPane tabPane;
     private Tab tabSample;
     private HBox audioTracksGridRowTemplate;
+    @Setter
     @Getter
     private Game game;
 
     private List<RoundTab> roundTabs = new ArrayList<>();
-    List<AudioTrackEditUIView> gameGridRows = new ArrayList<>();
+    private final List<AudioTrackEditUIView> gameGridRows = new ArrayList<>();
     @Autowired
     private ApplicationContext applicationContext;
     @Autowired
@@ -50,6 +56,14 @@ public class RoundsTabPane {
     private AudioTrackAsyncLengthLoadService audioTrackAsyncLengthLoadService;
     @Autowired
     private EventPublisherService eventPublisherService;
+    @Autowired
+    private RangeSliderService rangeSliderService;
+
+    @PostConstruct
+    public void setUp() {
+        audioTrackAsyncLengthLoadService.setGridRows(gameGridRows);
+        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderService.updateRangeSlider(gameGridRows), "editTable-" + this.hashCode());
+    }
 
     @EventListener
     public void onGameAudioTracksListChanged(GameAudioTracksListChangedEvent gameAudioTracksListChangedEvent) {
@@ -78,9 +92,14 @@ public class RoundsTabPane {
     }
 
     public void renderEmpty() {
-        gameGridRows = new ArrayList<>();
-        audioTrackAsyncLengthLoadService.setGridRows(gameGridRows);
-        RoundTab firstTab = generateRoundTabBasedOnRound(null);
+        this.game = new Game();
+        gameGridRows.clear();
+        Round firstRound = new Round();
+        RoundTab firstTab = new RoundTab(
+                createDeepCopy(tabSample),
+                audioTracksGridRowTemplate,
+                playMediaService,
+                eventPublisherService, firstRound);
         this.roundTabs = new ArrayList<RoundTab>() {{
             add(firstTab);
         }};
@@ -94,19 +113,14 @@ public class RoundsTabPane {
         return new RoundTab(createDeepCopy(tabSample),
                 audioTracksGridRowTemplate,
                 playMediaService,
-                eventPublisherService,
-                round);
+                eventPublisherService, round);
     }
 
     public void renderGame(Game game) {
-        this.roundTabs = game.getRounds().stream().map(round -> {
-            RoundTab tab = generateRoundTabBasedOnRound(round);
-            tab.getTab().setText(round.getName());
-            tab.getNumberOfBlanks().setText(round.getNumberOfBlanks().toString());
-            tab.getNewRoundNameTextField().setText(round.getName());
-            tab.getEditAudioTracksTable().addAudioTracks(round.getAudioTracks());
-            return tab;
-        }).collect(Collectors.toList());
+        this.game = game;
+        this.roundTabs = game.getRounds().stream()
+                .map(this::generateRoundTabBasedOnRound)
+                .collect(Collectors.toList());
         tabPane.getTabs().setAll(roundTabs.stream().map(RoundTab::getTab).collect(Collectors.toList()));
         tabPane.getTabs().add(newTabButton(tabPane, tabSample));
     }
@@ -132,15 +146,17 @@ public class RoundsTabPane {
 
     private Tab newTabButton(TabPane tabPane, Tab tabSample) {
         Tab addTab = new Tab("+");
+        addTab.getStyleClass().add("plus-tab");
         addTab.setTooltip(new Tooltip("Add round"));
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if(newTab == addTab) {
+                Round round = new Round();
                 RoundTab newTab1 = new RoundTab(
                         createDeepCopy(tabSample),
                         audioTracksGridRowTemplate,
                         playMediaService,
                         eventPublisherService,
-                        null);
+                        round);
                 this.addRoundTab(this.getTabsCount() - 1, newTab1);
                 tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
                 tabPane.getSelectionModel().select(tabPane.getTabs().size() - 2); // Selecting the tab before the button, which is the newly created one

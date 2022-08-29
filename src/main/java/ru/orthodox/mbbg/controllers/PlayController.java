@@ -1,6 +1,5 @@
 package ru.orthodox.mbbg.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import ru.orthodox.mbbg.model.basic.Game;
 import ru.orthodox.mbbg.services.play.PlayGameService;
-import ru.orthodox.mbbg.utils.screen.ScreenService;
 
 import javax.annotation.PostConstruct;
 
@@ -61,8 +59,6 @@ public class PlayController {
     @FXML
     private Button nextButton;
 
-    @Autowired
-    private ScreenService screenService;
     @Autowired
     private PlayGameService playGameService;
 
@@ -134,7 +130,7 @@ public class PlayController {
 
     @FXML
     private void backToMenu() {
-        screenService.activate("startMenu");
+        playGameService.backToMenu();
     }
 
     @FXML

@@ -58,4 +58,10 @@ public class RoundService {
     public List<Round> findInStorageByIds(List<UUID> uuids) {
         return roundRepository.findByIds(uuids);
     }
+
+    public void setIdIfAbsent(Round round) {
+        if (round.getId() == null) {
+            round.setId(UUID.randomUUID());
+        }
+    }
 }

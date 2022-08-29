@@ -5,24 +5,21 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.text.Font?>
-<Pane fx:id="container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      nodeOrientation="LEFT_TO_RIGHT" prefHeight="660.0" styleClass="container"
+<AnchorPane fx:id="container" nodeOrientation="LEFT_TO_RIGHT" prefHeight="560.0" styleClass="container"
       xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="ru.orthodox.mbbg.controllers.ViewBlanksController">
     <children>
-        <Pane layoutX="14.0" layoutY="17.0" prefWidth="446.0" styleClass="preview-container">
-            <children>
-                <VBox prefWidth="445.0">
+        <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="grid-scroll-pane"
+                    hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" >
+                <VBox prefWidth="445.0" maxHeight="1000.0" style="-fx-background-color: #1b1b1b">
                     <children>
-                        <TabPane fx:id="blanksMiniatureTabPane" prefWidth="446.0"
-                                 tabClosingPolicy="UNAVAILABLE">
+                        <TabPane fx:id="blanksMiniatureTabPane" prefWidth="446.0" tabClosingPolicy="UNAVAILABLE" >
                             <tabs>
                                 <fx:define>
                                     <Tab fx:id="blanksMiniatureSampleTab" text="Round 1">
                                         <content>
-                                            <AnchorPane prefWidth="446.0" styleClass="vbox-containing-scroll-pane">
-                                                <ScrollPane hbarPolicy="NEVER" maxHeight="950.0" prefWidth="446.0" styleClass="grid-scroll-pane" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                                                            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+                                            <VBox prefWidth="446.0" styleClass="vbox-containing-scroll-pane">
+                                                <ScrollPane hbarPolicy="NEVER" maxHeight="950.0" prefWidth="446.0" styleClass="grid-scroll-pane">
                                                     <GridPane fx:id="miniaturesGrid"
                                                               prefWidth="446.0" minWidth="446.0" styleClass="miniatures-grid">
                                                         <columnConstraints>
@@ -56,7 +53,7 @@
                                                 <padding>
                                                     <Insets right="5.0" left="5.0" top="5.0" bottom="5.0"/>
                                                 </padding>
-                                            </AnchorPane>
+                                            </VBox>
                                         </content>
                                     </Tab>
                                 </fx:define>
@@ -75,11 +72,10 @@
                         </HBox>
                     </children>
                 </VBox>
-            </children>
-        </Pane>
-        <Pane layoutX="472.0" layoutY="17.0" prefHeight="520.0" prefWidth="380.0">
+        </ScrollPane>
+        <HBox alignment="CENTER" AnchorPane.leftAnchor="456.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
             <children>
-                <AnchorPane fx:id="blankPreview" prefHeight="520.0" prefWidth="380.0"
+                <AnchorPane fx:id="blankPreview" maxHeight="520.0" maxWidth="380.0"
                             style="-fx-background-color: linear-gradient(to bottom right, #008080, black);">
                     <children>
                         <VBox fx:id="blankPreviewVbox" prefHeight="520.0" prefWidth="380.0">
@@ -87,8 +83,8 @@
                                 <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
                                     <children>
                                         <Label fx:id="blankNumber" alignment="CENTER" contentDisplay="CENTER"
-                                               prefHeight="49.0" prefWidth="89.0" style="blankNumber"
-                                               styleClass="blankNumber" text="A108" textFill="#4a3996">
+                                               prefHeight="49.0" prefWidth="89.0"
+                                               styleClass="blank-number" text="A108" textFill="#4a3996">
                                             <HBox.margin>
                                                 <Insets right="20.0"/>
                                             </HBox.margin>
@@ -100,7 +96,7 @@
                                 </HBox>
                                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                     <children>
-                                        <Label fx:id="roundName" contentDisplay="CENTER" style="roundName"
+                                        <Label fx:id="roundName" contentDisplay="CENTER" styleClass="round-name"
                                                textFill="#a67c07">
                                             <font>
                                                 <Font size="26.0"/>
@@ -110,7 +106,7 @@
                                 </HBox>
                                 <HBox prefHeight="100.0" prefWidth="200.0"/>
                                 <GridPane fx:id="gridContent" alignment="CENTER" prefHeight="300.0" prefWidth="325.0"
-                                          style="gridPane" styleClass="gridPane">
+                                          styleClass="gridPane">
                                     <columnConstraints/>
                                     <rowConstraints/>
                                     <VBox.margin>
@@ -119,7 +115,7 @@
                                         <fx:define>
                                             <Label fx:id="blankItem" alignment="CENTER" contentDisplay="CENTER"
                                                    prefHeight="68.0" prefWidth="89.5"
-                                                   text="Evanescence" textAlignment="CENTER">
+                                                   text="Evanescence" textAlignment="CENTER" wrapText="true">
                                                 <font>
                                                     <Font size="11.0"/>
                                                 </font>
@@ -137,6 +133,6 @@
                     </children>
                 </AnchorPane>
             </children>
-        </Pane>
+        </HBox>
     </children>
-</Pane>
+</AnchorPane>

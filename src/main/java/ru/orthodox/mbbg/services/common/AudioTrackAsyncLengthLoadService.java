@@ -5,8 +5,6 @@ import lombok.Setter;
 import org.controlsfx.control.RangeSlider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.support.BeanDefinitionDsl;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.events.AudioTrackLengthLoadedEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
@@ -40,22 +38,9 @@ public class AudioTrackAsyncLengthLoadService implements ApplicationListener<Aud
             rangeSlider.setMax(audioTrack.getLengthInSeconds());
             rangeSlider.setHighValue(audioTrack.getFinishInSeconds());
             rangeSlider.setLowValue(audioTrack.getStartInSeconds());
-            rangeSlider.highValueProperty().addListener((observable, oldValue, newValue) -> {
-                playMediaService.pause(audioTrack);
-                String currentTrackFinish = toStringFormat(newValue.doubleValue());
-                rowToUpdate.getEndTimeLabel().setText(currentTrackFinish);
-                audioTrack.setFinishInSeconds(newValue.doubleValue());
-                rowToUpdate.getProgressLabel().setText("00:00/" + toStringFormat(audioTrack.getFinishInSeconds() - audioTrack.getStartInSeconds()));
-            });
-            rangeSlider.lowValueProperty().addListener((observable, oldValue, newValue) -> {
-                playMediaService.pause(audioTrack);
-                String currentTrackStart = toStringFormat(newValue.doubleValue());
-                rowToUpdate.getStartTimeLabel().setText(currentTrackStart);
-                audioTrack.setStartInSeconds(newValue.doubleValue());
-                rowToUpdate.getProgressLabel().setText("00:00/" + toStringFormat(audioTrack.getFinishInSeconds() - audioTrack.getStartInSeconds()));
-            });
+            rowToUpdate.getStartTimeLabel().setText(toStringFormat(audioTrack.getStartInSeconds()));
             rowToUpdate.getEndTimeLabel().setText(toStringFormat(audioTrack.getFinishInSeconds()));
-            rowToUpdate.getProgressLabel().setText(getSongProgressAsString(0, audioTrack.getLengthInSeconds()));
+            rowToUpdate.getProgressLabel().setText(getSongProgressAsString(0, audioTrack.getFinishInSeconds() - audioTrack.getStartInSeconds()));
         }
 
     }

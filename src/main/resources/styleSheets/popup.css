@@ -6,6 +6,12 @@
     -fx-background-radius: 10px;
     -fx-background-color: orange;
     -fx-text-fill: black;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
 }
 
 .message-container {

@@ -1,7 +1,7 @@
 package ru.orthodox.mbbg.events;
 
 import org.springframework.context.ApplicationEvent;
-import ru.orthodox.mbbg.model.proxy.play.RoundTab;
+import ru.orthodox.mbbg.model.proxy.create.RoundTab;
 
 public class TabCreatedEvent extends ApplicationEvent {
     private final RoundTab roundTab;

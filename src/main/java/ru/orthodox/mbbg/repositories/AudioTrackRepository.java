@@ -49,9 +49,7 @@ public class AudioTrackRepository {
     }
 
     public void save(AudioTrack audioTrack) {
-        if (isUnique(audioTrack)) {
-            localFilesService.write(audioTrack, audioTracksFile);
-        }
+        localFilesService.write(audioTrack, audioTracksFile);
     }
 
     public void save(List<AudioTrack> audioTracks) {

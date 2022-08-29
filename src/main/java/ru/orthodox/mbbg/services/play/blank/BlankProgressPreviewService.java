@@ -58,7 +58,7 @@ public class BlankProgressPreviewService implements ApplicationListener<NextTrac
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException(String.format("No blank with name %s was found", blankName)));
 
-        BlankPreviewAnchorPane blankPreviewAnchorPane = new BlankPreviewAnchorPane(blankPreviewContainer, blankToRender, "", blankItemTemplate);
+        BlankPreviewAnchorPane blankPreviewAnchorPane = new BlankPreviewAnchorPane(blankPreviewContainer, blankToRender, activeRound.getName(), blankItemTemplate);
         blankPreviewContainer.setVisible(true);
         List<Label> blankItems = blankPreviewAnchorPane.addItemsToPreview();
         tracksAndCells = blankItems.stream()
@@ -101,16 +101,18 @@ public class BlankProgressPreviewService implements ApplicationListener<NextTrac
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("No progress found for blank " + blankToRender.getNumber()));
 
-        blankItems.stream()
-                .filter(item -> item.getText().equals(activeRound.getNextTrack().getArtist()))
-                .limit(1)
-                .forEach(label -> {
-                    final Animation animation = animationService.provide(
-                            label,
-                            BlinkingColorPair.forNextProgress(winningSetCells.isEmpty() ? nextProgress : 0.99),
-                            5.0);
-                    animation.play();
-                });
+        if (activeRound.getNextTrack() != null) {
+            blankItems.stream()
+                    .filter(item -> item.getText().equals(activeRound.getNextTrack().getArtist()))
+                    .limit(1)
+                    .forEach(label -> {
+                        final Animation animation = animationService.provide(
+                                label,
+                                BlinkingColorPair.forNextProgress(winningSetCells.isEmpty() ? nextProgress : 0.99),
+                                5.0);
+                        animation.play();
+                    });
+        }
     }
 
     public void emptyBlankPreview() {

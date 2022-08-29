@@ -105,7 +105,7 @@ public class MediaPlayerService implements ApplicationListener<NextTrackChangeRe
             double current = playService.getCurrentTime();
             double end = playService.getFinishInSeconds();
 
-            if (current / end >= 1) {
+            if (current / end >= 1 && activeRound.getNextTrack() != null) {
                 switchToNextTrack();
             }
         }
@@ -182,6 +182,7 @@ public class MediaPlayerService implements ApplicationListener<NextTrackChangeRe
 
     private void updateNextTrack(AudioTrack audioTrack) {
         activeRound.setNextTrack(audioTrack);
+        nextTrackInPlayerButton.setDisable(audioTrack == null);
         eventPublisher.publishEvent(new NextTrackChangedEvent(this));
     }
 
@@ -191,12 +192,15 @@ public class MediaPlayerService implements ApplicationListener<NextTrackChangeRe
 
         songTitle.setText(audioTrack.getTitle());
         previousTrackInPlayerButton.setDisable(activeRound.getPreviousTrack() == null);
-        nextTrackInPlayerButton.setDisable(activeRound.getNextTrack() == null);
 
         eventPublisher.publishEvent(new CurrentTrackChangedEvent(this));
     }
 
     private void updatePreviousTrack(AudioTrack audioTrack) {
         activeRound.setPreviousTrack(audioTrack);
+    }
+
+    public void stop() {
+        playService.stop(activeRound.getCurrentTrack());
     }
 }

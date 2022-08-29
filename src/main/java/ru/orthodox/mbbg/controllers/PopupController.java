@@ -16,20 +16,9 @@ public class PopupController {
     private Button okButton;
 
     @FXML
-    private void close(){
-        Scene currentScene = okButton.getScene();
+    private void close(ActionEvent event){
+        Scene currentScene = ((Button) event.getSource()).getScene();
         Stage currentStage = (Stage) currentScene.getWindow();
-        currentStage.close();
-        try {
-            currentScene.setRoot(null);
-        } catch (NullPointerException e) {
-            log.warn("аяяй, опять перетираешь Scene");
-        }
-        try {
-            currentStage.setScene(null);
-        } catch (NullPointerException e) {
-            log.warn("аяяй, опять перетираешь Stage");
-        }
         currentStage.close();
     }
 }

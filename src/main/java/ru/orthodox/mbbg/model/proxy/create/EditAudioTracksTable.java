@@ -12,12 +12,10 @@ import ru.orthodox.mbbg.enums.EntityUpdateMode;
 import ru.orthodox.mbbg.events.GameAudioTracksListChangedEvent;
 import ru.orthodox.mbbg.events.TextFieldChangeEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
-import ru.orthodox.mbbg.services.common.AudioTrackAsyncLengthLoadService;
+import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.services.common.EventPublisherService;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
 import ru.orthodox.mbbg.services.create.AudioTrackUIViewService;
-import ru.orthodox.mbbg.services.create.RangeSliderService;
-import ru.orthodox.mbbg.utils.common.ThreadUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,16 +24,15 @@ import java.util.stream.Collectors;
 import static ru.orthodox.mbbg.services.create.AudioTrackCreateModeButtonsService.prepareButtonView;
 import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findElementByTypeAndStyleclass;
 
-public class EditAudioTracksTable {
+public class EditAudioTracksTable implements AudioTracksTable {
 
-    @Setter
-    private static HBox audioTracksTableRowTemplate;
-    @Setter
-    private static PlayMediaService playMediaService;
-    @Setter
-    private static EventPublisherService eventPublisherService;
 
-    private final RangeSliderService rangeSliderService;
+    private final HBox audioTracksTableRowTemplate;
+    private final PlayMediaService playMediaService;
+    private final EventPublisherService eventPublisherService;
+    @Getter
+    @Setter
+    private Round round;
 
     private final AudioTrackUIViewService audioTrackUIViewService;
 
@@ -44,9 +41,16 @@ public class EditAudioTracksTable {
     @Getter
     private final Label placeholder;
 
-    public EditAudioTracksTable(VBox audioTracksTable) {
+    public EditAudioTracksTable(VBox audioTracksTable,
+                                HBox audioTracksTableRowTemplate,
+                                PlayMediaService playMediaService,
+                                EventPublisherService eventPublisherService,
+                                Round round) {
+        this.audioTracksTableRowTemplate = audioTracksTableRowTemplate;
+        this.playMediaService = playMediaService;
+        this.eventPublisherService = eventPublisherService;
+        this.round = round;
         this.audioTrackUIViewService = new AudioTrackUIViewService();
-        this.rangeSliderService = new RangeSliderService(gridRows, audioTrackUIViewService);
         this.audioTracksTable = audioTracksTable;
         this.placeholder = findElementByTypeAndStyleclass(audioTracksTable, "tracks-grid-placeholder");
         this.placeholder.managedProperty().bind(this.placeholder.visibleProperty());
@@ -54,10 +58,13 @@ public class EditAudioTracksTable {
         AudioTrackGridRow.setRowContainerTemplate(audioTracksTableRowTemplate);
         AudioTrackGridRow.setEventPublisherService(eventPublisherService);
 
-        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderService.updateRangeSlider(playMediaService), "editTable-" + this.hashCode());
+
     }
 
-
+    @Override
+    public List<AudioTrackEditUIView> getRows() {
+        return gridRows;
+    }
 
     public List<AudioTrack> getAudioTracks() {
         return gridRows.stream()
@@ -85,9 +92,8 @@ public class EditAudioTracksTable {
     }
 
     private void addTrack(AudioTrack audioTrack) {
-        AudioTrackEditUIView row = AudioTrackGridRow.of(audioTrack);
+        AudioTrackEditUIView row = AudioTrackGridRow.of(audioTrack, playMediaService);
         populateRowWithButtons(row);
-
         audioTracksTable.getChildren().add(row.getRowContainer());
         gridRows.add(row);
         eventPublisherService.publishEvent(new GameAudioTracksListChangedEvent(this, row, EntityUpdateMode.ADD));
@@ -138,6 +144,7 @@ public class EditAudioTracksTable {
                 .orElseThrow(() -> new IllegalArgumentException("There is no row for audiotrack " + audioTrack.getTitle()));
         int rowIndex = gridRows.indexOf(rowToDelete);
         gridRows.remove(rowToDelete);
+        round.getAudioTracks().remove(audioTrack);
         audioTracksTable.getChildren().remove(rowIndex + 1);
         if (audioTracksTable.getChildren().size() == 1) {
             placeholder.setVisible(true);

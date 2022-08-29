@@ -38,6 +38,7 @@
 }
 
 .choice-box .menu-item:focused {
+    -fx-cursor: hand;
     -fx-background-color: -main-color;
 }
 
@@ -54,6 +55,7 @@
     -fx-border-color: -second-main-color;
     -fx-background-radius: 15px;
     -fx-border-radius: 15px;
+    -fx-cursor: hand;
 }
 
 .table-cell .tab .split-pane .anchor-pane {
@@ -176,4 +178,12 @@
 
 .tracks-grid {
     -fx-background-color: -main-background-color;
+}
+
+.plus-tab {
+    -fx-cursor: hand;
+}
+
+.tab .tab-close-button {
+   -fx-cursor: hand;
 }

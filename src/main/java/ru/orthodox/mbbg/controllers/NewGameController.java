@@ -7,18 +7,17 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import ru.orthodox.mbbg.events.ChoiceBoxChangeEvent;
+import ru.orthodox.mbbg.events.BlankDimensionsChangedEvent;
 import ru.orthodox.mbbg.events.TextFieldChangeEvent;
 import ru.orthodox.mbbg.events.WinConditionChangedEvent;
-import ru.orthodox.mbbg.model.proxy.play.RoundTab;
-import ru.orthodox.mbbg.model.proxy.play.RoundsTabPane;
+import ru.orthodox.mbbg.model.proxy.create.RoundTab;
+import ru.orthodox.mbbg.model.proxy.create.RoundsTabPane;
 import ru.orthodox.mbbg.services.common.EventPublisherService;
 import ru.orthodox.mbbg.services.create.EditGameService;
 import ru.orthodox.mbbg.services.create.NewGameService;
 import ru.orthodox.mbbg.services.create.validator.GameValidator;
 
 import javax.annotation.PostConstruct;
-
 import java.util.Optional;
 
 import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
@@ -87,8 +86,8 @@ public class NewGameController {
     }
 
     @FXML
-    private void saveNewGame(ActionEvent e) {
-        newGameService.saveNewGame((Button) e.getSource());
+    private void saveGame(ActionEvent e) {
+        newGameService.saveGame((Button) e.getSource());
     }
 
     @FXML
@@ -126,8 +125,11 @@ public class NewGameController {
     }
 
     @FXML
-    private void onBlankDimensionsChosen() {
-        eventPublisherService.publishEvent(new ChoiceBoxChangeEvent(this));
+    private void onBlankDimensionsChosen(ActionEvent event) {
+        Optional<RoundTab> sourceTab = roundsTabPane.findTabByChild((Node) event.getSource());
+        if (sourceTab.isPresent()) {
+            eventPublisherService.publishEvent(new BlankDimensionsChangedEvent(sourceTab.get()));
+        }
     }
 
     @FXML

@@ -12,8 +12,8 @@
                 <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
                     <children>
                         <Label fx:id="blankNumber" alignment="CENTER" contentDisplay="CENTER"
-                               prefHeight="49.0" prefWidth="89.0" style="blankNumber"
-                               styleClass="blankNumber" text="A108" textFill="#4a3996">
+                               prefHeight="49.0" prefWidth="89.0"
+                               styleClass="blank-number" text="A108" textFill="#4a3996">
                             <HBox.margin>
                                 <Insets right="20.0"/>
                             </HBox.margin>
@@ -35,7 +35,7 @@
                 </HBox>
                 <HBox prefHeight="100.0" prefWidth="200.0"/>
                 <GridPane fx:id="gridContent" alignment="CENTER" prefHeight="300.0" prefWidth="325.0"
-                          style="gridPane" styleClass="gridPane">
+                          styleClass="gridPane">
                     <columnConstraints/>
                     <rowConstraints/>
                     <VBox.margin>
@@ -45,7 +45,7 @@
                         <fx:define>
                             <Label fx:id="blankItem" alignment="CENTER" contentDisplay="CENTER"
                                    prefHeight="68.0" prefWidth="89.5"
-                                   text="Evanescence" textAlignment="CENTER">
+                                   text="Evanescence" textAlignment="CENTER" wrapText="true">
                                 <font>
                                     <Font size="11.0"/>
                                 </font>

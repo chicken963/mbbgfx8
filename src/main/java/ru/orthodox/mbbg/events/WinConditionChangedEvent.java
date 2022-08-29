@@ -1,8 +1,7 @@
 package ru.orthodox.mbbg.events;
 
 import org.springframework.context.ApplicationEvent;
-import ru.orthodox.mbbg.enums.WinCondition;
-import ru.orthodox.mbbg.model.proxy.play.RoundTab;
+import ru.orthodox.mbbg.model.proxy.create.RoundTab;
 
 public class WinConditionChangedEvent extends ApplicationEvent {
     private final int numberOfWinLevel;

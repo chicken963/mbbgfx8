@@ -69,5 +69,10 @@ public class Round implements MarkedWithId {
     @JsonIgnore
     private WinCondition currentTargetWinCondition = WinCondition.ONE_LINE_STRIKE;
 
+    @Override
+    public String toString() {
+        return getId() + " - " + getName();
+    }
+
 
 }

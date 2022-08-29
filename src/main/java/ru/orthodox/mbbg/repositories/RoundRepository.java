@@ -38,13 +38,6 @@ public class RoundRepository {
         return localFilesService.readEntityListFromFile(roundsFile, Round.class);
     }
 
-    public Round findById(UUID id) {
-        return findAllRounds().stream()
-                .filter(round -> round.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
-
     public List<Round> findByIds(List<UUID> ids) {
         return findAllRounds().stream()
                 .filter(round -> ids.contains(round.getId()))

@@ -4,7 +4,6 @@ import javafx.animation.Animation;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,7 +108,7 @@ public class MiniaturesGridService implements ApplicationListener<NextTrackChang
     public void checkWinCondition() {
         double currentMaxProgress = progressService.recalculateRoundProgress(round);
         updateAnimations(round);
-        if (currentMaxProgress == 1.0) {
+        if (currentMaxProgress == 1.0 && !round.getThirdStrikeCondition().equals(round.getCurrentTargetWinCondition())) {
             changeWinCondition.setDisable(false);
         }
     }

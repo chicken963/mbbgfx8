@@ -1,7 +1,6 @@
 package ru.orthodox.mbbg.services.create;
 
 import javafx.event.ActionEvent;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -12,25 +11,26 @@ import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.controllers.NewGameController;
-import ru.orthodox.mbbg.controllers.StartMenuController;
 import ru.orthodox.mbbg.exceptions.GameInputsValidationException;
-import ru.orthodox.mbbg.mappers.SceneToGameMapper;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.basic.Game;
 import ru.orthodox.mbbg.model.proxy.create.AudioTracksLibraryTable;
 import ru.orthodox.mbbg.model.proxy.create.EditAudioTracksTable;
-import ru.orthodox.mbbg.model.proxy.play.RoundTab;
-import ru.orthodox.mbbg.model.proxy.play.RoundsTabPane;
+import ru.orthodox.mbbg.model.proxy.create.RoundTab;
+import ru.orthodox.mbbg.model.proxy.create.RoundsTabPane;
 import ru.orthodox.mbbg.services.create.library.AudiotracksLibraryService;
 import ru.orthodox.mbbg.services.create.validator.GameValidator;
 import ru.orthodox.mbbg.services.model.GameService;
+import ru.orthodox.mbbg.services.popup.PopupAlerter;
+import ru.orthodox.mbbg.services.start.StartMenuService;
 import ru.orthodox.mbbg.utils.screen.ScreenService;
 
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
@@ -41,8 +41,6 @@ public class NewGameService {
     @Autowired
     private FileChooserDealer fileChooserDealer;
     @Autowired
-    private SceneToGameMapper sceneToGameMapper;
-    @Autowired
     private GameValidator gameValidator;
     @Autowired
     private GameService gameService;
@@ -50,6 +48,12 @@ public class NewGameService {
     protected ScreenService screenService;
     @Autowired
     private AudiotracksLibraryService audiotracksLibraryService;
+    @Autowired
+    private AudioTracksLibraryTable audioTracksLibraryTable;
+    @Autowired
+    private PopupAlerter popupAlerter;
+    @Autowired
+    private ApplicationContext applicationContext;
 
     private TextField newGameName;
     private Scene audioTracksLibraryScene;
@@ -64,6 +68,7 @@ public class NewGameService {
             this.newGameName.setText(game.getName());
             this.roundsTabPane.renderGame(game);
         } else {
+            this.newGameName.clear();
             this.roundsTabPane.renderEmpty();
         }
 
@@ -80,10 +85,11 @@ public class NewGameService {
                 .orElseThrow(() -> new IllegalArgumentException("Parent tab for table not found"));;
         EditAudioTracksTable roundTable = currentTab.getEditAudioTracksTable();
         roundTable.addAudioTracks(audioTracks);
+        roundTable.getRound().getAudioTracks().addAll(audioTracks);
     }
 
 
-    public void saveNewGame(Button saveButton) {
+    public void saveGame(Button saveButton) {
         GameScene gameScene = new GameScene(newGameName, roundsTabPane);
 
         try {
@@ -91,16 +97,17 @@ public class NewGameService {
         } catch (GameInputsValidationException ex) {
             return;
         }
-
-        Game game = sceneToGameMapper.generateFromScene(gameScene);
+        Game game = roundsTabPane.getGame();
+        game.setName(newGameName.getText());
+        if (game.getId() == null) {
+            game.setId(UUID.randomUUID());
+        }
         gameService.save(game);
-
         saveButton.setDisable(true);
+        popupAlerter.invoke(saveButton.getScene().getWindow(), "Success", "Game has been saved successfully.", this::backToMainMenu);
     }
 
     public void cancelCreation() {
-/*        StartMenuController startMenuController = applicationContext.getBean(StartMenuController.class);
-        startMenuController.fillGridWithAllGames();*/
         screenService.activate("startMenu");
     }
 
@@ -117,11 +124,21 @@ public class NewGameService {
         HBox libraryRowTemplate = (HBox) screenService.getParentNode("audioTracksLibraryRow");
 
         RoundTab currentTab = roundsTabPane.findTabByChild(libraryButton)
-                .orElseThrow(() -> new IllegalArgumentException("Parent tab for table not found"));;
-        AudioTracksLibraryTable audioTracksLibraryTable = new AudioTracksLibraryTable(audioTracksLibraryRoot, libraryRowTemplate);
-        audiotracksLibraryService.populateTableWithAllAudioTracks(audioTracksLibraryTable);
-        audiotracksLibraryService.defineSubmitProperty(audioTracksLibraryTable, currentTab, libraryStage);
+                .orElseThrow(() -> new IllegalArgumentException("Parent tab for table not found"));
+        audioTracksLibraryTable.setRoot(audioTracksLibraryRoot);
+        audioTracksLibraryTable.setRowTemplate(libraryRowTemplate);
+        audiotracksLibraryService.populateTableWithAllAudioTracks();
+        audiotracksLibraryService.defineSubmitProperty(currentTab, libraryStage);
         libraryStage.show();
+    }
+
+    private void backToMainMenu(ActionEvent event) {
+        StartMenuService startMenuService = applicationContext.getBean(StartMenuService.class);
+        startMenuService.fillGridWithAllGames();
+        Scene currentScene = ((Button) event.getSource()).getScene();
+        Stage currentStage = (Stage) currentScene.getWindow();
+        currentStage.close();
+        screenService.activate("startMenu");
     }
 
     @Getter

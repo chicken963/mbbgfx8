@@ -32,6 +32,11 @@ public class ProgressService {
 
     public double recalculateRoundProgress(Round round) {
 
+        if (round.getNextTrack() == null) {
+            recalculateProgress(round, roundService.getPlayedArtists(round), round.getCurrentTrack().getArtist());
+            return 1;
+        }
+
         Set<String> playedArtists = roundService.getPlayedArtists(round);
         String nextArtist = roundService.getNextArtist(round);
 
@@ -72,6 +77,10 @@ public class ProgressService {
                 .collect(Collectors.toSet());
 
         List<BlankItemStrokeSet> sortedStrokedItems = prepareStrokeItemsForAllTypes(round, strokeBlankItems);
+        if (sortedStrokedItems.isEmpty()) {
+            return new ProgressResult(0, Collections.emptySet());
+        }
+
         Set<BlankItem> winningItemsSet;
         int targetValue;
         int currentValue;
@@ -121,6 +130,12 @@ public class ProgressService {
             for (BlankItemStrokeSet secondFixedSet: secondLayerBuffer) {
                 List<BlankItemStrokeSet> thirdLayerBuffer = new ArrayList<>(secondLayerBuffer);
                 thirdLayerBuffer.remove(secondFixedSet);
+                if (thirdLayerBuffer.isEmpty()) {
+                    return Stream.concat(
+                            sortedStrokedItems.stream(),
+                            Stream.of(new BlankItemStrokeSet(StrokeType.DIAGONAL, 0, Collections.emptySet())))
+                            .collect(Collectors.toList());
+                }
                 for (BlankItemStrokeSet thirdFixedSet: thirdLayerBuffer) {
                     List<BlankItemStrokeSet> listToAnalyze = new ArrayList<BlankItemStrokeSet>(){{
                         add(firstFixedSet);
@@ -201,10 +216,15 @@ public class ProgressService {
         Set<BlankItem> mainDiagonalItems = getMainDiagonalItems(strokeBlankItems);
         Set<BlankItem> secondaryDiagonalItems = getSecondaryDiagonalItems(strokeBlankItems, round.getHeight());
 
-        return new ArrayList<BlankItemStrokeSet>(){{
-            add(new BlankItemStrokeSet(StrokeType.DIAGONAL, 0, mainDiagonalItems));
-            add(new BlankItemStrokeSet(StrokeType.DIAGONAL, 1, secondaryDiagonalItems));
-        }};
+        List<BlankItemStrokeSet> diagonalStrokeSets = new ArrayList<>();
+
+        if (!mainDiagonalItems.isEmpty()) {
+            diagonalStrokeSets.add(new BlankItemStrokeSet(StrokeType.DIAGONAL, 0, mainDiagonalItems));
+        }
+        if (!secondaryDiagonalItems.isEmpty()) {
+            diagonalStrokeSets.add(new BlankItemStrokeSet(StrokeType.DIAGONAL, 1, secondaryDiagonalItems));
+        }
+        return diagonalStrokeSets;
     }
 
     private List<BlankItemStrokeSet> sortItemsByColumns(Set<BlankItem> strokeBlankItems) {

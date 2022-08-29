@@ -14,6 +14,7 @@ import ru.orthodox.mbbg.services.model.GameService;
 import ru.orthodox.mbbg.services.model.RoundService;
 import ru.orthodox.mbbg.services.play.blank.BlankProgressPreviewService;
 import ru.orthodox.mbbg.services.play.blank.MiniaturesGridService;
+import ru.orthodox.mbbg.utils.screen.ScreenService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,8 @@ public class PlayGameService {
     private BlankProgressPreviewService blankProgressPreviewService;
     @Autowired
     private PlaylistTableService playlistTableService;
+    @Autowired
+    private ScreenService screenService;
 
     private List<Round> rounds = new ArrayList<>();
     private Round currentRound;
@@ -152,5 +155,10 @@ public class PlayGameService {
 
     public void showBlankWithProgress(Button miniature) {
         blankProgressPreviewService.showBlankWithProgress(miniature);
+    }
+
+    public void backToMenu() {
+        mediaPlayerService.stop();
+        screenService.activate("startMenu");
     }
 }

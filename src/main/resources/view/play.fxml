@@ -280,7 +280,7 @@
                                                             <children>
                                                                 <Label alignment="CENTER" contentDisplay="CENTER"
                                                                        prefHeight="49.0" prefWidth="89.0"
-                                                                       style="blankNumber" styleClass="blankNumber"
+                                                                       styleClass="blank-number"
                                                                        text="A108" textFill="#111">
                                                                     <HBox.margin>
                                                                         <Insets right="20.0"/>
@@ -294,7 +294,7 @@
                                                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                                             <children>
                                                                 <Label fx:id="roundName" contentDisplay="CENTER"
-                                                                       style="roundName" textFill="#a67c07">
+                                                                       styleClass="round-name" textFill="#a67c07">
                                                                     <font>
                                                                         <Font size="26.0"/>
                                                                     </font>
@@ -303,7 +303,7 @@
                                                         </HBox>
                                                         <HBox prefHeight="100.0" prefWidth="200.0"/>
                                                         <GridPane fx:id="gridContent" alignment="CENTER"
-                                                                  prefHeight="300.0" prefWidth="325.0" style="gridPane"
+                                                                  prefHeight="300.0" prefWidth="325.0"
                                                                   styleClass="gridPane">
                                                             <columnConstraints>
                                                                 <ColumnConstraints/>
@@ -318,7 +318,7 @@
                                                                 <Label fx:id="blankItem" alignment="CENTER"
                                                                        contentDisplay="CENTER" prefHeight="68.0"
                                                                        prefWidth="89.5"
-                                                                       text="Evanescence" textAlignment="CENTER">
+                                                                       text="Evanescence" textAlignment="CENTER" wrapText="true">
                                                                     <font>
                                                                         <Font size="11.0"/>
                                                                     </font>

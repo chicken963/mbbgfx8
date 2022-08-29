@@ -337,7 +337,7 @@
                         </TabPane>
                         <HBox prefHeight="56.0" prefWidth="1177.0">
                             <children>
-                                <Button fx:id="saveGame" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#saveNewGame" text="Save" disable="true">
+                                <Button fx:id="saveGame" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#saveGame" text="Save" disable="true">
                                     <HBox.margin>
                                         <Insets right="10.0" />
                                     </HBox.margin>

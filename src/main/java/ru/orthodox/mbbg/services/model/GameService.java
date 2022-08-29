@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.mappers.RoundEntityFieldsMapper;
 import ru.orthodox.mbbg.model.basic.Game;
-import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.repositories.GamesRepository;
-
-import java.util.List;
 
 @Service
 public class GameService {
@@ -20,6 +17,7 @@ public class GameService {
     private RoundEntityFieldsMapper roundEntityFieldsMapper;
 
     public void save(Game game) {
+        game.getRounds().stream().forEach(roundService::setIdIfAbsent);
         gamesRepository.save(game);
         game.getRounds().forEach(roundService::save);
     }

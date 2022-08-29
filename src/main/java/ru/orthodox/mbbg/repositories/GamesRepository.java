@@ -59,21 +59,10 @@ public class GamesRepository {
         localFilesService.write(game, gamesFile);
     }
 
-    public List<Round> findRoundsByGameId(UUID gameId) {
-        Game game = this.findById(gameId);
-        return game != null
-                ? roundRepository.findByIds(game.getRoundIds())
-                : null;
-    }
-
     public void deleteGame(Game gameToDelete) {
         List<Game> allGames = findAllGames();
         localFilesService.delete(gameToDelete, gamesFile);
 
-    }
-
-    public List<Round> findRoundsByGame(Game game) {
-        return roundRepository.findByIds(game.getRoundIds());
     }
 
 }

@@ -4,28 +4,23 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="211.0" prefWidth="361.0" spacing="20.0" styleClass="container" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.PopupController">
+<VBox alignment="CENTER" maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="211.0" prefWidth="600.0" styleClass="container" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.PopupController">
     <children>
-        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="361.0">
+        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="361.0">
             <VBox.margin>
-                <Insets top="20.0" />
+                <Insets left="20.0" right="20.0" top="20.0" />
             </VBox.margin>
             <children>
-                <Label id="headingLabel" styleClass="message-container" text="Main message" />
+                <Label id="headingLabel" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" minWidth="400.0" styleClass="message-container" text="Main message" textAlignment="CENTER" wrapText="true" />
             </children>
         </HBox>
-        <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+        <HBox alignment="CENTER" prefWidth="600.0">
             <children>
-                <Label id="detailsLabel" styleClass="message-container" HBox.hgrow="ALWAYS" />
+                <Button fx:id="okButton" mnemonicParsing="false" onAction="#close" styleClass="ok-button" text="Ok" />
             </children>
-            <padding>
-                <Insets left="20.0" />
-            </padding>
-        </HBox>
-        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-            <children>
-                <Button fx:id="okButton" mnemonicParsing="false" onAction="#close" text="Ok" />
-            </children>
+         <VBox.margin>
+            <Insets bottom="5.0" left="20.0" right="20.0" top="20.0" />
+         </VBox.margin>
         </HBox>
     </children>
 </VBox>

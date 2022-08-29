@@ -100,6 +100,8 @@ public class ViewBlanksController {
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.initOwner(sourceButton.getScene().getWindow());
         popupStage.setScene(dialogScene);
+        popupStage.setMinWidth(886);
+        popupStage.setMinHeight(540);
         popupStage.show();
     }
 

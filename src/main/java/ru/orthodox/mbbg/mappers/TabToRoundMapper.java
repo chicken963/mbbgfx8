@@ -3,8 +3,8 @@ package ru.orthodox.mbbg.mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.model.basic.Round;
+import ru.orthodox.mbbg.model.proxy.create.RoundTab;
 import ru.orthodox.mbbg.services.create.RoundDimensionsManager;
-import ru.orthodox.mbbg.model.proxy.play.RoundTab;
 
 import java.util.UUID;
 

@@ -10,7 +10,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 
 @Service
-public class SliderBarBackgroundService {
+public class ProgressBarBackgroundService {
     private static final String NOT_COVERED_PROGRESS_RANGE_COLOR = "#eee";
     private static final String COVERED_PROGRESS_RANGE_COLOR = "#999";
     private static final String COVERED_PROGRESS_RANGE_COLOR_INTERMEDIATE = "#aaa";

@@ -33,7 +33,7 @@ public class AudioTrackRepository {
     }
 
     public List<AudioTrack> findAllAudioTracks() {
-        return localFilesService.readEntityListFromFile(audioTracksFile, AudioTrack.class);
+        return localFilesService.readEntitiesFromFile(audioTracksFile, AudioTrack.class);
     }
 
     public Optional<AudioTrack> findById(UUID id) {
@@ -53,14 +53,20 @@ public class AudioTrackRepository {
     }
 
     public void save(List<AudioTrack> audioTracks) {
-        for (AudioTrack audioTrack : audioTracks) {
-            save(audioTrack);
-        }
+        localFilesService.write(audioTracks, audioTracksFile);
     }
 
     private boolean isUnique(AudioTrack audioTrack) {
         List<AudioTrack> allAudioTracks = findAllAudioTracks();
         return allAudioTracks.stream()
                 .noneMatch(at -> at.equals(audioTrack));
+    }
+
+    public void delete(AudioTrack trackToDelete) {
+        localFilesService.delete(trackToDelete, audioTracksFile);
+    }
+
+    public void delete(List<AudioTrack> tracksToDelete) {
+        localFilesService.delete(tracksToDelete, audioTracksFile);
     }
 }

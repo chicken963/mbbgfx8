@@ -1,8 +1,10 @@
 package ru.orthodox.mbbg.services.model;
 
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
+import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.repositories.AudioTrackRepository;
 import ru.orthodox.mbbg.utils.AudioTrackAsyncDataUpdater;
 
@@ -21,12 +23,18 @@ public class AudioTrackService {
 
     @Autowired
     private AudioTrackRepository audioTrackRepository;
+    @Setter
+    private Round round;
 
     private static final String[] SEPARATORS = {"_-_", " - ", "-", "_"};
     Pattern digitPattern = Pattern.compile("\\d+");
 
     public void save(AudioTrack audioTrack) {
         audioTrackRepository.save(audioTrack);
+    }
+
+    public void save(List<AudioTrack> audioTracks) {
+        audioTrackRepository.save(audioTracks);
     }
 
     public AudioTrack generateFromFile(String absolutePath) {
@@ -37,6 +45,7 @@ public class AudioTrackService {
                 .title(extractSongNameFromFileName(absolutePath))
                 .startInSeconds(0)
                 .build();
+        audioTrackAsyncDataUpdater.setRound(round);
         audioTrackAsyncDataUpdater.setAudioTrackLength(audioTrack);
         return audioTrack;
     }
@@ -88,5 +97,9 @@ public class AudioTrackService {
 
     public List<AudioTrack> findByIds(List<UUID> uuids) {
         return audioTrackRepository.findByIds(uuids);
+    }
+
+    public List<AudioTrack> findAll() {
+        return audioTrackRepository.findAllAudioTracks();
     }
 }

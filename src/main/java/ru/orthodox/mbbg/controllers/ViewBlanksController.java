@@ -1,8 +1,6 @@
 package ru.orthodox.mbbg.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -14,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import ru.orthodox.mbbg.model.basic.Game;
-import ru.orthodox.mbbg.repositories.BlankRepository;
-import ru.orthodox.mbbg.repositories.RoundRepository;
+import ru.orthodox.mbbg.services.model.RoundService;
+import ru.orthodox.mbbg.services.play.blank.BlankService;
 import ru.orthodox.mbbg.services.viewGameBlanks.ViewBlanksService;
 
 import javax.annotation.PostConstruct;
@@ -29,9 +27,9 @@ import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findAllLabeledRecur
 public class ViewBlanksController {
 
     @Autowired
-    private BlankRepository blankRepository;
+    private BlankService blankService;
     @Autowired
-    private RoundRepository roundRepository;
+    private RoundService roundService;
 
     private ViewBlanksService viewBlanksService;
 
@@ -84,8 +82,8 @@ public class ViewBlanksController {
                 .blankPreview(blankPreview)
                 .game(game)
                 .blanksMiniatureSampleTab(blanksMiniatureSampleTab)
-                .blankRepository(blankRepository)
-                .roundRepository(roundRepository)
+                .blankService(blankService)
+                .roundService(roundService)
                 .miniatureGridRowConstraints(miniatureGridRowConstraints)
                 .miniatureGridColumnConstraints(miniatureGridColumnConstraints)
                 .blankMiniature(blankMiniature)

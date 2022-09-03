@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.services.common.LocalFilesService;
 
@@ -35,7 +34,7 @@ public class RoundRepository {
     }
 
     public List<Round> findAllRounds() {
-        return localFilesService.readEntityListFromFile(roundsFile, Round.class);
+        return localFilesService.readEntitiesFromFile(roundsFile, Round.class);
     }
 
     public List<Round> findByIds(List<UUID> ids) {
@@ -46,6 +45,18 @@ public class RoundRepository {
 
     public void save(Round round) {
         localFilesService.write(round, roundsFile);
+    }
+
+    public void save(List<Round> rounds) {
+        localFilesService.write(rounds, roundsFile);
+    }
+
+    public void delete(Round roundToDelete) {
+        localFilesService.delete(roundToDelete, roundsFile);
+    }
+
+    public void delete(List<Round> roundsToDelete) {
+        localFilesService.delete(roundsToDelete, roundsFile);
     }
 
 }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.HBox?>
+<HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1">
+    <Slider value="100.0">
+        <HBox.margin>
+            <Insets left="20.0" />
+        </HBox.margin>
+    </Slider>
+    <HBox alignment="CENTER" maxHeight="32.0" maxWidth="32.0" minHeight="32.0" minWidth="32.0" styleClass="image-container" style="-fx-background-color: orange; -fx-background-radius: 50%;">
+        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" styleClass="low-volume">
+            <image>
+                <Image url="/volumeIcons/volume-off.png"/>
+            </image>
+        </ImageView>
+      <HBox.margin>
+         <Insets left="10.0" />
+      </HBox.margin>
+        <ImageView styleClass="medium-volume" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
+                   preserveRatio="true">
+            <image>
+                <Image url="/volumeIcons/volume-quiet.png"/>
+            </image>
+        </ImageView>
+        <ImageView styleClass="high-volume" fitHeight="24.0" fitWidth="24.0" pickOnBounds="true"
+                   preserveRatio="true">
+            <image>
+                <Image url="/volumeIcons/volume-loud.png"/>
+            </image>
+        </ImageView>
+    </HBox>
+</HBox>

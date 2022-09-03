@@ -4,12 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.mappers.RoundEntityFieldsMapper;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
+import ru.orthodox.mbbg.model.basic.Blank;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.repositories.RoundRepository;
+import ru.orthodox.mbbg.services.play.blank.BlankService;
 
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,17 +21,18 @@ public class RoundService {
     private AudioTrackService audioTrackService;
     @Autowired
     private RoundEntityFieldsMapper roundEntityFieldsMapper;
+    @Autowired
+    private BlankService blankService;
 
     public void save(Round round) {
+        if (round.getId() == null) {
+            round.setId(UUID.randomUUID());
+        }
         round.setTracksIds(round.getAudioTracks().stream()
                 .map(AudioTrack::getId)
                 .collect(Collectors.toList()));
         roundRepository.save(round);
-        round.getAudioTracks().forEach(audioTrackService::save);
-    }
-
-    public List<AudioTrack> getAudioTracks(Round round) {
-        return audioTrackService.findByIds(round.getTracksIds());
+        audioTrackService.save(round.getAudioTracks());
     }
 
     public void shiftCurrentTargetWinCondition(Round round) {
@@ -55,13 +56,39 @@ public class RoundService {
                 .orElse(null);
     }
 
-    public List<Round> findInStorageByIds(List<UUID> uuids) {
-        return roundRepository.findByIds(uuids);
+    public void delete(Round round) {
+        blankService.delete(round.getBlanks());
+        roundRepository.delete(round);
     }
 
-    public void setIdIfAbsent(Round round) {
-        if (round.getId() == null) {
-            round.setId(UUID.randomUUID());
-        }
+    public void delete(List<Round> rounds) {
+        List<Blank> blanksToDelete = rounds.stream()
+                .map(Round::getBlanks)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        blankService.delete(blanksToDelete);
+        roundRepository.delete(rounds);
+    }
+
+    public List<Round> findByIds(List<UUID> roundIds) {
+        List<Round> rounds = roundRepository.findByIds(roundIds);
+        rounds.forEach(round -> {
+            round.setAudioTracks(audioTrackService.findByIds(round.getTracksIds()));
+            List<UUID> blanksIds = round.getBlanksIds();
+            if (blanksIds != null) {
+                round.setBlanks(blankService.findByIds(round.getBlanksIds()));
+            } else {
+                round.setBlanks(new ArrayList<>());
+            }
+        });
+        return rounds;
+    }
+
+    public void generateBlanks(Round round, int roundNumber) {
+        List<Blank> roundBlanks = blankService.generateBlanks(round, roundNumber);
+        round.setBlanksIds(roundBlanks.stream()
+                .map(Blank::getId)
+                .collect(Collectors.toList()));
+        roundRepository.save(round);
     }
 }

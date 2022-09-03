@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import ru.orthodox.mbbg.enums.BlanksStatus;
 
 import javax.persistence.Column;
 import java.util.ArrayList;
@@ -24,6 +25,9 @@ public class Game implements MarkedWithId {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name="blanksStatus")
+    private BlanksStatus blanksStatus;
 
     @Column(name = "roundIds")
     private List<UUID> roundIds;

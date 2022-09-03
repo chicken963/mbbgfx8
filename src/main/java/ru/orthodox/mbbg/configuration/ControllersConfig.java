@@ -7,10 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.orthodox.mbbg.controllers.NewGameController;
-import ru.orthodox.mbbg.controllers.PlayController;
-import ru.orthodox.mbbg.controllers.StartMenuController;
-import ru.orthodox.mbbg.controllers.ViewBlanksController;
+import ru.orthodox.mbbg.controllers.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +35,11 @@ public class ControllersConfig {
         return loadView("view/popup.fxml");
     }
 
+    @Bean(name = "popupOkCancelView")
+    public View getPopupOkCancelView() throws IOException {
+        return loadView("view/popup_ok_cancel.fxml");
+    }
+
     @Bean(name = "viewBlanksView")
     public View getViewBlanksView() throws IOException {
         return loadView("view/view_blanks.fxml");
@@ -51,6 +53,11 @@ public class ControllersConfig {
     @Bean(name = "audioTracksLibraryRow")
     public View getAudioTracksLibraryRow() throws IOException {
         return loadView("view/audiotracks-library-row.fxml");
+    }
+
+    @Bean(name = "volumeSlider")
+    public View getVolumeSlider() throws IOException {
+        return loadView("view/volume_slider.fxml");
     }
 
     @Bean
@@ -71,6 +78,11 @@ public class ControllersConfig {
     @Bean
     public ViewBlanksController getViewBlanksController() throws IOException {
         return (ViewBlanksController) getViewBlanksView().getController();
+    }
+
+    @Bean
+    public PopupController getVPopupController() throws IOException {
+        return (PopupController) getPopupOkCancelView().getController();
     }
 
     protected View loadView(String url) throws IOException {

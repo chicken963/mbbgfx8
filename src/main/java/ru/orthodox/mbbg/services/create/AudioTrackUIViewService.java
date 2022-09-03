@@ -12,7 +12,7 @@ public class AudioTrackUIViewService {
 
     public Optional<AudioTrackEditUIView> findByAudioTrack(List<AudioTrackEditUIView> gridRows, AudioTrack audioTrack) {
         return gridRows.stream()
-                .filter(row -> row.getAudioTrack().equals(audioTrack))
+                .filter(row -> row.getAudioTrack() == audioTrack)
                 .findFirst();
     }
 

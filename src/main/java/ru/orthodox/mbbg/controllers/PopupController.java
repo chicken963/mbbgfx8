@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Configurable;
 @Configurable
 public class PopupController {
     @FXML
+    private Button cancelButton;
+    @FXML
     private Button okButton;
 
     @FXML

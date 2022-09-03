@@ -11,9 +11,9 @@ import lombok.Builder;
 import ru.orthodox.mbbg.model.basic.Blank;
 import ru.orthodox.mbbg.model.basic.Game;
 import ru.orthodox.mbbg.model.basic.Round;
-import ru.orthodox.mbbg.repositories.BlankRepository;
-import ru.orthodox.mbbg.repositories.RoundRepository;
 import ru.orthodox.mbbg.model.proxy.viewblanks.BlankPreviewAnchorPane;
+import ru.orthodox.mbbg.services.model.RoundService;
+import ru.orthodox.mbbg.services.play.blank.BlankService;
 
 import java.io.File;
 import java.util.List;
@@ -23,7 +23,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.*;
+import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findElementsByTypeAndStyleclass;
+import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findTabElementByTypeAndStyleclass;
 import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
 @Builder
@@ -36,8 +37,8 @@ public class ViewBlanksService {
     private Map<Round, List<Blank>> blanksOfTheGame;
     private Map<Round, Tab> roundsAndTabs;
     private Tab blanksMiniatureSampleTab;
-    private BlankRepository blankRepository;
-    private RoundRepository roundRepository;
+    private BlankService blankService;
+    private RoundService roundService;
     private RowConstraints miniatureGridRowConstraints;
     private ColumnConstraints miniatureGridColumnConstraints;
     private Button blankMiniature;
@@ -46,11 +47,11 @@ public class ViewBlanksService {
 
     public void fillTabPaneWithBlankMiniatures() {
         blanksMiniatureTabPane.getTabs().clear();
-        List<Round> rounds = roundRepository.findByIds(game.getRoundIds());
+        List<Round> rounds = roundService.findByIds(game.getRoundIds());
         blanksOfTheGame = rounds.stream()
                 .collect(Collectors.toMap(
                         Function.identity(),
-                        round -> blankRepository.findByIds(round.getBlanksIds()
+                        round -> blankService.findByIds(round.getBlanksIds()
                         )
                 ));
         roundsAndTabs = rounds.stream().collect(Collectors.toMap(Function.identity(), round -> {
@@ -96,7 +97,7 @@ public class ViewBlanksService {
                         .limit(numberOfRowsToReplicate)
                         .collect(Collectors.toList()));
         AtomicInteger counter = new AtomicInteger(0);
-        List<Button> miniatures = blankRepository.findByIds(round.getBlanksIds())
+        List<Button> miniatures = blankService.findByIds(round.getBlanksIds())
                 .stream()
                 .map(Blank::getNumber)
                 .map(blankNumber -> {

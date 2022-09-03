@@ -1,0 +1,17 @@
+.slider .thumb {
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-cursor: hand;
+}
+
+.slider .thumb:focused {
+    -fx-faint-focus-color: white;
+    -fx-focus-color: white;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.image-container {
+    -fx-background-color: orange;
+    -fx-background-radius: 50%;
+}

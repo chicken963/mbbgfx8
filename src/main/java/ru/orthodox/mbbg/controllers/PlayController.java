@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,8 @@ import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
 
 @Configurable
 public class PlayController {
+    @FXML
+    private HBox volumeSliderContainer;
     @FXML
     private Button prevRound;
     @FXML
@@ -42,8 +43,6 @@ public class PlayController {
     private Label songProgressInSeconds;
     @FXML
     private Label roundNameLabel;
-    @FXML
-    private Slider volumeSlider;
     @FXML
     private ProgressBar songProgressBar;
     @FXML
@@ -78,7 +77,7 @@ public class PlayController {
                     roundNameLabel,
                     songTitle,
                     songProgressInSeconds,
-                    volumeSlider,
+                    volumeSliderContainer,
                     songProgressBar,
                     previousButton,
                     nextButton,
@@ -121,11 +120,6 @@ public class PlayController {
     @FXML
     private void switchMute() {
         playGameService.switchMute();
-    }
-
-    @FXML
-    private void updateVolume() {
-        playGameService.updateVolume(volumeSlider.getValue());
     }
 
     @FXML

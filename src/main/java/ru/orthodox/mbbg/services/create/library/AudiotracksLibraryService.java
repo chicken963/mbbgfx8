@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.proxy.create.AudioTracksLibraryTable;
 import ru.orthodox.mbbg.model.proxy.create.EditAudioTracksTable;
-import ru.orthodox.mbbg.model.proxy.create.RoundTab;
 import ru.orthodox.mbbg.repositories.AudioTrackRepository;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
 
@@ -30,9 +29,12 @@ public class AudiotracksLibraryService {
     }
 
 
-    public void defineSubmitProperty(RoundTab currentTab, Stage libraryStage) {
+    public void defineSubmitProperty(EditAudioTracksTable tableToPopulate, Stage libraryStage) {
         libraryTable.getAddSelectedTracksButton()
-                .setOnAction(e -> addSelectedTracksToRound(currentTab.getEditAudioTracksTable(), libraryStage));
+                .setOnAction(e -> {
+                    addSelectedTracksToRound(tableToPopulate, libraryStage);
+                    libraryTable.stopPlayingIfNeeded();
+                });
     }
 
     public void addSelectedTracksToRound(EditAudioTracksTable roundTableToSendTheSelectedAudiotracks, Stage stage) {
@@ -41,5 +43,15 @@ public class AudiotracksLibraryService {
         roundTableToSendTheSelectedAudiotracks.getRound().getAudioTracks().addAll(selectedAudioTracks);
         libraryTable.clear();
         stage.close();
+    }
+
+    public void defineHeaderCheckBoxProperty() {
+        libraryTable.getHeaderCheckBox().setOnAction(event -> {
+            if (libraryTable.getHeaderCheckBox().isSelected()) {
+                libraryTable.getRows().forEach(row -> row.getCheckBox().setSelected(true));
+            } else {
+                libraryTable.getRows().forEach(row -> row.getCheckBox().setSelected(false));
+            }
+        });
     }
 }

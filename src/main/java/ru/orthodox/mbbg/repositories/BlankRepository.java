@@ -29,7 +29,7 @@ public class BlankRepository {
     }
 
     public List<Blank> findAllBlanks() {
-        return localFilesService.readEntityListFromFile(blanksFile, Blank.class);
+        return localFilesService.readEntitiesFromFile(blanksFile, Blank.class);
     }
 
     public Blank findById(UUID id) {
@@ -45,7 +45,19 @@ public class BlankRepository {
                 .collect(Collectors.toList());
     }
 
+    public void delete(Blank blankToDelete) {
+        localFilesService.delete(blankToDelete, blanksFile);
+    }
+
+    public void delete(List<Blank> blanksToDelete) {
+        localFilesService.delete(blanksToDelete, blanksFile);
+    }
+
     public void save(Blank blank) {
         localFilesService.write(blank, blanksFile);
+    }
+
+    public void save(List<Blank> blanks) {
+        localFilesService.write(blanks, blanksFile);
     }
 }

@@ -94,3 +94,7 @@
 .miniatures-grid {
     -fx-background-color: -main-background-color;
 }
+
+.tab {
+    -fx-cursor: hand;
+}

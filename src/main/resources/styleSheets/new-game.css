@@ -169,6 +169,7 @@
 .check-box {
     -fx-text-color: -main-color;
     -fx-text-fill: -main-color;
+    -fx-cursor: hand;
 }
 
 .tracks-grid-placeholder {

@@ -1,17 +1,12 @@
 package ru.orthodox.mbbg.utils.screen;
 
-import javafx.event.ActionEvent;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.orthodox.mbbg.utils.screen.ScreenViewResource;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -19,8 +14,6 @@ import java.util.List;
 @Component
 public class ScreenService {
 
-    @Setter
-    @Getter
     private Scene startScene;
 
     @Autowired
@@ -42,7 +35,6 @@ public class ScreenService {
     public Scene activate(String name) {
         ScreenViewResource resource = findByName(name);
         startScene.setRoot(resource.getParentNode());
-        startScene.getStylesheets().clear();
         startScene.getStylesheets().setAll(resource.getStyleSheetUrls());
         return startScene;
     }

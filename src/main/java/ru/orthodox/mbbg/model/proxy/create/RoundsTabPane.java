@@ -10,22 +10,20 @@ import javafx.scene.layout.HBox;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import ru.orthodox.mbbg.enums.EntityUpdateMode;
-import ru.orthodox.mbbg.events.GameAudioTracksListChangedEvent;
-import ru.orthodox.mbbg.events.TabAddedEvent;
-import ru.orthodox.mbbg.events.TabClosedEvent;
-import ru.orthodox.mbbg.events.TextFieldChangeEvent;
+import ru.orthodox.mbbg.events.*;
 import ru.orthodox.mbbg.model.basic.Game;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.services.common.AudioTrackAsyncLengthLoadService;
 import ru.orthodox.mbbg.services.common.EventPublisherService;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
+import ru.orthodox.mbbg.services.common.VolumeSliderService;
 import ru.orthodox.mbbg.services.create.RangeSliderService;
-import ru.orthodox.mbbg.utils.common.ThreadUtils;
+import ru.orthodox.mbbg.services.create.library.AudiotracksLibraryService;
 import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
+import ru.orthodox.mbbg.utils.screen.ScreenService;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -46,10 +44,10 @@ public class RoundsTabPane {
     @Getter
     private Game game;
 
+    private AudioTracksTable playedTable;
+
     private List<RoundTab> roundTabs = new ArrayList<>();
     private final List<AudioTrackEditUIView> gameGridRows = new ArrayList<>();
-    @Autowired
-    private ApplicationContext applicationContext;
     @Autowired
     private PlayMediaService playMediaService;
     @Autowired
@@ -58,11 +56,18 @@ public class RoundsTabPane {
     private EventPublisherService eventPublisherService;
     @Autowired
     private RangeSliderService rangeSliderService;
+    @Autowired
+    private VolumeSliderService volumeSliderService;
+    @Autowired
+    private ScreenService screenService;
+    @Autowired
+    private AudiotracksLibraryService audiotracksLibraryService;
+    @Autowired
+    private AudioTracksLibraryTable audioTracksLibraryTable;
 
     @PostConstruct
     public void setUp() {
         audioTrackAsyncLengthLoadService.setGridRows(gameGridRows);
-        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderService.updateRangeSlider(gameGridRows), "editTable-" + this.hashCode());
     }
 
     @EventListener
@@ -79,27 +84,42 @@ public class RoundsTabPane {
     public void onTabClosed(TabClosedEvent tabClosedEvent) {
         RoundTab tabToDelete = tabClosedEvent.getRoundTab();
         this.getRoundTabs().remove(tabToDelete);
+        if (tabToDelete.getEditAudioTracksTable() == playedTable) {
+            playMediaService.stop();
+        }
         eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
     }
 
-    public void configureUIElements(TabPane tabPane, Tab tabSample, HBox audioTracksGridRowTemplate) {
+    @EventListener
+    public void onActiveRowChanged(ActiveRowChangedEvent activeRowChangedEvent) {
+        AudioTrackEditUIView newActiveRow = activeRowChangedEvent.getRow();
+        rangeSliderService.setActiveRow(newActiveRow);
+        this.playedTable = activeRowChangedEvent.getTable();
+    }
+
+    public void configureUIElements(TabPane tabPane, Tab tabSample, HBox audioTracksGridRowTemplate, HBox volumeSliderContainer) {
         this.tabPane = tabPane;
         this.tabSample = tabSample;
         this.audioTracksGridRowTemplate = audioTracksGridRowTemplate;
         setDefaultFont(
                 ElementFinder.findAllLabelsRecursively((Parent) tabSample.getContent()).toArray(new Labeled[0])
         );
+        VolumeSlider volumeSlider = volumeSliderService.createNewSlider();
+        volumeSliderContainer.getChildren().setAll(volumeSlider.getRoot());
     }
 
     public void renderEmpty() {
         this.game = new Game();
         gameGridRows.clear();
-        Round firstRound = new Round();
         RoundTab firstTab = new RoundTab(
                 createDeepCopy(tabSample),
                 audioTracksGridRowTemplate,
                 playMediaService,
-                eventPublisherService, firstRound);
+                eventPublisherService,
+                audiotracksLibraryService,
+                audioTracksLibraryTable,
+                screenService,
+                new Round());
         this.roundTabs = new ArrayList<RoundTab>() {{
             add(firstTab);
         }};
@@ -113,7 +133,11 @@ public class RoundsTabPane {
         return new RoundTab(createDeepCopy(tabSample),
                 audioTracksGridRowTemplate,
                 playMediaService,
-                eventPublisherService, round);
+                eventPublisherService,
+                audiotracksLibraryService,
+                audioTracksLibraryTable,
+                screenService,
+                round);
     }
 
     public void renderGame(Game game) {
@@ -156,6 +180,9 @@ public class RoundsTabPane {
                         audioTracksGridRowTemplate,
                         playMediaService,
                         eventPublisherService,
+                        audiotracksLibraryService,
+                        audioTracksLibraryTable,
+                        screenService,
                         round);
                 this.addRoundTab(this.getTabsCount() - 1, newTab1);
                 tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.events.RoundNameChangedEvent;
 import ru.orthodox.mbbg.events.TabAddedEvent;
 import ru.orthodox.mbbg.events.TabClosedEvent;
+import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.model.proxy.create.RoundsTabPane;
 
 @Service
@@ -22,7 +23,8 @@ public class RoundTabPaneService {
     @EventListener
     public void onTabAdded(TabAddedEvent tabAddedEvent) {
         recalculateTabNames();
-        roundsTabPane.getGame().getRounds().add(tabAddedEvent.getRoundTab().getRound());
+        Round addedRound = tabAddedEvent.getRoundTab().getRound();
+        roundsTabPane.getGame().getRounds().add(addedRound);
     }
 
     @EventListener

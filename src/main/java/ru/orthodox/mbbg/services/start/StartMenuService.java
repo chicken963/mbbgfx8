@@ -2,41 +2,40 @@ package ru.orthodox.mbbg.services.start;
 
 import javafx.event.ActionEvent;
 import javafx.geometry.Side;
-import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
-import lombok.Builder;
+import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.controllers.NewGameController;
-import ru.orthodox.mbbg.controllers.PlayController;
 import ru.orthodox.mbbg.controllers.ViewBlanksController;
+import ru.orthodox.mbbg.enums.BlanksStatus;
 import ru.orthodox.mbbg.model.basic.Game;
-import ru.orthodox.mbbg.repositories.GamesRepository;
 import ru.orthodox.mbbg.model.proxy.start.GamesGridItem;
-import ru.orthodox.mbbg.repositories.RoundRepository;
 import ru.orthodox.mbbg.services.create.EditGameService;
 import ru.orthodox.mbbg.services.create.NewGameService;
 import ru.orthodox.mbbg.services.model.GameService;
-import ru.orthodox.mbbg.services.play.blank.BlankService;
+import ru.orthodox.mbbg.services.play.PlayGameService;
 import ru.orthodox.mbbg.services.popup.PopupAlerter;
-import ru.orthodox.mbbg.services.start.GridItemService;
 import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
 import ru.orthodox.mbbg.utils.screen.ScreenService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findParentAnchorPane;
+import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
 @Setter
 @Service
@@ -48,6 +47,7 @@ public class StartMenuService {
     private AnchorPane newGameAnchorPane;
 
     private List<Game> existingGames;
+    private Game currentGame;
 
     private int columnsNumber;
     private int rowsNumber;
@@ -59,24 +59,22 @@ public class StartMenuService {
     private static List<GamesGridItem> availableGames = new ArrayList<>();
 
     @Autowired
-    private GamesRepository gamesRepository;
-    @Autowired
     private EditGameService editGameService;
     @Autowired
     private ScreenService screenService;
     @Autowired
     private GameService gameService;
     @Autowired
-    private BlankService blankService;
-    @Autowired
     private ApplicationContext applicationContext;
     @Autowired
-    private RoundRepository roundRepository;
-    @Autowired
     private PopupAlerter popupAlerter;
+    @Autowired
+    private PlayGameService playGameService;
+    @Autowired
+    private NewGameService newGameService;
 
     public void fillGridWithAllGames() {
-        existingGames = gamesRepository.findAllGames();
+        existingGames = gameService.findAllGames();
         columnsNumber = gamesField.getColumnConstraints().size();
         rowsNumber = existingGames.size() / columnsNumber;
 
@@ -119,17 +117,20 @@ public class StartMenuService {
 
     public void invokeGameContextMenu(Button sourceButton) {
         AnchorPane gamePane = findParentAnchorPane(sourceButton);
-        Game relatedGame = GridItemService.findByEventTarget(availableGames, gamePane);
+        currentGame = GridItemService.findByEventTarget(availableGames, gamePane);
         ContextMenu contextMenu = new ContextMenu();
         MenuItem editGame = new MenuItem();
         MenuItem deleteGame = new MenuItem();
         editGame.setText("Edit game");
         editGame.setOnAction(event ->
-                editGameService.editGame(relatedGame));
+                editGameService.editGame(currentGame));
         deleteGame.setText("Delete game");
         deleteGame.setOnAction(event -> {
-            gamesRepository.deleteGame(relatedGame);
-            fillGridWithAllGames();
+            popupAlerter.invokeOkCancel(sourceButton.getScene().getWindow(),
+                    "Game deletion",
+                    "Are you sure you want to delete the game " + currentGame.getName() + "? Rounds and Blanks will be permanently deleted. Audiotracks will still be stored in library.",
+                    this::deleteGame,
+                    e -> ((Stage) ((Button) e.getSource()).getScene().getWindow()).close());
         });
         contextMenu.getItems().add(editGame);
         contextMenu.getItems().add(deleteGame);
@@ -147,23 +148,32 @@ public class StartMenuService {
     }
 
     public void openNewGameForm() {
-        NewGameController controller = applicationContext.getBean(NewGameController.class);
-        controller.renderNewGameForm();
+        newGameService.renderGame(Optional.empty());
         screenService.activate("newGame");
     }
 
     public void openPlayGameForm(Button source) {
         AnchorPane gameGridItem = findParentAnchorPane(source);
         Game targetGame = GridItemService.findByEventTarget(StartMenuService.getAvailableGames(), gameGridItem);
-        targetGame.setRounds(roundRepository.findByIds(targetGame.getRoundIds()));
-        PlayController controller = applicationContext.getBean(PlayController.class);
-        controller.renderNewGame(targetGame);
+        if (BlanksStatus.ABSENT.equals(targetGame.getBlanksStatus())) {
+            popupAlerter.invoke(source.getScene().getWindow(),
+                    "No blanks",
+                    "No blanks are generated for this game.\nPlease generate them using 'Generate blanks' button, save them to *.png images in a view mode and provide them to participants.");
+            return;
+        } else if (BlanksStatus.OUTDATED.equals(targetGame.getBlanksStatus())) {
+            popupAlerter.invoke(source.getScene().getWindow(),
+                    "Blanks are outdated",
+                    "You edited the game, so you need to re-generate blanks according to the relevant game data.");
+            return;
+        }
+
+        playGameService.render(targetGame);
         screenService.activate("play");
     }
 
     public void generateBlanks(Button source) {
         Game targetGame = GridItemService.findByRightMenuButton(StartMenuService.getAvailableGames(), source);
-        blankService.generateBlanks(targetGame);
+        gameService.generateBlanks(targetGame);
         popupAlerter.invoke(source.getScene().getWindow(),
                 "Success",
                 "Blanks are generated successfully");
@@ -175,5 +185,10 @@ public class StartMenuService {
         ViewBlanksController controller = applicationContext.getBean(ViewBlanksController.class);
         controller.setGame(targetGame);
         controller.render(source);
+    }
+
+    private void deleteGame(ActionEvent event) {
+        gameService.delete(currentGame);
+        fillGridWithAllGames();
     }
 }

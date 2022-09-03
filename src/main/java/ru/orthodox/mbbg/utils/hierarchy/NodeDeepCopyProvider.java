@@ -38,10 +38,20 @@ public class NodeDeepCopyProvider {
             GridPane.setRowIndex(nodeCopy, GridPane.getRowIndex(node));
         }
 
-        for (Node child : children) {
-            Parent childCopy = createDeepCopy((Parent) child);
-            ((Pane) nodeCopy).getChildren().add(childCopy);
-        }
+        children.stream()
+                .filter(child -> child instanceof Parent)
+                .map(child -> (Parent) child)
+                .forEach(childAsParent -> {
+                    Parent childCopy = createDeepCopy(childAsParent);
+                    ((Pane) nodeCopy).getChildren().add(childCopy);
+                });
+        children.stream()
+                .filter(child -> child instanceof ImageView)
+                .map(child -> (ImageView) child)
+                .forEach(child -> {
+                    ImageView childCopy = createDeepCopy(child);
+                    ((Pane) nodeCopy).getChildren().add(childCopy);
+                });
         return nodeCopy;
     }
 
@@ -78,15 +88,32 @@ public class NodeDeepCopyProvider {
             copy = createDeepCopy((TextField) control);
         } else if (control instanceof TableView) {
             copy = createDeepCopy((TableView) control);
-        }  else if (control instanceof ScrollPane) {
+        } else if (control instanceof ScrollPane) {
             copy = createDeepCopy((ScrollPane) control);
-        }  else if (control instanceof RangeSlider) {
+        } else if (control instanceof RangeSlider) {
             copy = createDeepCopy((RangeSlider) control);
+        } else if (control instanceof Slider) {
+            copy = createDeepCopy((Slider) control);
         } else {
             throw new ClassCastException(String.format("Class %s is unable to be processed as a Control",
                     control.getClass()));
         }
         return copy;
+    }
+
+    public static ImageView createDeepCopy(ImageView sourceView) {
+        ImageView copy = new ImageView();
+        copy.setFitHeight(sourceView.getFitHeight());
+        copy.setFitWidth(sourceView.getFitWidth());
+        copy.setPickOnBounds(sourceView.isPickOnBounds());
+        copy.setPreserveRatio(sourceView.isPreserveRatio());
+        copy.getStyleClass().setAll(sourceView.getStyleClass());
+        copy.setImage(createDeepCopy(sourceView.getImage()));
+        return copy;
+    }
+
+    private static Image createDeepCopy(Image source) {
+        return new Image(source.impl_getUrl());
     }
 
     private static Pagination createDeepCopy(Pagination pagination) {
@@ -242,6 +269,20 @@ public class NodeDeepCopyProvider {
         copy.setMajorTickUnit(origSlider.getMajorTickUnit());
         copy.setBlockIncrement(origSlider.getBlockIncrement());
         copy.setDisable(origSlider.isDisable());
+        return copy;
+    }
+
+    private static Slider createDeepCopy(Slider origSlider) {
+        Slider copy = new Slider();
+        copy.setValue(origSlider.getValue());
+        alignWidthAndHeight(origSlider, copy);
+        copy.setShowTickLabels(origSlider.isShowTickLabels());
+        copy.setShowTickMarks(origSlider.isShowTickMarks());
+        copy.setMajorTickUnit(origSlider.getMajorTickUnit());
+        copy.setBlockIncrement(origSlider.getBlockIncrement());
+        copy.setDisable(origSlider.isDisable());
+
+        HBox.setMargin(copy, createDeepCopy(HBox.getMargin(origSlider)));
         return copy;
     }
 

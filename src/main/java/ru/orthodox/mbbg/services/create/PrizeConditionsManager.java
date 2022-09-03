@@ -22,7 +22,7 @@ public class PrizeConditionsManager {
         RoundTab tabToPopulate = tabCreatedEvent.getRoundTab();
         Round roundToUseDefaultData = tabToPopulate.getRound();
 
-        if (roundToUseDefaultData == null) {
+        if (roundToUseDefaultData.getId() == null) {
             setDefaultValues(tabToPopulate);
         }
     }

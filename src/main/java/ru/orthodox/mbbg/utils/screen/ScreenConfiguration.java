@@ -1,6 +1,5 @@
 package ru.orthodox.mbbg.utils.screen;
 
-import javafx.scene.Scene;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -28,6 +27,10 @@ public class ScreenConfiguration {
     private ControllersConfig.View popupView;
 
     @Autowired
+    @Qualifier("popupOkCancelView")
+    private ControllersConfig.View popupOkCancelView;
+
+    @Autowired
     @Qualifier("viewBlanksView")
     private ControllersConfig.View viewBlanksView;
 
@@ -38,6 +41,10 @@ public class ScreenConfiguration {
     @Autowired
     @Qualifier("audioTracksLibraryRow")
     private ControllersConfig.View audioTracksLibraryRow;
+
+    @Autowired
+    @Qualifier("volumeSlider")
+    private ControllersConfig.View volumeSlider;
 
     @Bean
     public ScreenViewResource startMenuScene() {
@@ -52,18 +59,23 @@ public class ScreenConfiguration {
         return new ScreenViewResource(
                 "play",
                 playView,
-                Arrays.asList("styleSheets/play-game.css", "styleSheets/scrollable-table.css"));
+                Arrays.asList("styleSheets/play-game.css", "styleSheets/scrollable-table.css", "styleSheets/volume-slider.css"));
     }
 
     @Bean
     public ScreenViewResource newGameScene() {
         return new ScreenViewResource("newGame", newGameView,
-                Arrays.asList("styleSheets/new-game.css", "styleSheets/scrollable-table.css", "styleSheets/tab-pane.css"));
+                Arrays.asList("styleSheets/new-game.css", "styleSheets/scrollable-table.css", "styleSheets/tab-pane.css", "styleSheets/volume-slider.css"));
     }
 
     @Bean
     public ScreenViewResource popupScene() {
-        return new ScreenViewResource("popup", popupView, "styleSheets/popup.css");
+        return new ScreenViewResource("popup", popupView, Arrays.asList("styleSheets/popup.css",  "styleSheets/scrollable-table.css"));
+    }
+
+    @Bean
+    public ScreenViewResource popupOkCancelScene() {
+        return new ScreenViewResource("popupOkCancel", popupOkCancelView, Arrays.asList("styleSheets/popup.css",  "styleSheets/scrollable-table.css"));
     }
     @Bean
     public ScreenViewResource viewBlanksScene() {
@@ -78,6 +90,10 @@ public class ScreenConfiguration {
     @Bean
     public ScreenViewResource audioTracksLibraryRowScene() {
         return new ScreenViewResource("audioTracksLibraryRow", audioTracksLibraryRow, "styleSheets/new-game.css");
+    }
+    @Bean
+    public ScreenViewResource audioVolumeSliderScene() {
+        return new ScreenViewResource("volumeSlider", volumeSlider, "styleSheets/volume-slider.css");
     }
 
 }

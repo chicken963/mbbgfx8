@@ -3,7 +3,7 @@ package ru.orthodox.mbbg.services.play;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Slider;
+import javafx.scene.layout.HBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
@@ -13,7 +13,9 @@ import ru.orthodox.mbbg.events.NextTrackChangeRequestedByUserEvent;
 import ru.orthodox.mbbg.events.NextTrackChangedEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.basic.Round;
+import ru.orthodox.mbbg.model.proxy.create.VolumeSlider;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
+import ru.orthodox.mbbg.services.common.VolumeSliderService;
 import ru.orthodox.mbbg.services.model.RoundService;
 
 import java.util.ArrayList;
@@ -28,20 +30,21 @@ public class MediaPlayerService implements ApplicationListener<NextTrackChangeRe
     @Autowired
     private RoundService roundService;
     @Autowired
-    private SliderBarBackgroundService sliderBarBackgroundService;
+    private ProgressBarBackgroundService progressBarBackgroundService;
     @Autowired
     private PlayMediaService playService;
     @Autowired
     private ApplicationEventPublisher eventPublisher;
     @Autowired
     private PlaylistTableService playlistTableService;
+    @Autowired
+    private VolumeSliderService volumeSliderService;
 
     private List<AudioTrack> roundQueue;
     private List<AudioTrack> roundHistory;
 
     private Label songTitle;
     private Label songProgressInSeconds;
-    private Slider volumeSlider;
 
     private ProgressBar songProgressBar;
 
@@ -55,17 +58,18 @@ public class MediaPlayerService implements ApplicationListener<NextTrackChangeRe
     public void configureUIElements(
             Label songTitle,
             Label songProgressInSeconds,
-            Slider volumeSlider,
+            HBox volumeSliderContainer,
             ProgressBar songProgressBar,
             Button previousButton,
             Button nextButton) {
         this.songTitle = songTitle;
         this.songProgressInSeconds = songProgressInSeconds;
-        this.volumeSlider = volumeSlider;
+        VolumeSlider volumeSlider = volumeSliderService.createNewSlider();
+        volumeSliderContainer.getChildren().setAll(volumeSlider.getRoot());
         this.previousTrackInPlayerButton = previousButton;
         this.nextTrackInPlayerButton = nextButton;
         this.songProgressBar = songProgressBar;
-        sliderBarBackgroundService.configureUIElements(songProgressBar);
+        progressBarBackgroundService.configureUIElements(songProgressBar);
     }
 
     public void setActiveRound(Round round) {
@@ -131,7 +135,7 @@ public class MediaPlayerService implements ApplicationListener<NextTrackChangeRe
             }
 
             playService.play(activeRound.getCurrentTrack());
-            sliderBarBackgroundService.recalculateProgressBarBackgroundRange(activeRound.getCurrentTrack());
+            progressBarBackgroundService.recalculateProgressBarBackgroundRange(activeRound.getCurrentTrack());
 
         } else if (playService.isPaused()) {
             playService.play(activeRound.getCurrentTrack());
@@ -155,7 +159,7 @@ public class MediaPlayerService implements ApplicationListener<NextTrackChangeRe
 
         playService.play(activeRound.getCurrentTrack());
 
-        sliderBarBackgroundService.recalculateProgressBarBackgroundRange(activeRound.getCurrentTrack());
+        progressBarBackgroundService.recalculateProgressBarBackgroundRange(activeRound.getCurrentTrack());
     }
 
     public void switchToNextTrack() {
@@ -171,7 +175,7 @@ public class MediaPlayerService implements ApplicationListener<NextTrackChangeRe
 
         playService.play(activeRound.getCurrentTrack());
 
-        sliderBarBackgroundService.recalculateProgressBarBackgroundRange(activeRound.getCurrentTrack());
+        progressBarBackgroundService.recalculateProgressBarBackgroundRange(activeRound.getCurrentTrack());
     }
 
     @Override

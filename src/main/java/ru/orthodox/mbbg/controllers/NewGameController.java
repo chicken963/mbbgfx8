@@ -24,7 +24,8 @@ import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
 
 @Configurable
 public class NewGameController {
-
+    @FXML
+    private HBox volumeSliderContainer;
     @FXML
     private Label enterNewGameNameLabel;
     @FXML
@@ -67,17 +68,13 @@ public class NewGameController {
                 cancelCreation,
                 importTracksButton);
 
-        roundsTabPane.configureUIElements(tabPane, tabSample, audioTracksGridRowTemplate);
+        roundsTabPane.configureUIElements(tabPane, tabSample, audioTracksGridRowTemplate, volumeSliderContainer);
         gameValidator.setSaveButton(saveGame);
         gameValidator.setGameName(newGameName);
         gameValidator.setTabPane(roundsTabPane);
 
-        newGameService.configureUIElements(newGameName);
-        editGameService.configureUIElements(newGameName);
-    }
-
-    public void renderNewGameForm() {
-        newGameService.renderGame(Optional.empty());
+        newGameService.configureUIElements(newGameLabel, newGameName);
+        editGameService.configureUIElements(newGameLabel, newGameName);
     }
 
     @FXML

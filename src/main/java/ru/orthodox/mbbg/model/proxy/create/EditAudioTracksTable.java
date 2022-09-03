@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.orthodox.mbbg.enums.ButtonType;
 import ru.orthodox.mbbg.enums.EntityUpdateMode;
+import ru.orthodox.mbbg.events.ActiveRowChangedEvent;
 import ru.orthodox.mbbg.events.GameAudioTracksListChangedEvent;
 import ru.orthodox.mbbg.events.TextFieldChangeEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
@@ -33,6 +34,8 @@ public class EditAudioTracksTable implements AudioTracksTable {
     @Getter
     @Setter
     private Round round;
+
+    private boolean isPlayed;
 
     private final AudioTrackUIViewService audioTrackUIViewService;
 
@@ -96,7 +99,7 @@ public class EditAudioTracksTable implements AudioTracksTable {
         populateRowWithButtons(row);
         audioTracksTable.getChildren().add(row.getRowContainer());
         gridRows.add(row);
-        eventPublisherService.publishEvent(new GameAudioTracksListChangedEvent(this, row, EntityUpdateMode.ADD));
+        eventPublisherService.publishEvent(new GameAudioTracksListChangedEvent(round, row, EntityUpdateMode.ADD));
     }
 
     private void populateRowWithButtons(AudioTrackEditUIView row) {
@@ -122,7 +125,13 @@ public class EditAudioTracksTable implements AudioTracksTable {
         buttonView.setOnAction(event -> {
             switch (type) {
                 case PLAY:
+                    AudioTrack trackBeforeClickingPlay = playMediaService.getCurrentTrack();
                     playMediaService.play(audioTrack);
+                    if (trackBeforeClickingPlay != playMediaService.getCurrentTrack()) {
+                        eventPublisherService.publishEvent(
+                            new ActiveRowChangedEvent(this, findRowByPlayButton((Button) event.getSource()))
+                        );
+                    }
                     break;
                 case PAUSE:
                     playMediaService.pause(audioTrack);
@@ -149,9 +158,14 @@ public class EditAudioTracksTable implements AudioTracksTable {
         if (audioTracksTable.getChildren().size() == 1) {
             placeholder.setVisible(true);
         }
-        eventPublisherService.publishEvent(new GameAudioTracksListChangedEvent(this, rowToDelete, EntityUpdateMode.DELETE));
+        eventPublisherService.publishEvent(new GameAudioTracksListChangedEvent(round, rowToDelete, EntityUpdateMode.DELETE));
         eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
     }
 
-
+    private AudioTrackEditUIView findRowByPlayButton(Button playButton) {
+        return gridRows.stream()
+                .filter(row -> row.getPlayButtonContainer().getChildren().get(0) == playButton)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No row found for event source"));
+    }
 }

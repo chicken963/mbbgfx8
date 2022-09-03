@@ -1,163 +1,174 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.image.Image?>
-<AnchorPane prefHeight="768.0" prefWidth="1366.0" style="-fx-background-color: #1b1b1b;" styleClass="container" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.StartMenuController">
-    <children>
-        <VBox alignment="TOP_CENTER" style="-fx-background-color: #1b1b1b;" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="40.0">
-            <children>
-                <Label fx:id="greetingLabel" alignment="CENTER" prefHeight="57.0" prefWidth="956.0" text="Choose your destiny" textFill="#ffa100">
-                    <font>
-                        <Font size="36.0" />
-                    </font>
-                </Label>
-                <VBox alignment="CENTER" maxHeight="460.0" maxWidth="950.0" minHeight="460.0" minWidth="950.0" prefHeight="460.0" prefWidth="950.0" style="-fx-background-color: #1b1b1b;">
-                    <ScrollPane hbarPolicy="NEVER" maxHeight="550.0" maxWidth="930.0" minWidth="930.0" prefWidth="930.0" style="-fx-background-color: #1b1b1b;">
-                        <GridPane fx:id="gamesField" minHeight="150.0" minWidth="930.0" prefWidth="930.0" style="-fx-background-color: #1b1b1b;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                            <columnConstraints>
-                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="230.0" />
-                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="230.0" />
-                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="230.0" />
-                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="230.0" />
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints minHeight="160.0" prefHeight="160.0" valignment="CENTER" vgrow="SOMETIMES" />
-                        <RowConstraints />
-                        <RowConstraints />
-                        <RowConstraints />
-                            </rowConstraints>
-                            <fx:define>
-                                <AnchorPane fx:id="newGameAnchorPane" maxHeight="130.0" maxWidth="200.0" minHeight="130.0" minWidth="200.0" prefHeight="130.0" prefWidth="200.0" styleClass="game-grid-item">
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane prefHeight="768.0" prefWidth="1366.0" style="-fx-background-color: #1b1b1b;" styleClass="container"
+            xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.orthodox.mbbg.controllers.StartMenuController">
+    <Label fx:id="greetingLabel" alignment="CENTER" prefHeight="57.0" prefWidth="956.0" text="Choose your destiny"
+           AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0"
+           textFill="#ffa100">
+        <font>
+            <Font size="36.0"/>
+        </font>
+    </Label>
+    <VBox alignment="TOP_CENTER" maxHeight="460.0" maxWidth="950.0" minHeight="460.0" minWidth="950.0" prefHeight="460.0"
+          prefWidth="950.0" style="-fx-background-color: #1b1b1b;" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+        <ScrollPane hbarPolicy="NEVER" maxHeight="550.0" maxWidth="930.0" minWidth="930.0" prefWidth="930.0"
+                    style="-fx-background-color: #1b1b1b;">
+            <GridPane fx:id="gamesField" minHeight="150.0" minWidth="930.0" prefWidth="930.0"
+                      style="-fx-background-color: #1b1b1b;">
+                <columnConstraints>
+                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="230.0"/>
+                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="230.0"/>
+                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="230.0"/>
+                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="230.0"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="160.0" prefHeight="160.0" valignment="CENTER" vgrow="SOMETIMES"/>
+                </rowConstraints>
+                <fx:define>
+                    <AnchorPane fx:id="newGameAnchorPane" maxHeight="130.0" maxWidth="200.0" minHeight="130.0"
+                                minWidth="200.0" prefHeight="130.0" prefWidth="200.0" styleClass="game-grid-item">
+                        <children>
+                            <VBox alignment="CENTER" layoutX="6.0" layoutY="10.0" prefHeight="118.0" prefWidth="193.0"
+                                  style="-fx-cursor: hand;" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="3.0">
+                                <children>
+                                    <Button fx:id="newGameButton" alignment="CENTER" contentDisplay="CENTER"
+                                            onAction="#openNewGameForm" prefHeight="90.0" prefWidth="90.0"
+                                            styleClass="game-button">
+                                        <graphic>
+                                            <ImageView fitHeight="77.0" fitWidth="75.0" pickOnBounds="true"
+                                                       preserveRatio="true">
+                                                <image>
+                                                    <Image url="/menuItemsIcons/newGame.png"/>
+                                                </image>
+                                                <cursor>
+                                                    <Cursor fx:constant="HAND"/>
+                                                </cursor>
+                                            </ImageView>
+                                        </graphic>
+                                        <tooltip>
+                                            <Tooltip text="Create new game"/>
+                                        </tooltip>
+                                    </Button>
+                                    <Label alignment="CENTER" onMouseClicked="#openNewGameForm" prefHeight="25.0"
+                                           prefWidth="188.0" text="New game" textFill="ORANGE">
+                                        <font>
+                                            <Font size="16.0"/>
+                                        </font>
+                                    </Label>
+                                </children>
+                            </VBox>
+                        </children>
+                    </AnchorPane>
+                </fx:define>
+                <fx:define>
+                    <AnchorPane fx:id="templateGameAnchorPane" maxHeight="130.0" maxWidth="200.0" minHeight="130.0"
+                                minWidth="200.0" prefHeight="130.0" prefWidth="200.0" styleClass="game-grid-item"
+                                GridPane.columnIndex="1">
+                        <HBox prefHeight="130.0" prefWidth="200.0">
+                            <children>
+                                <VBox alignment="CENTER" prefHeight="130.0" prefWidth="200.0" style="-fx-cursor: hand;">
+                                    <Button onAction="#openPlayGameForm" styleClass="game-button">
+                                        <graphic>
+                                            <ImageView styleClass="template-game-image" fitHeight="80.0"
+                                                       fitWidth="80.0" pickOnBounds="true"
+                                                       preserveRatio="true">
+                                                <image>
+                                                    <Image url="/menuItemsIcons/iwannarock3.png"/>
+                                                </image>
+                                            </ImageView>
+                                        </graphic>
+                                        <tooltip>
+                                            <Tooltip text="Play a game"/>
+                                        </tooltip>
+                                    </Button>
+                                    <Label fx:id="gameLabel" styleClass="game-name-label" alignment="CENTER"
+                                           contentDisplay="CENTER" layoutX="63.0" layoutY="100.0"
+                                           onMouseClicked="#openNewGameForm" prefHeight="32.0" prefWidth="192.0"
+                                           text="Game 1" textFill="ORANGE">
+                                        <font>
+                                            <Font size="16.0"/>
+                                        </font>
+                                    </Label>
+                                </VBox>
+                                <VBox prefHeight="200.0" prefWidth="100.0">
                                     <children>
-                                        <VBox alignment="CENTER" layoutX="6.0" layoutY="10.0" prefHeight="118.0" prefWidth="193.0" style="-fx-cursor: hand;" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="3.0">
-                                            <children>
-                                                <Button fx:id="newGameButton" alignment="CENTER" contentDisplay="CENTER" onAction="#openNewGameForm" prefHeight="90.0" prefWidth="90.0" styleClass="game-button">
-                                                    <graphic>
-                                                        <ImageView fitHeight="77.0" fitWidth="75.0" pickOnBounds="true"
-                                                                   preserveRatio="true">
-                                                            <image>
-                                                                <Image url="/menuItemsIcons/newGame.png"/>
-                                                            </image>
-                                                            <cursor>
-                                                                <Cursor fx:constant="HAND"/>
-                                                            </cursor>
-                                                        </ImageView>
-                                                    </graphic>
-                                                    <tooltip>
-                                                        <Tooltip text="Create new game" />
-                                                    </tooltip>
-                                                </Button>
-                                                <Label alignment="CENTER" onMouseClicked="#openNewGameForm" prefHeight="25.0" prefWidth="188.0" text="New game" textFill="ORANGE">
-                                                    <font>
-                                                        <Font size="16.0" />
-                                                    </font>
-                                                </Label>
-                                            </children>
-                                        </VBox>
+                                        <Button maxHeight="43.0" maxWidth="50.0" mnemonicParsing="false"
+                                                onAction="#generateBlanks" prefHeight="43.0" prefWidth="43.0"
+                                                styleClass="generate-blanks">
+                                            <graphic>
+                                                <ImageView fitHeight="33.0" fitWidth="33.0"
+                                                           pickOnBounds="true"
+                                                           preserveRatio="true">
+                                                    <image>
+                                                        <Image url="/menuItemsIcons/generate2.png"/>
+                                                    </image>
+                                                    <cursor>
+                                                        <Cursor fx:constant="OPEN_HAND"/>
+                                                    </cursor>
+                                                </ImageView>
+                                            </graphic>
+                                            <tooltip>
+                                                <Tooltip text="Generate blanks"/>
+                                            </tooltip>
+                                        </Button>
+                                        <Button maxHeight="43.0" maxWidth="50.0" mnemonicParsing="false"
+                                                onAction="#viewBlanks" prefHeight="44.0" prefWidth="43.0"
+                                                styleClass="view-blanks">
+                                            <graphic>
+                                                <ImageView fitHeight="33.0" fitWidth="33.0"
+                                                           pickOnBounds="true"
+                                                           preserveRatio="true">
+                                                    <image>
+                                                        <Image url="/menuItemsIcons/view3.png"/>
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                            <tooltip>
+                                                <Tooltip text="View/print blanks"/>
+                                            </tooltip>
+                                        </Button>
+                                        <Button maxHeight="43.0" maxWidth="50.0" onAction="#invokeGameContextMenu"
+                                                prefHeight="43.0" prefWidth="43.0" styleClass="game-options">
+                                            <graphic>
+                                                <ImageView fitHeight="33.0" fitWidth="33.0"
+                                                           pickOnBounds="true"
+                                                           preserveRatio="true">
+                                                    <image>
+                                                        <Image url="/menuItemsIcons/three_dots.png"/>
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                            <tooltip>
+                                                <Tooltip text="Game options"/>
+                                            </tooltip>
+                                        </Button>
                                     </children>
-                                </AnchorPane>
-                            </fx:define>
-                            <fx:define>
-                                <AnchorPane fx:id="templateGameAnchorPane" maxHeight="130.0" maxWidth="200.0" minHeight="130.0" minWidth="200.0" prefHeight="130.0" prefWidth="200.0" styleClass="game-grid-item" GridPane.columnIndex="1">
-                                    <HBox prefHeight="130.0" prefWidth="200.0">
-                                        <children>
-                                            <VBox alignment="CENTER" prefHeight="130.0" prefWidth="200.0" style="-fx-cursor: hand;">
-                                                <Button onAction="#openPlayGameForm" styleClass="game-button">
-                                                    <graphic>
-                                                        <ImageView styleClass="template-game-image" fitHeight="80.0"
-                                                                   fitWidth="80.0" pickOnBounds="true"
-                                                                   preserveRatio="true">
-                                                            <image>
-                                                                <Image url="/menuItemsIcons/iwannarock3.png"/>
-                                                            </image>
-                                                        </ImageView>
-                                                    </graphic>
-                                                    <tooltip>
-                                                        <Tooltip text="Play a game" />
-                                                    </tooltip>
-                                                </Button>
-                                                <Label fx:id="gameLabel" styleClass="game-name-label" alignment="CENTER" contentDisplay="CENTER" layoutX="63.0" layoutY="100.0" onMouseClicked="#openNewGameForm" prefHeight="32.0" prefWidth="192.0" text="Game 1" textFill="ORANGE">
-                                                    <font>
-                                                        <Font size="16.0" />
-                                                    </font>
-                                                </Label>
-                                            </VBox>
-                                            <VBox prefHeight="200.0" prefWidth="100.0">
-                                                <children>
-                                                    <Button maxHeight="43.0" maxWidth="50.0" mnemonicParsing="false" onAction="#generateBlanks" prefHeight="43.0" prefWidth="43.0" styleClass="generate-blanks">
-                                                        <graphic>
-                                                            <ImageView fitHeight="33.0" fitWidth="33.0"
-                                                                       pickOnBounds="true"
-                                                                       preserveRatio="true">
-                                                                <image>
-                                                                    <Image url="/menuItemsIcons/generate2.png"/>
-                                                                </image>
-                                                                <cursor>
-                                                                    <Cursor fx:constant="OPEN_HAND"/>
-                                                                </cursor>
-                                                            </ImageView>
-                                                        </graphic>
-                                                        <tooltip>
-                                                            <Tooltip text="Generate blanks" />
-                                                        </tooltip>
-                                                    </Button>
-                                                    <Button maxHeight="43.0" maxWidth="50.0" mnemonicParsing="false" onAction="#viewBlanks" prefHeight="44.0" prefWidth="43.0" styleClass="view-blanks">
-                                                        <graphic>
-                                                            <ImageView fitHeight="33.0" fitWidth="33.0"
-                                                                       pickOnBounds="true"
-                                                                       preserveRatio="true">
-                                                                <image>
-                                                                    <Image url="/menuItemsIcons/view3.png"/>
-                                                                </image>
-                                                            </ImageView>
-                                                        </graphic>
-                                                        <tooltip>
-                                                            <Tooltip text="View/print blanks" />
-                                                        </tooltip>
-                                                    </Button>
-                                                    <Button maxHeight="43.0" maxWidth="50.0" onAction="#invokeGameContextMenu" prefHeight="43.0" prefWidth="43.0" styleClass="game-options">
-                                                        <graphic>
-                                                            <ImageView fitHeight="33.0" fitWidth="33.0"
-                                                                       pickOnBounds="true"
-                                                                       preserveRatio="true">
-                                                                <image>
-                                                                    <Image url="/menuItemsIcons/three_dots.png"/>
-                                                                </image>
-                                                            </ImageView>
-                                                        </graphic>
-                                                        <tooltip>
-                                                            <Tooltip text="Game options" />
-                                                        </tooltip>
-                                                    </Button>
-                                                </children>
-                                            </VBox>
-                                        </children>
-                                    </HBox>
-                                </AnchorPane>
-                            </fx:define>
-                     <padding>
-                        <Insets right="20.0" />
-                     </padding>
-                        </GridPane>
-                  <VBox.margin>
-                     <Insets />
-                  </VBox.margin>
-                  <padding>
-                     <Insets bottom="-2.0" />
-                  </padding>
-                    </ScrollPane>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-                </VBox>
-            </children>
-        </VBox>
-    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </AnchorPane>
+                </fx:define>
+                <padding>
+                    <Insets right="20.0"/>
+                </padding>
+            </GridPane>
+            <VBox.margin>
+                <Insets/>
+            </VBox.margin>
+            <padding>
+                <Insets bottom="-2.0"/>
+            </padding>
+        </ScrollPane>
+        <VBox.margin>
+            <Insets/>
+        </VBox.margin>
+    </VBox>
 </AnchorPane>

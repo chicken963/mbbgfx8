@@ -15,5 +15,27 @@
 }
 
 .message-container {
+    -fx-border-color: #1b1b1b;
     -fx-text-fill: white;
+    -fx-background-color: #1b1b1b;
+}
+
+.message-scroll-pane {
+    -fx-background: #1b1b1b;
+    -fx-border-color: #1b1b1b;
+}
+
+.scroll-pane:focused .focus-indicator {
+    -fx-focus-color: #1b1b1b;
+    -fx-faint-focus-color: #1b1b1b;
+}
+
+.message-scroll-pane > .viewport {
+    -fx-border-color: #1b1b1b;
+    -fx-background: #1b1b1b;
+}
+
+.inner-container {
+    -fx-background-color: #1b1b1b;
+    -fx-border-color: #1b1b1b;
 }

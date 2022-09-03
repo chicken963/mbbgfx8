@@ -1,10 +1,12 @@
 package ru.orthodox.mbbg.services.create;
 
 import javafx.stage.FileChooser;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
+import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.services.model.AudioTrackService;
 
 import java.io.File;
@@ -20,6 +22,9 @@ public class FileChooserDealer {
     @Value("${music.localpath.startfolder}")
     private String localStartFolder;
 
+    @Setter
+    private Round round;
+
     public FileChooser provideFileChooser() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Please select audio files");
@@ -33,6 +38,7 @@ public class FileChooserDealer {
     }
 
     public List<AudioTrack> mapFilesToAudioTracks(List<File> files) {
+        audioTrackService.setRound(round);
         return files.stream()
                 .map(File::getAbsolutePath)
                 .map(absPath -> audioTrackService.generateFromFile(absPath))

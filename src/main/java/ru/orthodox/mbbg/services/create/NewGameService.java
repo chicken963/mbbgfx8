@@ -3,9 +3,8 @@ package ru.orthodox.mbbg.services.create;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.AllArgsConstructor;
@@ -13,6 +12,7 @@ import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import ru.orthodox.mbbg.enums.BlanksStatus;
 import ru.orthodox.mbbg.exceptions.GameInputsValidationException;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.basic.Game;
@@ -20,8 +20,10 @@ import ru.orthodox.mbbg.model.proxy.create.AudioTracksLibraryTable;
 import ru.orthodox.mbbg.model.proxy.create.EditAudioTracksTable;
 import ru.orthodox.mbbg.model.proxy.create.RoundTab;
 import ru.orthodox.mbbg.model.proxy.create.RoundsTabPane;
+import ru.orthodox.mbbg.services.common.PlayMediaService;
 import ru.orthodox.mbbg.services.create.library.AudiotracksLibraryService;
 import ru.orthodox.mbbg.services.create.validator.GameValidator;
+import ru.orthodox.mbbg.services.model.AudioTrackService;
 import ru.orthodox.mbbg.services.model.GameService;
 import ru.orthodox.mbbg.services.popup.PopupAlerter;
 import ru.orthodox.mbbg.services.start.StartMenuService;
@@ -31,8 +33,6 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
 @Service
 public class NewGameService {
@@ -54,20 +54,27 @@ public class NewGameService {
     private PopupAlerter popupAlerter;
     @Autowired
     private ApplicationContext applicationContext;
+    @Autowired
+    private AudioTrackService audioTrackService;
+    @Autowired
+    private PlayMediaService playMediaService;
 
     private TextField newGameName;
-    private Scene audioTracksLibraryScene;
+    private Label newGameLabel;
 
-    public void configureUIElements(TextField newGameName) {
+    public void configureUIElements(Label newGameLabel, TextField newGameName) {
+        this.newGameLabel = newGameLabel;
         this.newGameName = newGameName;
     }
 
     public void renderGame(Optional<Game> optGame) {
         if (optGame.isPresent()) {
             Game game = optGame.get();
+            this.newGameLabel.setText("Edit game");
             this.newGameName.setText(game.getName());
             this.roundsTabPane.renderGame(game);
         } else {
+            this.newGameLabel.setText("New game");
             this.newGameName.clear();
             this.roundsTabPane.renderEmpty();
         }
@@ -80,9 +87,11 @@ public class NewGameService {
         if (selectedFiles == null) {
             return;
         }
-        List<AudioTrack> audioTracks = fileChooserDealer.mapFilesToAudioTracks(selectedFiles);
         RoundTab currentTab = roundsTabPane.findTabByChild(sourceButton)
-                .orElseThrow(() -> new IllegalArgumentException("Parent tab for table not found"));;
+                .orElseThrow(() -> new IllegalArgumentException("Parent tab for table not found"));
+        fileChooserDealer.setRound(currentTab.getRound());
+        List<AudioTrack> audioTracks = fileChooserDealer.mapFilesToAudioTracks(selectedFiles);
+
         EditAudioTracksTable roundTable = currentTab.getEditAudioTracksTable();
         roundTable.addAudioTracks(audioTracks);
         roundTable.getRound().getAudioTracks().addAll(audioTracks);
@@ -101,35 +110,35 @@ public class NewGameService {
         game.setName(newGameName.getText());
         if (game.getId() == null) {
             game.setId(UUID.randomUUID());
+            game.setBlanksStatus(BlanksStatus.ABSENT);
+        } else {
+            game.setBlanksStatus(BlanksStatus.OUTDATED);
         }
-        gameService.save(game);
+        gameService.deepSave(game);
         saveButton.setDisable(true);
-        popupAlerter.invoke(saveButton.getScene().getWindow(), "Success", "Game has been saved successfully.", this::backToMainMenu);
+        popupAlerter.invokeOkCancel(
+                saveButton.getScene().getWindow(),
+                "Success",
+                "Game has been saved successfully. Would you like to continue editing?",
+                event -> ((Stage) ((Button) event.getSource()).getScene().getWindow()).close(),
+                this::backToMainMenu);
     }
 
     public void cancelCreation() {
+        playMediaService.stop(playMediaService.getCurrentTrack());
+        StartMenuService startMenuService = applicationContext.getBean(StartMenuService.class);
+        startMenuService.fillGridWithAllGames();
         screenService.activate("startMenu");
     }
 
     public void openLibrary(Button libraryButton) {
-        AnchorPane audioTracksLibraryRootTemplate = (AnchorPane) screenService.getParentNode("audioTracksLibrary");
-        AnchorPane audioTracksLibraryRoot = (AnchorPane) createDeepCopy(audioTracksLibraryRootTemplate);
-
-        audioTracksLibraryScene = new Scene(audioTracksLibraryRoot);
-        audioTracksLibraryScene.getStylesheets().addAll("styleSheets/scrollable-table.css", "styleSheets/new-game.css");
-
-        final Stage libraryStage = screenService.createSeparateStage(libraryButton, audioTracksLibraryScene, "Вот всё, что ты надобавлял за эти годы");
-
-
-        HBox libraryRowTemplate = (HBox) screenService.getParentNode("audioTracksLibraryRow");
-
+        if (audioTrackService.findAll().isEmpty()) {
+            popupAlerter.invoke(libraryButton.getScene().getWindow(), "Library is empty", "Oops. It seems that you've never created games before or cleaned up used audio tracks info storage.\nAfter you add audiotracks from your local machine, their info will be available during subsequent games creation.");
+            return;
+        }
         RoundTab currentTab = roundsTabPane.findTabByChild(libraryButton)
                 .orElseThrow(() -> new IllegalArgumentException("Parent tab for table not found"));
-        audioTracksLibraryTable.setRoot(audioTracksLibraryRoot);
-        audioTracksLibraryTable.setRowTemplate(libraryRowTemplate);
-        audiotracksLibraryService.populateTableWithAllAudioTracks();
-        audiotracksLibraryService.defineSubmitProperty(currentTab, libraryStage);
-        libraryStage.show();
+        currentTab.openLibrary();
     }
 
     private void backToMainMenu(ActionEvent event) {

@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-
-<?import org.controlsfx.control.RangeSlider?>
-<AnchorPane prefHeight="800.0" prefWidth="1450.0" style="-fx-background-color: #1b1b1b"
+<AnchorPane prefHeight="1000.0" prefWidth="1450.0" style="-fx-background-color: #1b1b1b"
             xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0"
@@ -20,7 +18,7 @@
                             <children>
                                 <CheckBox alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0"
                                           maxHeight="10.0" maxWidth="10.0" minHeight="10.0" minWidth="10.0"
-                                          mnemonicParsing="false" prefHeight="10.0" prefWidth="10.0">
+                                          mnemonicParsing="false" prefHeight="10.0" prefWidth="10.0" styleClass="header-check">
                                 </CheckBox>
                             </children>
                             <padding>
@@ -80,7 +78,7 @@
                         </Label>
                     </children>
                 </HBox>
-                <ScrollPane fitToHeight="true" hbarPolicy="NEVER" maxHeight="710.0" minHeight="0.0" prefWidth="1435.0"
+                <ScrollPane fitToHeight="true" hbarPolicy="NEVER" maxHeight="910.0" minHeight="0.0" prefWidth="1435.0"
                             styleClass="tracks-grid-scroll-pane">
                     <VBox prefWidth="1450.0" styleClass="tracks-grid"/>
                 </ScrollPane>

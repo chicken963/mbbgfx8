@@ -13,7 +13,9 @@ import org.controlsfx.control.RangeSlider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.orthodox.mbbg.enums.ButtonType;
+import ru.orthodox.mbbg.events.ActiveRowChangedEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
+import ru.orthodox.mbbg.services.common.EventPublisherService;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
 import ru.orthodox.mbbg.services.create.RangeSliderService;
 import ru.orthodox.mbbg.utils.common.ThreadUtils;
@@ -44,6 +46,8 @@ public class AudioTracksLibraryTable implements AudioTracksTable {
     private static final int STOP_BUTTON_COLUMN_INDEX = 9;
 
     private VBox audioTracksGrid;
+    @Getter
+    private CheckBox headerCheckBox;
     @Setter
     private HBox rowTemplate;
 
@@ -55,14 +59,17 @@ public class AudioTracksLibraryTable implements AudioTracksTable {
     private PlayMediaService playMediaService;
     @Autowired
     private RangeSliderService rangeSliderService;
+    @Autowired
+    private EventPublisherService eventPublisherService;
 
     @PostConstruct
     public void setup(){
-        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderService.updateRangeSlider(gridRows), "library");
+        ThreadUtils.runTaskInSeparateThread(() -> rangeSliderService.updateRangeSlider(), "library");
     }
 
     public void setRoot(AnchorPane root) {
         this.audioTracksGrid = findElementByTypeAndStyleclass(root, "tracks-grid");
+        this.headerCheckBox = findElementByTypeAndStyleclass(root, "header-check");
         this.addSelectedTracksButton = findElementByTypeAndStyleclass(root, "add-selected-tracks");
     }
 
@@ -111,7 +118,13 @@ public class AudioTracksLibraryTable implements AudioTracksTable {
         buttonView.setOnAction(event -> {
             switch (type) {
                 case PLAY:
+                    AudioTrack trackBeforeClickingPlay = playMediaService.getCurrentTrack();
                     playMediaService.play(audioTrack);
+                    if (trackBeforeClickingPlay != playMediaService.getCurrentTrack()) {
+                        eventPublisherService.publishEvent(
+                            new ActiveRowChangedEvent(this, findRowByPlayButton((Button) event.getSource()))
+                        );
+                    }
                     break;
                 case PAUSE:
                     playMediaService.pause(audioTrack);
@@ -148,6 +161,19 @@ public class AudioTracksLibraryTable implements AudioTracksTable {
                 .collect(Collectors.toList());
     }
 
+    private AudioTrackEditUIView findRowByPlayButton(Button playButton) {
+        return gridRows.stream()
+                .filter(row -> row.getPlayButtonContainer().getChildren().get(0) == playButton)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No row found for event source"));
+    }
+
+    public void stopPlayingIfNeeded() {
+        if (rangeSliderService.getActiveRow() != null && rangeSliderService.getActiveRow().isDisabled()) {
+            playMediaService.stop();
+        }
+    }
+
     @Getter
     @Builder
     private static class AudioTrackLibraryGridRow implements AudioTrackEditUIView {
@@ -167,7 +193,8 @@ public class AudioTracksLibraryTable implements AudioTracksTable {
             return getCheckBox().isSelected();
         }
 
-        private CheckBox getCheckBox() {
+        @Override
+        public CheckBox getCheckBox() {
             return (CheckBox) this.getCheckBoxContainer().getChildren().get(0);
         }
 

@@ -3,7 +3,6 @@ package ru.orthodox.mbbg.services.play;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Slider;
 import javafx.scene.layout.*;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,7 @@ public class PlayGameService {
     public void configureUIElements(Label roundNameLabel,
                               Label songTitle,
                               Label songProgressInSeconds,
-                              Slider volumeSlider,
+                              HBox volumeSliderContainer,
                               ProgressBar songProgressBar,
                               Button previousButton,
                               Button nextButton,
@@ -64,7 +63,7 @@ public class PlayGameService {
         mediaPlayerService.configureUIElements(
                 songTitle,
                 songProgressInSeconds,
-                volumeSlider,
+                volumeSliderContainer,
                 songProgressBar,
                 previousButton,
                 nextButton);

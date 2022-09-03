@@ -14,7 +14,10 @@ public class PlayMediaService {
     @Getter
     private AudioTrack currentTrack;
 
-    private double volumeCache = 1;
+    private double volumeCache;
+
+    private double volume = 1;
+
     private boolean muted = false;
     @Getter
     private boolean isPaused = false;
@@ -67,6 +70,11 @@ public class PlayMediaService {
         }
     }
 
+
+    public void stop() {
+        stop(getCurrentTrack());
+    }
+
     public void stop(AudioTrack audioTrack) {
         if (audioTrack != null && audioTrack == currentTrack) {
             mediaPlayer.stop();
@@ -77,16 +85,25 @@ public class PlayMediaService {
 
 
     public void switchMute() {
+        if (this.muted) {
+            volume = volumeCache;
+        } else {
+            volumeCache = volume;
+            volume = 0;
+        }
         this.muted = !this.muted;
-        mediaPlayer.setVolume(volumeCache);
+        mediaPlayer.setVolume(volume);
     }
 
-    public void setVolume(double volume) {
-        if (mediaPlayer == null) {
-            volumeCache = volume * 0.01;
-        } else {
-            mediaPlayer.setVolume(volume * 0.01);
+    public void setVolume(double newValue) {
+        this.volume = newValue * 0.01;
+        if (mediaPlayer != null) {
+            mediaPlayer.setVolume(volume);
         }
+    }
+
+    public int getVolume() {
+        return (int) (volume * 100);
     }
 
     public double getCurrentTime() {
@@ -113,14 +130,11 @@ public class PlayMediaService {
     }
 
     protected void generateMediaPlayer(AudioTrack audioTrack) {
-        if (mediaPlayer != null) {
-            volumeCache = mediaPlayer.getVolume();
-        }
         this.media = new Media(NormalizedPathString.of(audioTrack.getLocalPath()));
         this.mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setStartTime(Duration.seconds(audioTrack.getStartInSeconds()));
         mediaPlayer.setStopTime(Duration.seconds(audioTrack.getFinishInSeconds()));
-        mediaPlayer.setVolume(muted ? 0 : volumeCache);
+        mediaPlayer.setVolume(volume);
     }
 
     public double getFinishInSeconds() {

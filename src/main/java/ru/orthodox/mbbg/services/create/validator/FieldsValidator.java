@@ -48,12 +48,15 @@ public class FieldsValidator {
             messageAboutInsufficientNumberOfAudioTracks += "\u2022 Number of audiotracks in round '" + tab.getTab().getText() + "' (" + tabAudioTracks.size() + ") is less than blank capacity (" + blankCapacity + "). Please add more tracks.\n";
         }
         Map<String, List<AudioTrack>> artistsOccurences = tabAudioTracks.stream()
-                .collect(Collectors.groupingBy(AudioTrack::getArtist));
+                .collect(Collectors.groupingBy(audioTrack -> audioTrack.getArtist().toUpperCase().trim()));
 
-        messageAboutNotUniqueArtist = artistsOccurences.entrySet().stream()
+        if (!messageAboutNotUniqueArtist.isEmpty()) {
+            messageAboutNotUniqueArtist += "\n";
+        }
+        messageAboutNotUniqueArtist += artistsOccurences.entrySet().stream()
                 .filter(artistSet -> artistSet.getValue().size() > 1)
-                .map(artistSet -> "\u2022 There are " + artistSet.getValue().size() + " audiotracks for artist "
-                        + artistSet.getKey() + " in round '" + tab.getTab().getText() + "' ("
+                .map(artistSet -> "\u2022 There are " + artistSet.getValue().size() + " audiotracks for artist '"
+                        + artistSet.getKey() + "' in round '" + tab.getTab().getText() + "' ("
                         + artistSet.getValue().stream().map(AudioTrack::getTitle).collect(Collectors.joining(", "))
                         + "). Please leave only one track of this artist in the specified round.")
                 .collect(Collectors.joining("\n\n"));

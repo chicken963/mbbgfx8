@@ -16,15 +16,15 @@
     </HBox>
     <Label maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="260.0"
            styleClass="time-column" text="Artist">
-        <GridPane.margin>
-            <Insets left="20.0"/>
-        </GridPane.margin>
+        <padding>
+            <Insets left="10.0"/>
+        </padding>
     </Label>
     <Label maxHeight="30.0" minHeight="30.0" prefHeight="30.0" prefWidth="315.0"
            styleClass="time-column" text="Song title">
-        <GridPane.margin>
+        <padding>
             <Insets left="10.0"/>
-        </GridPane.margin>
+        </padding>
     </Label>
     <Label alignment="CENTER" maxHeight="30.0" minHeight="30.0" prefHeight="30.0"
            prefWidth="48.0" styleClass="time-column" text="00:00"/>

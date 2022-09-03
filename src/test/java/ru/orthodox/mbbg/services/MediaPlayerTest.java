@@ -4,26 +4,24 @@ import com.sun.javafx.application.PlatformImpl;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Slider;
+import javafx.scene.layout.HBox;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
 import ru.orthodox.mbbg.services.model.RoundService;
 import ru.orthodox.mbbg.services.play.MediaPlayerService;
 import ru.orthodox.mbbg.services.play.PlaylistTableService;
-import ru.orthodox.mbbg.services.play.SliderBarBackgroundService;
+import ru.orthodox.mbbg.services.play.ProgressBarBackgroundService;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +31,7 @@ import java.util.Optional;
 @ContextConfiguration(classes = {
         MediaPlayerService.class,
         RoundService.class,
-        SliderBarBackgroundService.class,
+        ProgressBarBackgroundService.class,
         PlayMediaService.class,
         ApplicationEventPublisher.class,
         PlaylistTableService.class
@@ -43,7 +41,7 @@ public class MediaPlayerTest {
     @Mock
     private RoundService roundService;
     @Mock
-    private SliderBarBackgroundService sliderBarBackgroundService;
+    private ProgressBarBackgroundService progressBarBackgroundService;
     @Mock
     private PlayMediaService playService;
     @Mock
@@ -67,7 +65,7 @@ public class MediaPlayerTest {
         this.activeRound = new Round();
         activeRound.setAudioTracks(roundQueue);
         PlatformImpl.startup(() -> {});
-        uut.configureUIElements(new Label(), new Label(), new Slider(), new ProgressBar(), new Button(), new Button());
+        uut.configureUIElements(new Label(), new Label(), new HBox(), new ProgressBar(), new Button(), new Button());
     }
 
     @Test

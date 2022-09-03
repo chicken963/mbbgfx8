@@ -1,5 +1,6 @@
 package ru.orthodox.mbbg.model.proxy.create;
 
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -7,6 +8,7 @@ import org.controlsfx.control.RangeSlider;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 
 public interface AudioTrackEditUIView extends AudioTrackUIView {
+    CheckBox getCheckBox();
     Control getArtistLabel();
     Control getSongTitleLabel();
     AudioTrack getAudioTrack();
@@ -20,4 +22,8 @@ public interface AudioTrackEditUIView extends AudioTrackUIView {
     HBox getPauseButtonContainer();
     HBox getStopButtonContainer();
     HBox getDeleteButtonContainer();
+
+    default boolean isDisabled() {
+        return getRangeSlider().isDisabled();
+    }
 }

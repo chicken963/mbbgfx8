@@ -3,11 +3,13 @@ package ru.orthodox.mbbg.services.play.blank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.enums.StrokeType;
-import ru.orthodox.mbbg.model.basic.*;
+import ru.orthodox.mbbg.model.basic.AudioTrack;
+import ru.orthodox.mbbg.model.basic.Blank;
+import ru.orthodox.mbbg.model.basic.BlankItem;
+import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.model.proxy.play.BlankItemStrokeSet;
 import ru.orthodox.mbbg.repositories.BlankRepository;
-import ru.orthodox.mbbg.repositories.RoundRepository;
-import ru.orthodox.mbbg.services.model.RoundService;
+import ru.orthodox.mbbg.services.model.GameService;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,9 +19,7 @@ public class BlankService {
     @Autowired
     private BlankRepository blankRepository;
     @Autowired
-    private RoundRepository roundRepository;
-    @Autowired
-    private RoundService roundService;
+    private GameService gameService;
 
     private static int CURRENT_BLANK_NUMBER;
 
@@ -31,36 +31,31 @@ public class BlankService {
         put(4, "E");
     }};
 
-    public void generateBlanks(Game targetGame) {
-        List<Round> rounds = roundRepository.findByIds(targetGame.getRoundIds());
-        for (Round round : rounds) {
-            List<Blank> blanks = new LinkedList<>();
-            CURRENT_BLANK_NUMBER = 100 * (rounds.indexOf(round) + 1);
-            List<AudioTrack> roundAudioTracks = roundService.getAudioTracks(round);
+    public List<Blank> generateBlanks(Round round, int roundNumber) {
 
-            int blankWidth = round.getWidth();
-            int blankHeight = round.getHeight();
+        List<Blank> blanks = new LinkedList<>();
+        CURRENT_BLANK_NUMBER = 100 * (roundNumber + 1);
 
-            List<String> roundArtists = roundAudioTracks.stream()
-                    .map(AudioTrack::getArtist)
-                    .collect(Collectors.toList());
+        int blankWidth = round.getWidth();
+        int blankHeight = round.getHeight();
 
-            for (int i = 0; i < round.getNumberOfBlanks(); i++) {
-                Blank blank = Blank.builder()
-                        .id(UUID.randomUUID())
-                        .blankItems(prepareBlankItems(roundArtists, blankWidth, blankHeight))
-                        .progress(0.0)
-                        .height(blankHeight)
-                        .width(blankWidth)
-                        .number(generateBlankNumber(rounds.indexOf(round)))
-                        .build();
-                blankRepository.save(blank);
-                blanks.add(blank);
-            }
+        List<String> roundArtists = round.getAudioTracks().stream()
+                .map(AudioTrack::getArtist)
+                .collect(Collectors.toList());
 
-            round.setBlanksIds(blanks.stream().map(Blank::getId).collect(Collectors.toList()));
-            roundRepository.save(round);
+        for (int i = 0; i < round.getNumberOfBlanks(); i++) {
+            Blank blank = Blank.builder()
+                    .id(UUID.randomUUID())
+                    .blankItems(prepareBlankItems(roundArtists, blankWidth, blankHeight))
+                    .progress(0.0)
+                    .height(blankHeight)
+                    .width(blankWidth)
+                    .number(generateBlankNumber(roundNumber))
+                    .build();
+            blanks.add(blank);
         }
+        blankRepository.save(blanks);
+        return blanks;
     }
 
     public static Set<BlankItem> getRowItems(Set<BlankItem> blankItems, int rowIndex) {
@@ -109,5 +104,13 @@ public class BlankService {
             blankItems.add(new BlankItem(x, y, artist));
         });
         return blankItems;
+    }
+
+    public void delete(List<Blank> blanks) {
+        blankRepository.delete(blanks);
+    }
+
+    public List<Blank> findByIds(List<UUID> blanksIds) {
+        return blankRepository.findByIds(blanksIds);
     }
 }

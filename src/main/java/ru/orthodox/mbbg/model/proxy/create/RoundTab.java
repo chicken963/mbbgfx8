@@ -1,12 +1,12 @@
 package ru.orthodox.mbbg.model.proxy.create;
 
 import javafx.scene.Node;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import lombok.Getter;
 import ru.orthodox.mbbg.enums.BlankSize;
 import ru.orthodox.mbbg.enums.WinCondition;
@@ -17,10 +17,15 @@ import ru.orthodox.mbbg.events.TextFieldChangeEvent;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.services.common.EventPublisherService;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
+import ru.orthodox.mbbg.services.create.library.AudiotracksLibraryService;
 import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
 import ru.orthodox.mbbg.utils.hierarchy.HierarchyUtils;
+import ru.orthodox.mbbg.utils.screen.ScreenService;
 
 import java.util.stream.Stream;
+
+import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findTabElementByTypeAndStyleclass;
+import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
 @Getter
 public class RoundTab {
@@ -28,6 +33,10 @@ public class RoundTab {
 
     private final EditAudioTracksTable editAudioTracksTable;
     private final EventPublisherService eventPublisherService;
+
+    private final AudiotracksLibraryService audiotracksLibraryService;
+    private final AudioTracksLibraryTable audioTracksLibraryTable;
+    private final ScreenService screenService;
 
 
     private ChoiceBox<WinCondition> firstPrizeCondition;
@@ -42,9 +51,16 @@ public class RoundTab {
     public RoundTab(Tab tab,
                     HBox audioTracksGridRowTemplate,
                     PlayMediaService playMediaService,
-                    EventPublisherService eventPublisherService, Round round) {
+                    EventPublisherService eventPublisherService,
+                    AudiotracksLibraryService audiotracksLibraryService,
+                    AudioTracksLibraryTable audioTracksLibraryTable,
+                    ScreenService screenService,
+                    Round round) {
         this.tab = tab;
         this.eventPublisherService = eventPublisherService;
+        this.audiotracksLibraryService = audiotracksLibraryService;
+        this.audioTracksLibraryTable = audioTracksLibraryTable;
+        this.screenService = screenService;
 
         this.editAudioTracksTable = Stream.of(ElementFinder.<VBox>findTabElementByTypeAndStyleclass(tab, "tracks-grid"))
                 .map(audiotracksVbox -> new EditAudioTracksTable(
@@ -126,31 +142,35 @@ public class RoundTab {
     }
 
     public ChoiceBox<WinCondition> getThirdPrizeCondition() {
-        return ElementFinder.<ChoiceBox<WinCondition>>findTabElementByTypeAndStyleclass(tab, "thirdPrizeCondition");
+        return findTabElementByTypeAndStyleclass(tab, "third-prize-condition");
     }
 
     public ChoiceBox<WinCondition> getSecondPrizeCondition() {
-        return ElementFinder.<ChoiceBox<WinCondition>>findTabElementByTypeAndStyleclass(tab, "secondPrizeCondition");
+        return findTabElementByTypeAndStyleclass(tab, "second-prize-condition");
     }
 
     public ChoiceBox<WinCondition> getFirstPrizeCondition() {
-        return ElementFinder.<ChoiceBox<WinCondition>>findTabElementByTypeAndStyleclass(tab, "firstPrizeCondition");
+        return findTabElementByTypeAndStyleclass(tab, "first-prize-condition");
     }
 
     public TextField getNewRoundNameTextField() {
-        return ElementFinder.<TextField>findTabElementByTypeAndStyleclass(tab, "newRoundName");
+        return findTabElementByTypeAndStyleclass(tab, "new-round-name");
     }
 
     public ChoiceBox<BlankSize> getBlankDimensions() {
-        return ElementFinder.<ChoiceBox<BlankSize>>findTabElementByTypeAndStyleclass(tab, "blankDimensions");
+        return findTabElementByTypeAndStyleclass(tab, "blank-dimensions");
     }
 
     public TextField getNumberOfBlanks() {
-        return ElementFinder.<TextField>findTabElementByTypeAndStyleclass(tab, "numberOfBlanks");
+        return findTabElementByTypeAndStyleclass(tab, "number-of-blanks");
     }
 
     public Label getNumberOfBlanksWarning() {
-        return ElementFinder.<Label>findTabElementByTypeAndStyleclass(tab, "numberOfBlanksWarning");
+        return findTabElementByTypeAndStyleclass(tab, "number-of-blanks-warning");
+    }
+
+    private Button getLibraryButton() {
+        return findTabElementByTypeAndStyleclass(tab, "open-library");
     }
 
     public boolean isFilled() {
@@ -172,5 +192,29 @@ public class RoundTab {
         getFirstPrizeCondition().setValue(round.getFirstStrikeCondition());
         getSecondPrizeCondition().setValue(round.getSecondStrikeCondition());
         getThirdPrizeCondition().setValue(round.getThirdStrikeCondition());
+    }
+
+    public void openLibrary() {
+
+        AnchorPane audioTracksLibraryRootTemplate = (AnchorPane) screenService.getParentNode("audioTracksLibrary");
+        AnchorPane audioTracksLibraryRoot = (AnchorPane) createDeepCopy(audioTracksLibraryRootTemplate);
+
+        Scene audioTracksLibraryScene = new Scene(audioTracksLibraryRoot);
+        audioTracksLibraryScene.getStylesheets().addAll("styleSheets/scrollable-table.css", "styleSheets/new-game.css");
+
+        final Stage libraryStage = screenService.createSeparateStage(getLibraryButton(), audioTracksLibraryScene, "Вот всё, что ты надобавлял за эти годы");
+        libraryStage.setOnCloseRequest(e -> audioTracksLibraryTable.stopPlayingIfNeeded());
+
+        HBox libraryRowTemplate = (HBox) screenService.getParentNode("audioTracksLibraryRow");
+
+
+        audioTracksLibraryTable.setRoot(audioTracksLibraryRoot);
+        audioTracksLibraryTable.setRowTemplate(libraryRowTemplate);
+        audiotracksLibraryService.populateTableWithAllAudioTracks();
+        audiotracksLibraryService.defineSubmitProperty(getEditAudioTracksTable(), libraryStage);
+        audiotracksLibraryService.defineHeaderCheckBoxProperty();
+        libraryStage.setMaxWidth(1470);
+        libraryStage.show();
+
     }
 }

@@ -1,26 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.*?>
-
-<VBox alignment="CENTER" maxHeight="1.7976931348623157E308" minWidth="-Infinity" prefHeight="211.0" prefWidth="600.0" styleClass="container" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.PopupController">
-    <children>
-        <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" prefWidth="361.0">
-            <VBox.margin>
-                <Insets left="20.0" right="20.0" top="20.0" />
-            </VBox.margin>
+<AnchorPane minHeight="160.0" prefHeight="193.0" prefWidth="640.0" styleClass="container" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.orthodox.mbbg.controllers.PopupController">
+   <children>
+        <HBox alignment="CENTER" layoutX="20.0" layoutY="40.0" prefWidth="600.0" styleClass="inner-container" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
             <children>
-                <Label id="headingLabel" alignment="CENTER" contentDisplay="CENTER" maxHeight="1.7976931348623157E308" minWidth="400.0" styleClass="message-container" text="Main message" textAlignment="CENTER" wrapText="true" />
+            <ScrollPane maxHeight="1000.0" styleClass="message-scroll-pane">
+               <content>
+                      <Label id="headingLabel" alignment="CENTER" contentDisplay="CENTER" prefWidth="550.0" styleClass="message-container" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." textAlignment="CENTER" wrapText="true" />
+               </content>
+            </ScrollPane>
             </children>
         </HBox>
-        <HBox alignment="CENTER" prefWidth="600.0">
+        <HBox alignment="CENTER" layoutX="20.0" layoutY="160.0" prefWidth="600.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
             <children>
                 <Button fx:id="okButton" mnemonicParsing="false" onAction="#close" styleClass="ok-button" text="Ok" />
             </children>
-         <VBox.margin>
-            <Insets bottom="5.0" left="20.0" right="20.0" top="20.0" />
-         </VBox.margin>
         </HBox>
-    </children>
-</VBox>
+   </children>
+</AnchorPane>

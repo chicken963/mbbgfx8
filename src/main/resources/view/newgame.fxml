@@ -11,7 +11,7 @@
             <children>
                 <HBox alignment="CENTER" layoutY="61.0" prefWidth="1860.0">
                     <children>
-                        <Label fx:id="newGameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="57.0" prefWidth="956.0" text="New game" textFill="#ffa100">
+                        <Label fx:id="newGameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="57.0" prefWidth="956.0" textFill="#ffa100">
                             <font>
                                 <Font size="36.0" />
                             </font>
@@ -32,6 +32,7 @@
                                         <Insets left="10.0" />
                                     </HBox.margin>
                                 </TextField>
+                                <HBox fx:id="volumeSliderContainer" alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="490.0" />
                             </children>
                         </HBox>
                         <TabPane fx:id="tabPane" prefHeight="810.0" prefWidth="1710.0" tabClosingPolicy="ALL_TABS">
@@ -55,7 +56,7 @@
                                                                                 <Font name="System Italic" size="12.0" />
                                                                             </font>
                                                                         </Label>
-                                                                        <TextField prefHeight="24.0" prefWidth="255.0" styleClass="newRoundName" />
+                                                                        <TextField prefHeight="24.0" prefWidth="255.0" styleClass="new-round-name" />
                                                                     </children>
                                                                     <padding>
                                                                         <Insets left="20.0" />
@@ -73,7 +74,7 @@
                                                                                         <Insets left="15.0" />
                                                                                     </padding>
                                                                                 </Label>
-                                                                                <ChoiceBox onAction="#onBlankDimensionsChosen" prefHeight="40.0" prefWidth="75.0" styleClass="blankDimensions" />
+                                                                                <ChoiceBox onAction="#onBlankDimensionsChosen" prefHeight="40.0" prefWidth="75.0" styleClass="blank-dimensions" />
                                                                             </children>
                                                                             <HBox.margin>
                                                                                 <Insets right="35.0" />
@@ -86,7 +87,7 @@
                                                                                         <Font name="System Italic" size="12.0" />
                                                                                     </font>
                                                                                 </Label>
-                                                                                <TextField fx:id="numberOfBlanks" prefHeight="40.0" prefWidth="59.0" styleClass="numberOfBlanks" />
+                                                                                <TextField fx:id="numberOfBlanks" prefHeight="40.0" prefWidth="59.0" styleClass="number-of-blanks" />
                                                                             </children>
                                                                         </VBox>
                                                                     </children>
@@ -107,7 +108,7 @@
                                                                                 <Insets right="13.0" />
                                                                             </HBox.margin>
                                                                         </Label>
-                                                                        <Label prefHeight="40.0" prefWidth="144.0" styleClass="numberOfBlanksWarning" text="Please fill number of blanks with non-zero number value" textFill="#ff004d" visible="false" wrapText="true">
+                                                                        <Label prefHeight="40.0" prefWidth="144.0" styleClass="number-of-blanks-warning" text="Please fill number of blanks with non-zero number value" textFill="#ff004d" visible="false" wrapText="true">
                                                                             <HBox.margin>
                                                                                 <Insets right="12.0" />
                                                                             </HBox.margin>
@@ -129,12 +130,12 @@
                                                                   <Insets left="15.0" />
                                                                </padding>
                                                                                 </Label>
-                                                                                <ChoiceBox onAction="#onFirstConditionChosen" prefHeight="26.0" prefWidth="240.0" styleClass="firstPrizeCondition" />
+                                                                                <ChoiceBox onAction="#onFirstConditionChosen" prefHeight="26.0" prefWidth="240.0" styleClass="first-prize-condition" />
                                                                             </children>
                                                                         </VBox>
                                                                         <HBox prefHeight="12.0" prefWidth="227.0">
                                                                             <children>
-                                                                                <Label prefHeight="12.0" prefWidth="208.0" styleClass="firstConditionWarning" text="Please fill first win condition" textFill="#ff004d" visible="false">
+                                                                                <Label prefHeight="12.0" prefWidth="208.0" styleClass="first-condition-warning" text="Please fill first win condition" textFill="#ff004d" visible="false">
                                                                                     <font>
                                                                                         <Font name="System Italic" size="12.0" />
                                                                                     </font>
@@ -151,12 +152,12 @@
                                                                                         <Insets left="15.0" />
                                                                                     </padding>
                                                                                 </Label>
-                                                                                <ChoiceBox onAction="#onSecondConditionChosen" prefHeight="26.0" prefWidth="240.0" styleClass="secondPrizeCondition" />
+                                                                                <ChoiceBox onAction="#onSecondConditionChosen" prefHeight="26.0" prefWidth="240.0" styleClass="second-prize-condition" />
                                                                             </children>
                                                                         </VBox>
                                                                         <HBox prefHeight="12.0" prefWidth="200.0">
                                                                             <children>
-                                                                                <Label prefHeight="12.0" prefWidth="208.0" styleClass="secondConditionWarning" text="Please fill second win condition" textFill="#ff004d" visible="false">
+                                                                                <Label prefHeight="12.0" prefWidth="208.0" styleClass="second-condition-warning" text="Please fill second win condition" textFill="#ff004d" visible="false">
                                                                                     <font>
                                                                                         <Font name="System Italic" size="12.0" />
                                                                                     </font>
@@ -173,7 +174,7 @@
                                                                                         <Insets left="15.0" />
                                                                                     </padding>
                                                                                 </Label>
-                                                                                <ChoiceBox onAction="#onThirdConditionChosen" prefHeight="26.0" prefWidth="240.0" styleClass="thirdPrizeCondition" />
+                                                                                <ChoiceBox onAction="#onThirdConditionChosen" prefHeight="26.0" prefWidth="240.0" styleClass="third-prize-condition" />
                                                                             </children>
                                                                         </VBox>
                                                                     </children>
@@ -186,7 +187,7 @@
                                                                 </VBox>
                                                                 <HBox alignment="TOP_RIGHT" prefHeight="25.0" prefWidth="200.0">
                                                                     <children>
-                                                                        <Label prefHeight="17.0" prefWidth="208.0" styleClass="thirdConditionWarning" text="Please fill third win condition" textFill="#ff004d" visible="false">
+                                                                        <Label prefHeight="17.0" prefWidth="208.0" styleClass="third-condition-warning" text="Please fill third win condition" textFill="#ff004d" visible="false">
                                                                             <font>
                                                                                 <Font name="System Italic" size="12.0" />
                                                                             </font>
@@ -203,7 +204,7 @@
                                                                                 <Font size="13.0" />
                                                                             </font>
                                                                         </Button>
-                                                                        <Button fx:id="importTracksButton" alignment="CENTER" mnemonicParsing="false" onAction="#openLibrary" prefHeight="25.0" prefWidth="200.0" text="Import from library...">
+                                                                        <Button fx:id="importTracksButton" alignment="CENTER" mnemonicParsing="false" onAction="#openLibrary" prefHeight="25.0" prefWidth="200.0" text="Import from library..." styleClass="open-library">
                                                                             <font>
                                                                                 <Font size="13.0" />
                                                                             </font>
@@ -337,12 +338,12 @@
                         </TabPane>
                         <HBox prefHeight="56.0" prefWidth="1177.0">
                             <children>
-                                <Button fx:id="saveGame" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#saveGame" text="Save" disable="true">
+                                <Button fx:id="saveGame" alignment="CENTER" contentDisplay="CENTER" disable="true" mnemonicParsing="false" onAction="#saveGame" text="Save">
                                     <HBox.margin>
                                         <Insets right="10.0" />
                                     </HBox.margin>
                                 </Button>
-                                <Button fx:id="cancelCreation" mnemonicParsing="false" onAction="#cancelCreation" text="Cancel" />
+                                <Button fx:id="cancelCreation" mnemonicParsing="false" onAction="#cancelCreation" text="Back" />
                             </children>
                             <VBox.margin>
                                 <Insets top="10.0" />

@@ -21,9 +21,6 @@ public class GamesRepository {
     @Autowired
     private LocalFilesService localFilesService;
 
-    @Autowired
-    private RoundRepository roundRepository;
-
     @Value("${games.json.filepath}")
     private String gamesInfoFilePath;
 
@@ -35,7 +32,7 @@ public class GamesRepository {
     }
 
     public List<Game> findAllGames() {
-        return localFilesService.readEntityListFromFile(gamesFile, Game.class);
+        return localFilesService.readEntitiesFromFile(gamesFile, Game.class);
     }
 
     public Game findById(UUID id) {
@@ -60,9 +57,7 @@ public class GamesRepository {
     }
 
     public void deleteGame(Game gameToDelete) {
-        List<Game> allGames = findAllGames();
         localFilesService.delete(gameToDelete, gamesFile);
-
     }
 
 }

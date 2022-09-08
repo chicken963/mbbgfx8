@@ -58,7 +58,7 @@
                                         </tooltip>
                                     </Button>
                                     <Label alignment="CENTER" onMouseClicked="#openNewGameForm" prefHeight="25.0"
-                                           prefWidth="188.0" text="New game" textFill="ORANGE">
+                                           prefWidth="188.0" text="New game" textFill="ORANGE" styleClass="game-name-label">
                                         <font>
                                             <Font size="16.0"/>
                                         </font>

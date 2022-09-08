@@ -2,10 +2,11 @@ package ru.orthodox.mbbg.utils.hierarchy;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.Labeled;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import ru.orthodox.mbbg.model.basic.AudioTrack;
 
 import java.util.Collection;
 import java.util.List;
@@ -37,36 +38,7 @@ public class ElementFinder {
                 .orElseThrow(() -> new IllegalArgumentException(String.format("Failed to find element with style class '%s'", styleClass)));
     }
 
-    public static<T> T findElementById(Parent parent, String id) {
-        return findRecursivelyByIdInTemplate(parent, id)
-                .stream()
-                .map(node -> (T) node)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Failed to find element with id '%s'", id)));
-    }
-
-    public static TableColumn<AudioTrack, String> findTracksTableColumnByNumber(TableView<AudioTrack> table, int index) {
-        return table.getColumns()
-                .stream()
-                .map(column -> (TableColumn<AudioTrack, String>) column)
-                .skip(index)
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Column at index %d was not found", index)));
-    }
-
-    public static List<Node> findRecursivelyByIdInTemplate(Parent parent, String id) {
-        return HierarchyUtils.flattenStructure(parent).stream()
-                .filter(node -> id.equals(node.getId()))
-                .collect(Collectors.toList());
-    }
-
-    public static List<Node> findRecursivelyByStyle(Parent parent, String style) {
-        return HierarchyUtils.flattenStructure(parent).stream()
-                .filter(node -> style.equals(node.getStyle()))
-                .collect(Collectors.toList());
-    }
-
-    public static Set<Node> findRecursivelyByStyleClass(Parent parent, String styleClass) {
+    private static Set<Node> findRecursivelyByStyleClass(Parent parent, String styleClass) {
         return HierarchyUtils.flattenStructure(parent).stream()
                 .filter(node -> node.getStyleClass().contains(styleClass))
                 .collect(Collectors.toSet());
@@ -96,13 +68,6 @@ public class ElementFinder {
             p = p.getParent();
         }
         return (AnchorPane) p;
-    }
-
-    public static Node findGridPaneNodeByIndexes(GridPane gridPane, int rowIndex, int columnIndex) {
-        return gridPane.getChildren().stream()
-                .filter(node -> GridPane.getRowIndex(node).equals(rowIndex) && GridPane.getColumnIndex(node).equals(columnIndex))
-                .findFirst()
-                .orElseThrow(() -> new IndexOutOfBoundsException("No node found with indexes " + rowIndex + " and " + columnIndex));
     }
 
 }

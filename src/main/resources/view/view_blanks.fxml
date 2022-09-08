@@ -1,138 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.scene.text.Font?>
-<AnchorPane fx:id="container" nodeOrientation="LEFT_TO_RIGHT" prefHeight="560.0" styleClass="container"
-      xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ru.orthodox.mbbg.controllers.ViewBlanksController">
+<AnchorPane fx:id="container" nodeOrientation="LEFT_TO_RIGHT" prefHeight="605.0" styleClass="container"
+            xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ru.orthodox.mbbg.controllers.ViewBlanksController">
     <children>
         <ScrollPane fitToHeight="true" fitToWidth="true" styleClass="grid-scroll-pane"
-                    hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" >
-                <VBox prefWidth="445.0" maxHeight="1000.0" style="-fx-background-color: #1b1b1b">
-                    <children>
-                        <TabPane fx:id="blanksMiniatureTabPane" prefWidth="446.0" tabClosingPolicy="UNAVAILABLE" >
-                            <tabs>
-                                <fx:define>
-                                    <Tab fx:id="blanksMiniatureSampleTab" text="Round 1">
-                                        <content>
-                                            <VBox prefWidth="446.0" styleClass="vbox-containing-scroll-pane">
-                                                <ScrollPane hbarPolicy="NEVER" maxHeight="950.0" prefWidth="446.0" styleClass="grid-scroll-pane">
-                                                    <GridPane fx:id="miniaturesGrid"
-                                                              prefWidth="446.0" minWidth="446.0" styleClass="miniatures-grid">
-                                                        <columnConstraints>
-                                                            <fx:define>
-                                                                <ColumnConstraints fx:id="miniatureGridColumnConstraints" halignment="CENTER" hgrow="SOMETIMES" minWidth="142.0" prefWidth="142.0" maxWidth="142.0"/>
-                                                            </fx:define>
-                                                        </columnConstraints>
-                                                        <rowConstraints>
-                                                            <fx:define>
-                                                                <RowConstraints fx:id="miniatureGridRowConstraints" maxHeight="60.0" minHeight="60.0" prefHeight="60.0" valignment="CENTER" vgrow="SOMETIMES"/>
-                                                            </fx:define>
-                                                        </rowConstraints>
-                                                    <fx:define>
-                                                            <Button fx:id="blankMiniature"
-                                                                    onMouseEntered="#showBlankByMiniature"
-                                                                    onMouseExited="#emptyBlanksPreview"
-                                                                    mnemonicParsing="false"
-                                                                    prefHeight="38.0" prefWidth="110.0"
-                                                                    styleClass="blank-miniature"
-                                                                    alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                                                                <font>
-                                                                    <Font size="23.0"/>
-                                                                </font>
-                                                            </Button>
+                    hbarPolicy="NEVER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                    AnchorPane.topAnchor="0.0">
+            <VBox prefWidth="445.0" maxHeight="1000.0" style="-fx-background-color: #1b1b1b">
+                <children>
+                    <TabPane fx:id="blanksMiniatureTabPane" prefWidth="446.0" tabClosingPolicy="UNAVAILABLE">
+                        <tabs>
+                            <fx:define>
+                                <Tab fx:id="blanksMiniatureSampleTab" text="Round 1">
+                                    <content>
+                                        <VBox prefWidth="446.0" styleClass="vbox-containing-scroll-pane">
+                                            <ScrollPane hbarPolicy="NEVER" maxHeight="950.0" prefWidth="446.0"
+                                                        styleClass="grid-scroll-pane">
+                                                <GridPane fx:id="miniaturesGrid"
+                                                          prefWidth="446.0" minWidth="446.0"
+                                                          styleClass="miniatures-grid">
+                                                    <columnConstraints>
+                                                        <fx:define>
+                                                            <ColumnConstraints fx:id="miniatureGridColumnConstraints"
+                                                                               halignment="CENTER" hgrow="SOMETIMES"
+                                                                               minWidth="142.0" prefWidth="142.0"
+                                                                               maxWidth="142.0"/>
                                                         </fx:define>
-                                                        <padding>
-                                                            <Insets right="20.0" />
-                                                        </padding>
-                                                    </GridPane>
-                                                </ScrollPane>
-                                                <padding>
-                                                    <Insets right="5.0" left="5.0" top="5.0" bottom="5.0"/>
-                                                </padding>
-                                            </VBox>
-                                        </content>
-                                    </Tab>
-                                </fx:define>
-                            </tabs>
-                        </TabPane>
-                        <HBox alignment="CENTER_LEFT" maxHeight="40.0" minHeight="40.0" prefHeight="40.0">
-                            <children>
-                                <Button fx:id="saveToPng" maxWidth="170.0" minWidth="170.0" onAction="#saveToPng"
-                                        styleClass="save-all-to-png" mnemonicParsing="false" prefWidth="170.0"
-                                        text="Save all blanks to png">
-                                    <HBox.margin>
-                                        <Insets left="10.0"/>
-                                    </HBox.margin>
-                                </Button>
-                            </children>
-                        </HBox>
-                    </children>
-                </VBox>
+                                                    </columnConstraints>
+                                                    <rowConstraints>
+                                                        <fx:define>
+                                                            <RowConstraints fx:id="miniatureGridRowConstraints"
+                                                                            maxHeight="60.0" minHeight="60.0"
+                                                                            prefHeight="60.0" valignment="CENTER"
+                                                                            vgrow="SOMETIMES"/>
+                                                        </fx:define>
+                                                    </rowConstraints>
+                                                    <fx:define>
+                                                        <Button fx:id="blankMiniature"
+                                                                onMouseEntered="#showBlankByMiniature"
+                                                                onMouseExited="#emptyBlanksPreview"
+                                                                mnemonicParsing="false"
+                                                                prefHeight="38.0" prefWidth="110.0"
+                                                                styleClass="blank-miniature"
+                                                                alignment="CENTER" GridPane.columnIndex="0"
+                                                                GridPane.rowIndex="0">
+                                                            <font>
+                                                                <Font size="23.0"/>
+                                                            </font>
+                                                        </Button>
+                                                    </fx:define>
+                                                    <padding>
+                                                        <Insets right="20.0"/>
+                                                    </padding>
+                                                </GridPane>
+                                            </ScrollPane>
+                                            <padding>
+                                                <Insets right="5.0" left="5.0" top="5.0" bottom="5.0"/>
+                                            </padding>
+                                        </VBox>
+                                    </content>
+                                </Tab>
+                            </fx:define>
+                        </tabs>
+                    </TabPane>
+                    <HBox alignment="CENTER_LEFT" maxHeight="40.0" minHeight="40.0" prefHeight="40.0">
+                        <children>
+                            <Button fx:id="saveToPng" maxWidth="170.0" minWidth="170.0" onAction="#saveToPng"
+                                    styleClass="save-all-to-png" mnemonicParsing="false" prefWidth="170.0"
+                                    text="Save all blanks to png">
+                                <HBox.margin>
+                                    <Insets left="10.0"/>
+                                </HBox.margin>
+                            </Button>
+                        </children>
+                    </HBox>
+                </children>
+            </VBox>
         </ScrollPane>
-        <HBox alignment="CENTER" AnchorPane.leftAnchor="456.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-            <children>
-                <AnchorPane fx:id="blankPreview" maxHeight="520.0" maxWidth="380.0"
-                            style="-fx-background-color: linear-gradient(to bottom right, #008080, black);">
-                    <children>
-                        <VBox fx:id="blankPreviewVbox" prefHeight="520.0" prefWidth="380.0">
-                            <children>
-                                <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
-                                    <children>
-                                        <Label fx:id="blankNumber" alignment="CENTER" contentDisplay="CENTER"
-                                               prefHeight="49.0" prefWidth="89.0"
-                                               styleClass="blank-number" text="A108" textFill="#4a3996">
-                                            <HBox.margin>
-                                                <Insets right="20.0"/>
-                                            </HBox.margin>
-                                            <font>
-                                                <Font size="24.0"/>
-                                            </font>
-                                        </Label>
-                                    </children>
-                                </HBox>
-                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                                    <children>
-                                        <Label fx:id="roundName" contentDisplay="CENTER" styleClass="round-name"
-                                               textFill="#a67c07">
-                                            <font>
-                                                <Font size="26.0"/>
-                                            </font>
-                                        </Label>
-                                    </children>
-                                </HBox>
-                                <HBox prefHeight="100.0" prefWidth="200.0"/>
-                                <GridPane fx:id="gridContent" alignment="CENTER" prefHeight="300.0" prefWidth="325.0"
-                                          styleClass="gridPane">
-                                    <columnConstraints/>
-                                    <rowConstraints/>
-                                    <VBox.margin>
-                                        <Insets bottom="20.0" left="20.0" right="20.0"/>
-                                    </VBox.margin>
-                                        <fx:define>
-                                            <Label fx:id="blankItem" alignment="CENTER" contentDisplay="CENTER"
-                                                   prefHeight="68.0" prefWidth="89.5"
-                                                   text="Evanescence" textAlignment="CENTER" wrapText="true">
-                                                <font>
-                                                    <Font size="11.0"/>
-                                                </font>
-                                                <opaqueInsets>
-                                                    <Insets/>
-                                                </opaqueInsets>
-                                                <GridPane.margin>
-                                                    <Insets top="1.0"/>
-                                                </GridPane.margin>
-                                            </Label>
-                                        </fx:define>
-                                </GridPane>
-                            </children>
-                        </VBox>
-                    </children>
-                </AnchorPane>
-            </children>
-        </HBox>
+        <HBox alignment="CENTER"
+              AnchorPane.leftAnchor="456.0" AnchorPane.bottomAnchor="10.0"
+              AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0"
+              fx:id="blankTemplateContainer"/>
+
+        <AnchorPane fx:id="loaderScene" AnchorPane.leftAnchor="270" AnchorPane.topAnchor="408" minWidth="65.0" minHeight="65.0" prefWidth="65.0" prefHeight="65.0" mouseTransparent="true"
+                    visible="false">
+            <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="/animations/loader.gif"/>
+                </image>
+            </ImageView>
+            <Label AnchorPane.topAnchor="50.0" text="Loading..."/>
+        </AnchorPane>
     </children>
 </AnchorPane>

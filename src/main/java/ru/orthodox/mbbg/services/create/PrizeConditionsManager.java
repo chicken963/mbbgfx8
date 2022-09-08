@@ -6,8 +6,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.enums.WinCondition;
-import ru.orthodox.mbbg.events.TabCreatedEvent;
-import ru.orthodox.mbbg.events.WinConditionChangedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.WinConditionChangedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.tab.TabCreatedEvent;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.model.proxy.create.RoundTab;
 
@@ -24,6 +24,7 @@ public class PrizeConditionsManager {
 
         if (roundToUseDefaultData.getId() == null) {
             setDefaultValues(tabToPopulate);
+            saveNewValues(tabToPopulate);
         }
     }
 

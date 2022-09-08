@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 public class ThreadUtils {
 
-    public static void runTaskInSeparateThread(Runnable r){
+    public static void runTaskInSeparateThread(Runnable r) {
         Thread thread = new Thread(() -> {
             while (true) {
                 try {
@@ -21,7 +21,7 @@ public class ThreadUtils {
         thread.start();
     }
 
-    public static void runTaskInSeparateThread(Runnable r, String threadName){
+    public static void runTaskInSeparateThread(Runnable r, String threadName) {
         Optional<Thread> previousTrackingThread = Thread.getAllStackTraces().keySet()
                 .stream()
                 .filter(thread -> thread.getName().contains(threadName))
@@ -44,7 +44,7 @@ public class ThreadUtils {
         }
     }
 
-    public static void runTaskInSeparateThread(Supplier<Boolean> booleanProvider, Runnable r){
+    public static void runTaskInSeparateThread(Supplier<Boolean> booleanProvider, Runnable r) {
         Thread thread = new Thread(() -> {
             do {
                 try {

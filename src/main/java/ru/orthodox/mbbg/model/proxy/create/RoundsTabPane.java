@@ -2,18 +2,23 @@ package ru.orthodox.mbbg.model.proxy.create;
 
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Labeled;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.Tooltip;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import ru.orthodox.mbbg.enums.BlanksStatus;
 import ru.orthodox.mbbg.enums.EntityUpdateMode;
-import ru.orthodox.mbbg.events.*;
+import ru.orthodox.mbbg.events.create.ActiveRowChangedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.GameOutdatedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.AudioTrackTextFieldEditRequestedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.BlankOutdatedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.GameAudioTracksListChangedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.tab.TabAddedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.tab.TabClosedEvent;
+import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.basic.Game;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.services.common.AudioTrackAsyncLengthLoadService;
@@ -45,6 +50,7 @@ public class RoundsTabPane {
     private Game game;
 
     private AudioTracksTable playedTable;
+    private AudioTrackEditUIView currentlyEditedRow;
 
     private List<RoundTab> roundTabs = new ArrayList<>();
     private final List<AudioTrackEditUIView> gameGridRows = new ArrayList<>();
@@ -84,10 +90,10 @@ public class RoundsTabPane {
     public void onTabClosed(TabClosedEvent tabClosedEvent) {
         RoundTab tabToDelete = tabClosedEvent.getRoundTab();
         this.getRoundTabs().remove(tabToDelete);
+        gameGridRows.removeAll(tabToDelete.getEditAudioTracksTable().getRows());
         if (tabToDelete.getEditAudioTracksTable() == playedTable) {
             playMediaService.stop();
         }
-        eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
     }
 
     @EventListener
@@ -95,6 +101,37 @@ public class RoundsTabPane {
         AudioTrackEditUIView newActiveRow = activeRowChangedEvent.getRow();
         rangeSliderService.setActiveRow(newActiveRow);
         this.playedTable = activeRowChangedEvent.getTable();
+    }
+
+    @EventListener
+    public void onAudioTrackTextFieldEditRequested(AudioTrackTextFieldEditRequestedEvent audioTrackTextFieldEditRequestedEvent) {
+        AudioTrackEditUIView newEditedRow = audioTrackTextFieldEditRequestedEvent.getRow();
+        if (currentlyEditedRow != null) {
+            saveAudioTrackWithCurrentInputValues(currentlyEditedRow);
+        }
+        currentlyEditedRow = newEditedRow;
+    }
+
+    @EventListener
+    private void onBlanksInvalidatedEvent(BlankOutdatedEvent blankOutdatedEvent) {
+        if (game != null) {
+            if (BlanksStatus.ACTUALIZED.equals(game.getBlanksStatus())) {
+                game.setBlanksStatus(BlanksStatus.OUTDATED);
+            }
+        }
+    }
+
+    @EventListener
+    public void onGameRevalidateRequiredEvent(GameOutdatedEvent gameOutdatedEvent) {
+        game.setHavingUnsavedChanges(true);
+    }
+
+    private void saveAudioTrackWithCurrentInputValues(AudioTrackEditUIView row) {
+        AudioTrack editedAudioTrack = row.getAudioTrack();
+        TextField artistField = (TextField) row.getArtistLabel();
+        TextField songTitleField = (TextField) row.getSongTitleLabel();
+        editedAudioTrack.setArtist(artistField.getText());
+        editedAudioTrack.setTitle(songTitleField.getText());
     }
 
     public void configureUIElements(TabPane tabPane, Tab tabSample, HBox audioTracksGridRowTemplate, HBox volumeSliderContainer) {
@@ -174,7 +211,6 @@ public class RoundsTabPane {
         addTab.setTooltip(new Tooltip("Add round"));
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if(newTab == addTab) {
-                Round round = new Round();
                 RoundTab newTab1 = new RoundTab(
                         createDeepCopy(tabSample),
                         audioTracksGridRowTemplate,
@@ -183,7 +219,7 @@ public class RoundsTabPane {
                         audiotracksLibraryService,
                         audioTracksLibraryTable,
                         screenService,
-                        round);
+                        new Round());
                 this.addRoundTab(this.getTabsCount() - 1, newTab1);
                 tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.ALL_TABS);
                 tabPane.getSelectionModel().select(tabPane.getTabs().size() - 2); // Selecting the tab before the button, which is the newly created one

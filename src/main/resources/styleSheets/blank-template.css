@@ -1,0 +1,71 @@
+* {
+   -main-color: orange;
+   -second-main-color: white;
+   -main-background-color: #1b1b1b;
+   -active-row-color: #333;
+   -danger-color: rgb(208,32,34);
+   -info-color: rgb(3,158,211);
+   -grid-border-color: #444;
+}
+
+.round-name {
+    -fx-text-fill: -main-color;
+}
+
+.blank-number {
+    -fx-background-color: -main-color;
+    -fx-text-fill: -background-color;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+.blank-items-grid {
+    -fx-border-radius: 10;
+    -fx-border-color: -grid-border-color;
+    -fx-background-color: -second-main-color;
+    -fx-background-radius: 10;
+}
+
+.blank-item {
+    -fx-border-style: hidden hidden solid solid;
+    -fx-border-color: -grid-border-color;
+}
+
+.blank-item.left {
+    -fx-border-style: hidden hidden solid hidden;
+    -fx-border-color: -grid-border-color;
+}
+
+.blank-item.lower {
+    -fx-border-style: hidden hidden hidden solid;
+    -fx-border-color: -grid-border-color;
+}
+
+.blank-item.left.lower {
+    -fx-border-style: hidden;
+    -fx-border-color: -grid-border-color;
+}
+
+.blank-item.left.upper {
+    -fx-background-radius: 10px 0 0 0;
+}
+
+.blank-item.right.upper {
+    -fx-background-radius: 0 10px 0 0;
+}
+
+.blank-item.right.lower {
+    -fx-background-radius: 0 0 10px 0;
+}
+
+.blank-item.passed {
+    -fx-background-color: -main-color;
+}
+
+.blank-preview-background {
+  -fx-background-color: -main-background-color;
+  -fx-background-radius: 5px;
+  -fx-border-radius: 5px;
+  -fx-border-color: -main-color;
+  -fx-border-style: dashed;
+}

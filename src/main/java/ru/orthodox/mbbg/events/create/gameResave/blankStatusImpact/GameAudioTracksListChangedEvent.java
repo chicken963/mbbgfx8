@@ -1,11 +1,10 @@
-package ru.orthodox.mbbg.events;
+package ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact;
 
-import org.springframework.context.ApplicationEvent;
 import ru.orthodox.mbbg.enums.EntityUpdateMode;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.model.proxy.create.AudioTrackEditUIView;
 
-public class GameAudioTracksListChangedEvent extends ApplicationEvent {
+public class GameAudioTracksListChangedEvent extends BlankOutdatedEvent {
     private final AudioTrackEditUIView row;
     private final EntityUpdateMode mode;
     private final Round round;

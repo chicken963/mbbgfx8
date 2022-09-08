@@ -33,6 +33,9 @@ public class Game implements MarkedWithId {
     private List<UUID> roundIds;
 
     @JsonIgnore
+    private boolean havingUnsavedChanges = false;
+
+    @JsonIgnore
     private List<Round> rounds = new ArrayList<>();
 
 }

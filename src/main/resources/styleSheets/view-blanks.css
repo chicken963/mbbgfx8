@@ -17,39 +17,6 @@
         -fx-background-color: #1b1b1b;
 }
 
-.blankNumber {
-   -fx-background-color: #bbb;
-   -fx-border-radius: 5px;
-   -fx-background-radius: 10px;
-}
-
-.gridPane {
-    -fx-border-radius: 10;
-    -fx-border-color: -grid-border-color;
-    -fx-background-color: #bbb;
-    -fx-background-radius: 10;
-}
-
-.blank-item {
-    -fx-border-style: hidden hidden solid solid;
-    -fx-border-color: -grid-border-color;
-}
-
-.blank-item.left {
-    -fx-border-style: hidden hidden solid hidden;
-    -fx-border-color: -grid-border-color;
-}
-
-.blank-item.lower {
-    -fx-border-style: hidden hidden hidden solid;
-    -fx-border-color: -grid-border-color;
-}
-
-.blank-item.left.lower {
-    -fx-border-style: hidden;
-    -fx-border-color: -grid-border-color;
-}
-
 .save-all-to-png:hover {
     -fx-scale-y: 1.05;
     -fx-scale-x: 1.05;

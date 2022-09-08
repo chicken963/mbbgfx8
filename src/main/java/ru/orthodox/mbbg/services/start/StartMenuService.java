@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -94,25 +93,29 @@ public class StartMenuService {
             currentRowIndex = index / columnsNumber;
             currentColumnIndex = index % columnsNumber;
             gameLabel.setText(game.getName());
-            Pane anchorPane = (Pane) createDeepCopy(templateGameAnchorPane);
+            AnchorPane anchorPane = (AnchorPane) createDeepCopy(templateGameAnchorPane);
 
-            Button innerButton = ElementFinder.findElementByTypeAndStyleclass(anchorPane, "game-button");
-            Label innerLabel = ElementFinder.findElementByTypeAndStyleclass(anchorPane, "game-name-label");
-            innerLabel.scaleXProperty().bind(innerButton.scaleXProperty());
-            (innerLabel.scaleYProperty()).bind(innerButton.scaleYProperty());
+            bindImageMiniatureAndLabel(anchorPane);
 
-            availableGames.add(new GamesGridItem((AnchorPane) anchorPane, game));
+            availableGames.add(new GamesGridItem(anchorPane, game));
             gamesField.add(anchorPane, currentColumnIndex, currentRowIndex);
             incrementIndexes();
         }
-        if (currentRowIndex != rowsNumber || currentColumnIndex != columnsNumber) {
-            if (currentColumnIndex == columnsNumber) {
-                currentColumnIndex = 0;
-                currentRowIndex++;
-            }
-            gamesField.add(newGameAnchorPane, currentColumnIndex, currentRowIndex);
 
+        if (currentColumnIndex == columnsNumber) {
+            currentColumnIndex = 0;
+            currentRowIndex++;
         }
+
+        bindImageMiniatureAndLabel(newGameAnchorPane);
+        gamesField.add(newGameAnchorPane, currentColumnIndex, currentRowIndex);
+    }
+
+    private void bindImageMiniatureAndLabel(AnchorPane gamesGridCell) {
+        Button innerButton = ElementFinder.findElementByTypeAndStyleclass(gamesGridCell, "game-button");
+        Label innerLabel = ElementFinder.findElementByTypeAndStyleclass(gamesGridCell, "game-name-label");
+        innerLabel.scaleXProperty().bind(innerButton.scaleXProperty());
+        (innerLabel.scaleYProperty()).bind(innerButton.scaleYProperty());
     }
 
     public void invokeGameContextMenu(Button sourceButton) {
@@ -183,12 +186,12 @@ public class StartMenuService {
         AnchorPane gameGridItem = findParentAnchorPane(source);
         Game targetGame = GridItemService.findByEventTarget(StartMenuService.getAvailableGames(), gameGridItem);
         ViewBlanksController controller = applicationContext.getBean(ViewBlanksController.class);
-        controller.setGame(targetGame);
-        controller.render(source);
+        controller.render(source, targetGame);
     }
 
     private void deleteGame(ActionEvent event) {
         gameService.delete(currentGame);
         fillGridWithAllGames();
+        ((Stage) ((Button) event.getSource()).getScene().getWindow()).close();
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import ru.orthodox.mbbg.configuration.ControllersConfig;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 public class ScreenConfiguration {
@@ -45,6 +46,14 @@ public class ScreenConfiguration {
     @Autowired
     @Qualifier("volumeSlider")
     private ControllersConfig.View volumeSlider;
+
+    @Autowired
+    @Qualifier("blankTemplate")
+    private ControllersConfig.View blankTemplate;
+
+    @Autowired
+    @Qualifier("loader")
+    private ControllersConfig.View loader;
 
     @Bean
     public ScreenViewResource startMenuScene() {
@@ -90,6 +99,14 @@ public class ScreenConfiguration {
     @Bean
     public ScreenViewResource audioTracksLibraryRowScene() {
         return new ScreenViewResource("audioTracksLibraryRow", audioTracksLibraryRow, "styleSheets/new-game.css");
+    }
+    @Bean
+    public ScreenViewResource blankTemplateScene() {
+        return new ScreenViewResource("blankTemplate", blankTemplate, "styleSheets/blank-template.css");
+    }
+    @Bean
+    public ScreenViewResource loaderScene() {
+        return new ScreenViewResource("loader", loader, Collections.emptyList());
     }
     @Bean
     public ScreenViewResource audioVolumeSliderScene() {

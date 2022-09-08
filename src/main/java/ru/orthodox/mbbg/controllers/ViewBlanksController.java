@@ -2,18 +2,20 @@ package ru.orthodox.mbbg.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Labeled;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import ru.orthodox.mbbg.enums.BlanksStatus;
 import ru.orthodox.mbbg.model.basic.Game;
-import ru.orthodox.mbbg.services.model.RoundService;
-import ru.orthodox.mbbg.services.play.blank.BlankService;
+import ru.orthodox.mbbg.services.popup.PopupAlerter;
 import ru.orthodox.mbbg.services.viewGameBlanks.ViewBlanksService;
 
 import javax.annotation.PostConstruct;
@@ -27,31 +29,21 @@ import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findAllLabeledRecur
 public class ViewBlanksController {
 
     @Autowired
-    private BlankService blankService;
-    @Autowired
-    private RoundService roundService;
-
     private ViewBlanksService viewBlanksService;
+    @Autowired
+    private PopupAlerter popupAlerter;
 
+    @FXML
+    private AnchorPane loaderScene;
     @FXML
     private TabPane blanksMiniatureTabPane;
     @FXML
     private Tab blanksMiniatureSampleTab;
     @FXML
     private Button blankMiniature;
+    @FXML
+    private HBox blankTemplateContainer;
 
-    @FXML
-    private AnchorPane blankPreview;
-    @FXML
-    private Label blankNumber;
-    @FXML
-    private Label roundName;
-    @FXML
-    private Label blankItem;
-    @FXML
-    private GridPane gridContent;
-    @FXML
-    private GridPane miniaturesGrid;
     @FXML
     private RowConstraints miniatureGridRowConstraints;
     @FXML
@@ -59,39 +51,49 @@ public class ViewBlanksController {
     @FXML
     private Pane container;
     @FXML
-    private VBox blankPreviewVbox;
-    @FXML
     private Button saveToPng;
 
     private Scene dialogScene;
 
-    @Setter
-    private Game game;
-
     @PostConstruct
     private void init() {
-        dialogScene = new Scene(container, 880, 560);
+        dialogScene = new Scene(container, 880, 605);
         dialogScene.getStylesheets().addAll("styleSheets/view-blanks.css",
                 "styleSheets/scrollable-table.css", "styleSheets/tab-pane.css");
-        blankPreview.setVisible(false);
+        if (viewBlanksService != null) {
+            viewBlanksService.configureUIElements(
+                    loaderScene,
+                    blanksMiniatureTabPane,
+                    blanksMiniatureSampleTab,
+                    miniatureGridRowConstraints,
+                    miniatureGridColumnConstraints,
+                    blankMiniature,
+                    blankTemplateContainer
+            );
+        }
+
     }
 
-    public void render(Button sourceButton) {
-        this.viewBlanksService = ViewBlanksService.builder()
-                .blanksMiniatureTabPane(blanksMiniatureTabPane)
-                .blankPreview(blankPreview)
-                .game(game)
-                .blanksMiniatureSampleTab(blanksMiniatureSampleTab)
-                .blankService(blankService)
-                .roundService(roundService)
-                .miniatureGridRowConstraints(miniatureGridRowConstraints)
-                .miniatureGridColumnConstraints(miniatureGridColumnConstraints)
-                .blankMiniature(blankMiniature)
-                .blankItem(blankItem)
-                .build();
+    public void render(Button sourceButton, Game game) {
+        if (BlanksStatus.ABSENT.equals(game.getBlanksStatus())) {
+            popupAlerter.invoke(sourceButton.getScene().getWindow(), "No blanks yet", "Please generate blanks before watching them.");
+            return;
+        } else if (BlanksStatus.OUTDATED.equals(game.getBlanksStatus())) {
+            popupAlerter.invokeOkCancel(sourceButton.getScene().getWindow(),
+                    "Blanks are irrelevant", "Current blanks set is not relevant any more. It's recommended to generate new set before further actions. Would you like to proceed outdated blanks watching?",
+                    event -> showBlanks(sourceButton, game),
+                    event -> ((Stage) ((Button) event.getSource()).getScene().getWindow()).close());
+        } else {
+            showBlanks(sourceButton, game);
+        }
+
+    }
+
+    private void showBlanks(Button sourceButton, Game game) {
+        viewBlanksService.setGame(game);
         viewBlanksService.fillTabPaneWithBlankMiniatures();
         setDefaultFont(findAllLabeledRecursively(blanksMiniatureTabPane).toArray(new Labeled[0]));
-        setDefaultFont(roundName, blankNumber, saveToPng);
+        setDefaultFont(saveToPng);
 
         final Stage popupStage = new Stage();
         popupStage.setTitle("Вот твои бланки для игры " + game.getName());
@@ -111,7 +113,7 @@ public class ViewBlanksController {
 
     @FXML
     private void emptyBlanksPreview() {
-        blankPreview.setVisible(false);
+        viewBlanksService.emptyBlanksPreview();
     }
 
     @FXML

@@ -46,7 +46,7 @@ public class RangeSliderService {
         }
 
         AudioTrack currentTrack = playMediaService.getCurrentTrack();
-        if (activeRow.getAudioTrack() == currentTrack) {
+        if (activeRow != null && activeRow.getAudioTrack() == currentTrack) {
             RangeSlider rangeSlider = activeRow.getRangeSlider();
             Label progressLabel = activeRow.getProgressLabel();
 

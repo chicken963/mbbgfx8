@@ -1,4 +1,4 @@
-package ru.orthodox.mbbg.events;
+package ru.orthodox.mbbg.events.create;
 
 import org.springframework.context.ApplicationEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;

@@ -4,12 +4,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import lombok.Setter;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.events.BlankDimensionsChangedEvent;
-import ru.orthodox.mbbg.events.TabAddedEvent;
-import ru.orthodox.mbbg.events.TextFieldChangeEvent;
-import ru.orthodox.mbbg.events.WinConditionChangedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.GameOutdatedEvent;
 import ru.orthodox.mbbg.model.proxy.create.RoundTab;
 import ru.orthodox.mbbg.model.proxy.create.RoundsTabPane;
 import ru.orthodox.mbbg.services.create.NewGameService;
@@ -25,24 +21,7 @@ public class GameValidator extends FieldsValidator {
     private TextField gameName;
 
     @EventListener
-    public void onTextFieldValueChanged(TextFieldChangeEvent textFieldChangeEvent) {
-        saveButton.setDisable(!allFieldsAreFilled());
-    }
-
-    @EventListener
-    public void onChoiceBoxValueChanged(BlankDimensionsChangedEvent blankDimensionsChangedEvent) {
-        saveButton.setDisable(!allFieldsAreFilled());
-    }
-
-    @Order(2)
-    @EventListener
-    public void onWinConditionChangedEvent(WinConditionChangedEvent winConditionChangedEvent) {
-        saveButton.setDisable(!allFieldsAreFilled());
-    }
-
-    @Order(2)
-    @EventListener
-    public void onTabAddedEvent(TabAddedEvent tabAddedEvent) {
+    public void onGameRevalidateRequiredEvent(GameOutdatedEvent gameOutdatedEvent) {
         saveButton.setDisable(!allFieldsAreFilled());
     }
 

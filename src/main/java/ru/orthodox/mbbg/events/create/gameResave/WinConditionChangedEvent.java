@@ -1,9 +1,8 @@
-package ru.orthodox.mbbg.events;
+package ru.orthodox.mbbg.events.create.gameResave;
 
-import org.springframework.context.ApplicationEvent;
 import ru.orthodox.mbbg.model.proxy.create.RoundTab;
 
-public class WinConditionChangedEvent extends ApplicationEvent {
+public class WinConditionChangedEvent extends GameOutdatedEvent {
     private final int numberOfWinLevel;
     private final RoundTab roundTab;
 

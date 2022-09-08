@@ -7,9 +7,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import ru.orthodox.mbbg.events.BlankDimensionsChangedEvent;
-import ru.orthodox.mbbg.events.TextFieldChangeEvent;
-import ru.orthodox.mbbg.events.WinConditionChangedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.GameNameChangedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.WinConditionChangedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.BlankDimensionsChangedEvent;
 import ru.orthodox.mbbg.model.proxy.create.RoundTab;
 import ru.orthodox.mbbg.model.proxy.create.RoundsTabPane;
 import ru.orthodox.mbbg.services.common.EventPublisherService;
@@ -88,8 +88,8 @@ public class NewGameController {
     }
 
     @FXML
-    private void cancelCreation() {
-        newGameService.cancelCreation();
+    private void cancelCreation(ActionEvent e) {
+        newGameService.cancelCreation((Button) e.getSource());
     }
 
     @FXML
@@ -131,7 +131,7 @@ public class NewGameController {
 
     @FXML
     private void onGameNameChanged() {
-        eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
+        eventPublisherService.publishEvent(new GameNameChangedEvent(this));
     }
 
 }

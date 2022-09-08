@@ -11,8 +11,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.enums.BlanksStatus;
+import ru.orthodox.mbbg.events.create.BrokenAudiotrackEvent;
 import ru.orthodox.mbbg.exceptions.GameInputsValidationException;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.basic.Game;
@@ -27,9 +29,11 @@ import ru.orthodox.mbbg.services.model.AudioTrackService;
 import ru.orthodox.mbbg.services.model.GameService;
 import ru.orthodox.mbbg.services.popup.PopupAlerter;
 import ru.orthodox.mbbg.services.start.StartMenuService;
+import ru.orthodox.mbbg.utils.AudioTrackAsyncDataUpdater;
 import ru.orthodox.mbbg.utils.screen.ScreenService;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,6 +55,8 @@ public class NewGameService {
     @Autowired
     private AudioTracksLibraryTable audioTracksLibraryTable;
     @Autowired
+    private AudioTrackAsyncDataUpdater audioTrackAsyncDataUpdater;
+    @Autowired
     private PopupAlerter popupAlerter;
     @Autowired
     private ApplicationContext applicationContext;
@@ -59,8 +65,16 @@ public class NewGameService {
     @Autowired
     private PlayMediaService playMediaService;
 
+    @EventListener
+    private void onBrokenAudiotrack(BrokenAudiotrackEvent brokenAudiotrackEvent) {
+        AudioTrack audioTrack = brokenAudiotrackEvent.getAudioTrack();
+        brokenAudiotracks.add(audioTrack);
+    }
+
     private TextField newGameName;
     private Label newGameLabel;
+
+    private List<AudioTrack> brokenAudiotracks = new ArrayList<>();
 
     public void configureUIElements(Label newGameLabel, TextField newGameName) {
         this.newGameLabel = newGameLabel;
@@ -82,6 +96,8 @@ public class NewGameService {
     }
 
     public void openExplorerMenuAndDefineOnSubmit(Button sourceButton) {
+        audioTrackAsyncDataUpdater.setSourceButton(sourceButton);
+        brokenAudiotracks = new ArrayList<>();
         FileChooser fileChooser = fileChooserDealer.provideFileChooser();
         List<File> selectedFiles = fileChooser.showOpenMultipleDialog(sourceButton.getScene().getWindow());
         if (selectedFiles == null) {
@@ -93,6 +109,7 @@ public class NewGameService {
         List<AudioTrack> audioTracks = fileChooserDealer.mapFilesToAudioTracks(selectedFiles);
 
         EditAudioTracksTable roundTable = currentTab.getEditAudioTracksTable();
+        audioTracks.removeAll(brokenAudiotracks);
         roundTable.addAudioTracks(audioTracks);
         roundTable.getRound().getAudioTracks().addAll(audioTracks);
     }
@@ -115,6 +132,7 @@ public class NewGameService {
             game.setBlanksStatus(BlanksStatus.OUTDATED);
         }
         gameService.deepSave(game);
+        game.setHavingUnsavedChanges(false);
         saveButton.setDisable(true);
         popupAlerter.invokeOkCancel(
                 saveButton.getScene().getWindow(),
@@ -124,11 +142,26 @@ public class NewGameService {
                 this::backToMainMenu);
     }
 
-    public void cancelCreation() {
+    public void cancelCreation(Button cancelButton) {
         playMediaService.stop(playMediaService.getCurrentTrack());
-        StartMenuService startMenuService = applicationContext.getBean(StartMenuService.class);
-        startMenuService.fillGridWithAllGames();
-        screenService.activate("startMenu");
+        if (roundsTabPane.getGame().isHavingUnsavedChanges()) {
+            popupAlerter.invokeOkCancel(
+                    cancelButton.getScene().getWindow(),
+                    "You have unsaved changes",
+                    "You're going to exit edit mode. All the unsaved changes will be lost. Continue?",
+                    event ->  {
+                        StartMenuService startMenuService = applicationContext.getBean(StartMenuService.class);
+                        startMenuService.fillGridWithAllGames();
+                        ((Stage) ((Button) event.getSource()).getScene().getWindow()).close();
+                        screenService.activate("startMenu");
+                    },
+                    event -> ((Stage) ((Button) event.getSource()).getScene().getWindow()).close());
+        } else {
+            StartMenuService startMenuService = applicationContext.getBean(StartMenuService.class);
+            startMenuService.fillGridWithAllGames();
+            screenService.activate("startMenu");
+        }
+
     }
 
     public void openLibrary(Button libraryButton) {

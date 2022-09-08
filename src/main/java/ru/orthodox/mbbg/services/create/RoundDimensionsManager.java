@@ -4,8 +4,8 @@ import javafx.scene.control.ChoiceBox;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.enums.BlankSize;
-import ru.orthodox.mbbg.events.BlankDimensionsChangedEvent;
-import ru.orthodox.mbbg.events.TabCreatedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.BlankDimensionsChangedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.tab.TabCreatedEvent;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.model.proxy.create.RoundTab;
 

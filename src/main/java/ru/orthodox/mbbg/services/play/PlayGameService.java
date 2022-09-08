@@ -54,9 +54,8 @@ public class PlayGameService {
                               GridPane miniaturesProgressGrid,
                               RowConstraints progressRowsConstraints,
                               Button blankMiniatureTemplate,
-                              AnchorPane blankPreview,
-                              Label blankPreviewPlaceholder,
-                              Label blankItemTemplate) {
+                              AnchorPane blankPreviewContainer,
+                              Label blankPreviewPlaceholder) {
 
         this.roundNameLabel = roundNameLabel;
 
@@ -69,9 +68,8 @@ public class PlayGameService {
                 nextButton);
         
         blankProgressPreviewService.configureUIElements(
-                blankPreview,
-                blankPreviewPlaceholder,
-                blankItemTemplate);
+                blankPreviewContainer,
+                blankPreviewPlaceholder);
         
         miniaturesGridService.configureUIElements(
                 changeWinCondition,

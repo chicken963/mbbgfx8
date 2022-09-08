@@ -40,7 +40,10 @@ public class ScreenService {
     }
 
     public Parent getParentNode(String name) {
-        return findByName(name).getParentNode();
+        ScreenViewResource resourceByName = findByName(name);
+        Parent parent = resourceByName.getParentNode();
+        parent.getStylesheets().setAll(resourceByName.getStyleSheetUrls());
+        return parent;
     }
 
     private ScreenViewResource findByName(String name) {

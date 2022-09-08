@@ -60,6 +60,16 @@ public class ControllersConfig {
         return loadView("view/volume_slider.fxml");
     }
 
+    @Bean(name = "blankTemplate")
+    public View getBlankTemplate() throws IOException {
+        return loadView("view/blank-template.fxml");
+    }
+
+    @Bean(name = "loader")
+    public View getLoader() throws IOException {
+        return loadView("view/loader.fxml");
+    }
+
     @Bean
     public PlayController getPlayController() throws IOException {
         return (PlayController) getPlayView().getController();

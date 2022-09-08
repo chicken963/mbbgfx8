@@ -168,6 +168,7 @@ public class NodeDeepCopyProvider {
         Label copy = new Label();
 
         HBox.setMargin(copy, createDeepCopy(HBox.getMargin(sourceLabel)));
+        GridPane.setMargin(copy, createDeepCopy(GridPane.getMargin(sourceLabel)));
         copy.setPadding(createDeepCopy(sourceLabel.getPadding()));
         alignCommonRegionProperties(sourceLabel, copy);
         alignCommonLabeledProperties(sourceLabel, copy);
@@ -234,6 +235,8 @@ public class NodeDeepCopyProvider {
         GridPane.setHalignment(copy, GridPane.getHalignment(sourcePane));
         GridPane.setValignment(copy, GridPane.getValignment(sourcePane));
 
+        copy.getStylesheets().setAll(sourcePane.getStylesheets());
+
         copy.setEffect(sourcePane.getEffect());
         copy.setPadding(createDeepCopy(sourcePane.getPadding()));
         return copy;
@@ -244,18 +247,14 @@ public class NodeDeepCopyProvider {
 
         alignWidthAndHeight(sourcePane, copy);
         alignCommonRegionProperties(sourcePane, copy);
-        copy.getStyleClass().setAll(sourcePane.getStyleClass());
+        alignAnchorInsets(sourcePane, copy);
         copy.getRowConstraints().setAll(sourcePane.getRowConstraints().stream()
                 .map(NodeDeepCopyProvider::createDeepCopy)
                 .collect(Collectors.toList()));
         copy.getColumnConstraints().setAll(sourcePane.getColumnConstraints().stream()
                 .map(NodeDeepCopyProvider::createDeepCopy)
                 .collect(Collectors.toList()));
-        AnchorPane.setBottomAnchor(copy, AnchorPane.getBottomAnchor(sourcePane));
-        AnchorPane.setTopAnchor(copy, AnchorPane.getTopAnchor(sourcePane));
-        AnchorPane.setLeftAnchor(copy, AnchorPane.getLeftAnchor(sourcePane));
-        AnchorPane.setRightAnchor(copy, AnchorPane.getRightAnchor(sourcePane));
-
+        VBox.setMargin(copy, createDeepCopy(VBox.getMargin(sourcePane)));
         return copy;
     }
 
@@ -432,7 +431,7 @@ public class NodeDeepCopyProvider {
 
     private static void alignCommonRegionProperties(Region orig, Region copy) {
         copy.setVisible(orig.isVisible());
-        copy.setOpaqueInsets(orig.getOpaqueInsets());
+        copy.setOpaqueInsets(createDeepCopy(orig.getOpaqueInsets()));
         copy.setStyle(orig.getStyle());
         copy.getStyleClass().setAll(orig.getStyleClass());
         copy.setOnMouseEntered(orig.getOnMouseEntered());
@@ -448,6 +447,7 @@ public class NodeDeepCopyProvider {
     private static void alignCommonLabeledProperties(Labeled orig, Labeled copy) {
         copy.setWrapText(orig.isWrapText());
         copy.setAlignment(orig.getAlignment());
+        copy.setTextAlignment(orig.getTextAlignment());
         copy.setContentDisplay(orig.getContentDisplay());
         copy.setTooltip(copyToolTip(orig.getTooltip()));
 

@@ -1,5 +1,6 @@
 package ru.orthodox.mbbg.model.proxy.viewblanks;
 
+import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.ColumnConstraints;
@@ -8,14 +9,13 @@ import javafx.scene.layout.RowConstraints;
 import lombok.Getter;
 import org.springframework.cache.annotation.Cacheable;
 import ru.orthodox.mbbg.model.basic.Blank;
-import ru.orthodox.mbbg.utils.common.CustomFontDealer;
-import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
 
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
+import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findElementByTypeAndStyleclass;
 import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
 @Getter
@@ -33,23 +33,17 @@ public class BlankPreviewAnchorPane {
     public BlankPreviewAnchorPane(AnchorPane anchorPane, Blank blank, String roundName, Label blankItem) {
         this.anchorPane = anchorPane;
         this.blank = blank;
-        this.gridPane = ElementFinder.findElementById(anchorPane, "gridContent");
+        this.gridPane = findElementByTypeAndStyleclass(anchorPane, "blank-items-grid");
         this.roundName = roundName;
         this.templateGridItem = blankItem;
         setDefaultFont();
     }
 
     public List<Label> addItemsToPreview() {
-        Label blankNumberLabel = ElementFinder.findRecursivelyByStyleClass(anchorPane, "blank-number")
-                .stream().map(element -> (Label) element)
-                .findFirst()
-                .orElseThrow(() -> new NullPointerException("No element with style class blankId was found"));
+        Label blankNumberLabel = findElementByTypeAndStyleclass(anchorPane, "blank-number");
         blankNumberLabel.setText(blank.getNumber());
 
-        Label roundNameLabel = ElementFinder.findRecursivelyByStyleClass(anchorPane, "round-name")
-                .stream().map(element -> (Label) element)
-                .findFirst()
-                .orElseThrow(() -> new NullPointerException("No element with style class round-name was found"));
+        Label roundNameLabel = findElementByTypeAndStyleclass(anchorPane, "round-name");
         roundNameLabel.setText(roundName);
 
         setDefaultFont(blankNumberLabel, roundNameLabel);
@@ -64,6 +58,7 @@ public class BlankPreviewAnchorPane {
                 gridItemWidthInPixels,
                 gridItemWidthInPixels,
                 gridItemWidthInPixels);
+        columnConstraints.setHalignment(HPos.CENTER);
 
         RowConstraints rowConstraints = new RowConstraints(
                 gridItemHeightInPixels,

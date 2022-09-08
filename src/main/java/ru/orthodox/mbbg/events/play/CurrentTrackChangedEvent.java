@@ -1,4 +1,4 @@
-package ru.orthodox.mbbg.events;
+package ru.orthodox.mbbg.events.play;
 
 import org.springframework.context.ApplicationEvent;
 

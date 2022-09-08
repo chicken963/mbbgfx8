@@ -7,13 +7,14 @@ import javafx.scene.layout.AnchorPane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.events.NextTrackChangedEvent;
+import ru.orthodox.mbbg.events.play.NextTrackChangedEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.basic.Blank;
 import ru.orthodox.mbbg.model.basic.BlankItem;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.model.proxy.BlinkingColorPair;
 import ru.orthodox.mbbg.model.proxy.viewblanks.BlankPreviewAnchorPane;
+import ru.orthodox.mbbg.utils.screen.ScreenService;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +23,12 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findElementByTypeAndStyleclass;
+import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
+
 @Service
 public class BlankProgressPreviewService implements ApplicationListener<NextTrackChangedEvent>  {
-    private AnchorPane blankPreviewContainer;
+    private AnchorPane blankPreview;
     private Label blankItemTemplate;
     private Label blankPreviewPlaceholder;
     private Round activeRound;
@@ -35,14 +39,18 @@ public class BlankProgressPreviewService implements ApplicationListener<NextTrac
     private AnimationBackgroundService animationService;
     @Autowired
     private ProgressService progressService;
+    @Autowired
+    private ScreenService screenService;
 
 
     Map<AudioTrack, Label> tracksAndCells = new HashMap<>();
 
-    public void configureUIElements(AnchorPane blankPreview, Label blankPreviewPlaceholder, Label blankItemTemplate) {
-        this.blankPreviewContainer = blankPreview;
+    public void configureUIElements(AnchorPane blankPreviewContainer, Label blankPreviewPlaceholder) {
+        this.blankPreview = (AnchorPane) createDeepCopy(screenService.getParentNode("blankTemplate"));
+        blankPreview.setVisible(false);
+        blankPreviewContainer.getChildren().add(blankPreview);
         this.blankPreviewPlaceholder = blankPreviewPlaceholder;
-        this.blankItemTemplate = blankItemTemplate;
+        this.blankItemTemplate = findElementByTypeAndStyleclass(blankPreview, "blank-item");
     }
 
     public void setActiveRound(Round round) {
@@ -58,8 +66,8 @@ public class BlankProgressPreviewService implements ApplicationListener<NextTrac
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException(String.format("No blank with name %s was found", blankName)));
 
-        BlankPreviewAnchorPane blankPreviewAnchorPane = new BlankPreviewAnchorPane(blankPreviewContainer, blankToRender, activeRound.getName(), blankItemTemplate);
-        blankPreviewContainer.setVisible(true);
+        BlankPreviewAnchorPane blankPreviewAnchorPane = new BlankPreviewAnchorPane(blankPreview, blankToRender, activeRound.getName(), blankItemTemplate);
+        blankPreview.setVisible(true);
         List<Label> blankItems = blankPreviewAnchorPane.addItemsToPreview();
         tracksAndCells = blankItems.stream()
                 .collect(Collectors.toMap(cell -> activeRound.getAudioTracks().stream()
@@ -117,14 +125,14 @@ public class BlankProgressPreviewService implements ApplicationListener<NextTrac
 
     public void emptyBlankPreview() {
         activeMiniature = null;
-        blankPreviewContainer.setVisible(false);
+        blankPreview.setVisible(false);
         blankPreviewPlaceholder.setVisible(true);
     }
 
     public void showBlankWithProgress(Button miniature) {
         blankPreviewPlaceholder.setVisible(false);
         renderBlankByMiniature(miniature);
-        blankPreviewContainer.setVisible(true);
+        blankPreview.setVisible(true);
     }
 
     @Override

@@ -12,7 +12,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.controlsfx.control.RangeSlider;
-import ru.orthodox.mbbg.events.TextFieldChangeEvent;
+import ru.orthodox.mbbg.events.create.TextFieldChangeEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.AudioTrackTextFieldEditRequestedEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.services.common.EventPublisherService;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
@@ -63,10 +64,9 @@ public class AudioTrackGridRow implements AudioTrackEditUIView {
 
                 if (mouseEvent.getClickCount() == 2) {
                     String oldValue = getArtistLabel().getText();
-
                     allEditableFields.forEach(textField -> textField.setEditable(false));
                     getArtistLabel().setEditable(true);
-
+                    eventPublisherService.publishEvent(new AudioTrackTextFieldEditRequestedEvent(this));
                     getArtistLabel().setOnKeyPressed(ke -> {
                         if (ke.getCode().equals(KeyCode.ENTER)) {
 

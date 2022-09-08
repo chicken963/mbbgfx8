@@ -13,7 +13,7 @@ import org.controlsfx.control.RangeSlider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.orthodox.mbbg.enums.ButtonType;
-import ru.orthodox.mbbg.events.ActiveRowChangedEvent;
+import ru.orthodox.mbbg.events.create.ActiveRowChangedEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.services.common.EventPublisherService;
 import ru.orthodox.mbbg.services.common.PlayMediaService;

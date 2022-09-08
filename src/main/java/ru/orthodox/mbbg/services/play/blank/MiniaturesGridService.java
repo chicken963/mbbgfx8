@@ -9,7 +9,7 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.events.NextTrackChangedEvent;
+import ru.orthodox.mbbg.events.play.NextTrackChangedEvent;
 import ru.orthodox.mbbg.model.basic.Blank;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.model.proxy.BlinkingColorPair;

@@ -2,18 +2,21 @@ package ru.orthodox.mbbg.services.viewGameBlanks;
 
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
-import lombok.Builder;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.model.basic.Blank;
 import ru.orthodox.mbbg.model.basic.Game;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.model.proxy.viewblanks.BlankPreviewAnchorPane;
+import ru.orthodox.mbbg.services.common.EventPublisherService;
 import ru.orthodox.mbbg.services.model.RoundService;
 import ru.orthodox.mbbg.services.play.blank.BlankService;
+import ru.orthodox.mbbg.services.popup.PopupAlerter;
+import ru.orthodox.mbbg.utils.screen.ScreenService;
 
 import java.io.File;
 import java.util.List;
@@ -23,27 +26,42 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findElementsByTypeAndStyleclass;
-import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findTabElementByTypeAndStyleclass;
+import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
+import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.*;
 import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
-@Builder
+@Service
 public class ViewBlanksService {
-    //TODO add interface to extract common logic with progress view blanks
-    private final TabPane blanksMiniatureTabPane;
-    private final AnchorPane blankPreview;
-    private final Game game;
+
+    private TabPane blanksMiniatureTabPane;
+    private AnchorPane blankPreview;
+    @Setter
+    private Game game;
     private BlankPreviewAnchorPane blankPreviewAnchorPane;
     private Map<Round, List<Blank>> blanksOfTheGame;
     private Map<Round, Tab> roundsAndTabs;
     private Tab blanksMiniatureSampleTab;
-    private BlankService blankService;
-    private RoundService roundService;
+
     private RowConstraints miniatureGridRowConstraints;
     private ColumnConstraints miniatureGridColumnConstraints;
     private Button blankMiniature;
     private Label blankItem;
+    @Autowired
     private RegionToImageSaverService regionToImageSaverService;
+    private Button realMiniatureExample;
+    private AnchorPane loaderScene;
+
+    @Autowired
+    private BlankService blankService;
+    @Autowired
+    private RoundService roundService;
+    @Autowired
+    private ScreenService screenService;
+    @Autowired
+    private PopupAlerter popupAlerter;
+    @Autowired
+    private EventPublisherService eventPublisherService;
+    private File gameDirectory;
 
     public void fillTabPaneWithBlankMiniatures() {
         blanksMiniatureTabPane.getTabs().clear();
@@ -84,6 +102,10 @@ public class ViewBlanksService {
         blankPreviewAnchorPane.addItemsToPreview();
     }
 
+    public void emptyBlanksPreview() {
+        blankPreview.setVisible(false);
+    }
+
     private void populateTabWithRoundContent(Tab tab, Round round) {
         GridPane miniaturesGrid = findTabElementByTypeAndStyleclass(tab, "miniatures-grid");
         miniaturesGrid.getColumnConstraints().addAll(
@@ -109,32 +131,44 @@ public class ViewBlanksService {
                     return button;
                 })
                 .collect(Collectors.toList());
+        realMiniatureExample = miniatures.get(0);
         miniaturesGrid.getChildren().setAll(miniatures);
     }
 
     public void saveToPng() {
-        RegionToImageSaverService regionToImageSaverService = new RegionToImageSaverService();
+
         File rootDirectory = getRootDirectoryFromDialog();
 
-        File gameDirectory = new File(rootDirectory.getAbsolutePath() + "\\" + game.getName());
-        if (!gameDirectory.exists()){
-            gameDirectory.mkdir();
-        }
+        if (rootDirectory != null) {
+            blanksMiniatureTabPane.getScene().getRoot().setEffect(new GaussianBlur());
+            loaderScene.setVisible(true);
 
-        SingleSelectionModel<Tab> selectionModel = blanksMiniatureTabPane.getSelectionModel();
+            this.gameDirectory = new File(rootDirectory.getAbsolutePath() + "\\" + game.getName());
+            if (!gameDirectory.exists()) {
+                gameDirectory.mkdir();
+            }
 
-        for (Tab tab: blanksMiniatureTabPane.getTabs()) {
-            selectionModel.select(tab);
-            File roundDirectory = new File(gameDirectory.getAbsolutePath() + "\\" + tab.getText());
-            if (!roundDirectory.exists()){
-                roundDirectory.mkdir();
+            SingleSelectionModel<Tab> selectionModel = blanksMiniatureTabPane.getSelectionModel();
+            for (Tab tab : blanksMiniatureTabPane.getTabs()) {
+                selectionModel.select(tab);
+                File roundDirectory = new File(gameDirectory.getAbsolutePath() + "\\" + tab.getText());
+                if (!roundDirectory.exists()) {
+                    roundDirectory.mkdir();
+                }
+                List<Button> blankMiniatures = findElementsByTypeAndStyleclass(((Parent) tab.getContent()), "blank-miniature");
+                for (Button blankMiniature : blankMiniatures) {
+                    this.renderBlankByMiniature(blankMiniature);
+                    File pictureFile = new File(roundDirectory.getAbsolutePath() + "\\" + blankMiniature.getText() + ".png");
+                    regionToImageSaverService.saveToImage(blankPreview, pictureFile);
+                }
             }
-            List<Button> blankMiniatures = findElementsByTypeAndStyleclass(((Parent) tab.getContent()), "blank-miniature");
-            for (Button blankMiniature: blankMiniatures) {
-                this.renderBlankByMiniature(blankMiniature);
-                File pictureFile = new File(roundDirectory.getAbsolutePath() + "\\" + blankMiniature.getText() + ".png");
-                regionToImageSaverService.saveToImage(blankPreview, pictureFile);
-            }
+
+
+            blanksMiniatureTabPane.getScene().getRoot().setEffect(null);
+            loaderScene.setVisible(false);
+            popupAlerter.invoke(blanksMiniatureTabPane.getScene().getWindow(),
+                    "Blanks saved to png",
+                    "Blanks are successfully stored as png files to the folder " + gameDirectory.getAbsolutePath());
         }
     }
 
@@ -143,5 +177,35 @@ public class ViewBlanksService {
         directoryChooser.setTitle("Please select root directory. Folder with the blanks will be created there.");
         directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         return directoryChooser.showDialog(blankPreview.getScene().getWindow());
+    }
+
+    public void configureUIElements(AnchorPane loaderScene,
+                                    TabPane blanksMiniatureTabPane,
+                                    Tab blanksMiniatureSampleTab,
+                                    RowConstraints miniatureGridRowConstraints,
+                                    ColumnConstraints miniatureGridColumnConstraints,
+                                    Button blankMiniature,
+                                    HBox blankTemplateContainer) {
+        this.loaderScene = loaderScene;
+        loaderScene.managedProperty().bind(loaderScene.visibleProperty());
+
+        this.blanksMiniatureTabPane = blanksMiniatureTabPane;
+        this.blanksMiniatureSampleTab = blanksMiniatureSampleTab;
+        this.miniatureGridRowConstraints = miniatureGridRowConstraints;
+        this.miniatureGridColumnConstraints = miniatureGridColumnConstraints;
+        this.blankMiniature = blankMiniature;
+        injectBlankTemplate(blankTemplateContainer);
+    }
+
+    private void injectBlankTemplate(HBox blankTemplateContainer) {
+        this.blankPreview = (AnchorPane) createDeepCopy(screenService.getParentNode("blankTemplate"));
+        this.blankItem = findElementByTypeAndStyleclass(blankPreview, "blank-item");
+        blankPreview.setVisible(false);
+
+        Label blankNumber = findElementByTypeAndStyleclass(blankPreview, "blank-number");
+        Label roundName = findElementByTypeAndStyleclass(blankPreview, "round-name");
+        setDefaultFont(blankNumber, roundName);
+
+        blankTemplateContainer.getChildren().setAll(blankPreview);
     }
 }

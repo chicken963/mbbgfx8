@@ -241,7 +241,7 @@
                                     </ScrollPane>
                                 </VBox>
                                 <AnchorPane minHeight="565.0" minWidth="400.0" prefHeight="565.0" prefWidth="400.0"
-                                            styleClass="blank-preview">
+                                            fx:id="blankPreviewContainer" styleClass="blank-preview">
                                     <HBox.margin>
                                         <Insets bottom="47.5" left="20.0" top="7.5"/>
                                     </HBox.margin>
@@ -254,94 +254,6 @@
                                             list to the
                                             left and the preview will be shown.
                                         </Label>
-                                        <AnchorPane fx:id="blankPreview" maxHeight="565.0" maxWidth="400.0"
-                                                    minHeight="565.0" minWidth="400.0" prefHeight="565.0"
-                                                    prefWidth="400.0" styleClass="blank-preview-background"
-                                                    visible="false">
-                                            <children>
-                                                <VBox maxWidth="400.0" minWidth="400.0" prefHeight="565.0"
-                                                      prefWidth="400.0">
-                                                    <children>
-                                                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0"
-                                                              prefWidth="200.0">
-                                                            <children>
-                                                                <Label alignment="CENTER" contentDisplay="CENTER"
-                                                                       prefHeight="49.0" prefWidth="89.0"
-                                                                       styleClass="blank-number"
-                                                                       text="A108" textFill="#111">
-                                                                    <HBox.margin>
-                                                                        <Insets right="20.0"/>
-                                                                    </HBox.margin>
-                                                                    <font>
-                                                                        <Font size="24.0"/>
-                                                                    </font>
-                                                                </Label>
-                                                            </children>
-                                                        </HBox>
-                                                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                                                            <children>
-                                                                <Label fx:id="roundName" contentDisplay="CENTER"
-                                                                       styleClass="round-name" textFill="#a67c07">
-                                                                    <font>
-                                                                        <Font size="26.0"/>
-                                                                    </font>
-                                                                </Label>
-                                                            </children>
-                                                        </HBox>
-                                                        <HBox prefHeight="100.0" prefWidth="200.0"/>
-                                                        <GridPane fx:id="gridContent" alignment="CENTER"
-                                                                  prefHeight="300.0" prefWidth="325.0"
-                                                                  styleClass="gridPane">
-                                                            <columnConstraints>
-                                                                <ColumnConstraints/>
-                                                            </columnConstraints>
-                                                            <rowConstraints>
-                                                                <RowConstraints/>
-                                                            </rowConstraints>
-                                                            <VBox.margin>
-                                                                <Insets bottom="20.0" left="20.0" right="20.0"/>
-                                                            </VBox.margin>
-                                                            <fx:define>
-                                                                <Label fx:id="blankItem" alignment="CENTER"
-                                                                       contentDisplay="CENTER" prefHeight="68.0"
-                                                                       prefWidth="89.5"
-                                                                       text="Evanescence" textAlignment="CENTER" wrapText="true">
-                                                                    <font>
-                                                                        <Font size="11.0"/>
-                                                                    </font>
-                                                                    <opaqueInsets>
-                                                                        <Insets/>
-                                                                    </opaqueInsets>
-                                                                    <GridPane.margin>
-                                                                        <Insets top="1.0"/>
-                                                                    </GridPane.margin>
-                                                                </Label>
-                                                                <Label alignment="CENTER"
-                                                                       contentDisplay="CENTER" prefHeight="68.0"
-                                                                       prefWidth="89.5"
-                                                                       text="Evanescence" textAlignment="CENTER">
-                                                                    <font>
-                                                                        <Font size="11.0"/>
-                                                                    </font>
-                                                                    <opaqueInsets>
-                                                                        <Insets/>
-                                                                    </opaqueInsets>
-                                                                    <GridPane.margin>
-                                                                        <Insets top="1.0"/>
-                                                                    </GridPane.margin>
-                                                                </Label>
-                                                            </fx:define>
-                                                        </GridPane>
-                                                    </children>
-                                                </VBox>
-                                            </children>
-                                            <VBox.margin>
-                                                <Insets/>
-                                            </VBox.margin>
-                                            <padding>
-                                                <Insets bottom="55.0" left="55.0" right="55.0"/>
-                                            </padding>
-                                        </AnchorPane>
                                     </children>
                                     <VBox.margin>
                                         <Insets top="55.0"/>

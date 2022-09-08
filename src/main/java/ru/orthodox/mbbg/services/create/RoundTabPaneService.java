@@ -3,9 +3,9 @@ package ru.orthodox.mbbg.services.create;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.events.RoundNameChangedEvent;
-import ru.orthodox.mbbg.events.TabAddedEvent;
-import ru.orthodox.mbbg.events.TabClosedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.RoundNameChangedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.tab.TabAddedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.tab.TabClosedEvent;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.model.proxy.create.RoundsTabPane;
 

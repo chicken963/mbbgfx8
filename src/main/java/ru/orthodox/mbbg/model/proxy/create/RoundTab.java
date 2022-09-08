@@ -10,10 +10,10 @@ import javafx.stage.Stage;
 import lombok.Getter;
 import ru.orthodox.mbbg.enums.BlankSize;
 import ru.orthodox.mbbg.enums.WinCondition;
-import ru.orthodox.mbbg.events.RoundNameChangedEvent;
-import ru.orthodox.mbbg.events.TabClosedEvent;
-import ru.orthodox.mbbg.events.TabCreatedEvent;
-import ru.orthodox.mbbg.events.TextFieldChangeEvent;
+import ru.orthodox.mbbg.events.create.TextFieldChangeEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.RoundNameChangedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.tab.TabClosedEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.tab.TabCreatedEvent;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.services.common.EventPublisherService;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
@@ -200,7 +200,6 @@ public class RoundTab {
         AnchorPane audioTracksLibraryRoot = (AnchorPane) createDeepCopy(audioTracksLibraryRootTemplate);
 
         Scene audioTracksLibraryScene = new Scene(audioTracksLibraryRoot);
-        audioTracksLibraryScene.getStylesheets().addAll("styleSheets/scrollable-table.css", "styleSheets/new-game.css");
 
         final Stage libraryStage = screenService.createSeparateStage(getLibraryButton(), audioTracksLibraryScene, "Вот всё, что ты надобавлял за эти годы");
         libraryStage.setOnCloseRequest(e -> audioTracksLibraryTable.stopPlayingIfNeeded());

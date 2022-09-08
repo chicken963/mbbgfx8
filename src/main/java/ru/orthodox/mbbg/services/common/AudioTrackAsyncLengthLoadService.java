@@ -6,7 +6,7 @@ import org.controlsfx.control.RangeSlider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.events.AudioTrackLengthLoadedEvent;
+import ru.orthodox.mbbg.events.create.AudioTrackLengthLoadedEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.proxy.create.AudioTrackEditUIView;
 import ru.orthodox.mbbg.services.create.AudioTrackUIViewService;

@@ -1,65 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<AnchorPane fx:id="blankPreview" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" prefHeight="520.0"
-            prefWidth="380.0" style="-fx-background-color: linear-gradient(to bottom right, #008080, black);">
+<AnchorPane fx:id="blankPreview" maxHeight="565.0" maxWidth="400.0" minHeight="565.0" minWidth="400.0" prefHeight="565.0" prefWidth="400.0" styleClass="blank-preview-background" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1">
     <children>
-        <VBox fx:id="blankPreviewVbox" prefHeight="520.0" prefWidth="380.0">
+        <VBox maxWidth="400.0" minWidth="400.0" prefHeight="565.0" prefWidth="400.0">
             <children>
                 <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
                     <children>
-                        <Label fx:id="blankNumber" alignment="CENTER" contentDisplay="CENTER"
-                               prefHeight="49.0" prefWidth="89.0"
-                               styleClass="blank-number" text="A108" textFill="#4a3996">
+                        <Label fx:id="blankNumber" alignment="CENTER" contentDisplay="CENTER" prefHeight="49.0" prefWidth="89.0" styleClass="blank-number" text="A108">
                             <HBox.margin>
-                                <Insets right="20.0"/>
+                                <Insets right="20.0" />
                             </HBox.margin>
                             <font>
-                                <Font size="24.0"/>
+                                <Font size="24.0" />
                             </font>
                         </Label>
                     </children>
                 </HBox>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                     <children>
-                        <Label fx:id="roundName" contentDisplay="CENTER" style="roundName"
-                               textFill="#a67c07">
+                        <Label contentDisplay="CENTER" styleClass="round-name">
                             <font>
-                                <Font size="26.0"/>
+                                <Font size="26.0" />
                             </font>
                         </Label>
                     </children>
                 </HBox>
-                <HBox prefHeight="100.0" prefWidth="200.0"/>
-                <GridPane fx:id="gridContent" alignment="CENTER" prefHeight="300.0" prefWidth="325.0"
-                          styleClass="gridPane">
+                <HBox prefHeight="100.0" prefWidth="200.0" />
+                <GridPane fx:id="gridContent" alignment="CENTER" maxHeight="300.0" maxWidth="325.0" styleClass="blank-items-grid">
                     <columnConstraints/>
                     <rowConstraints/>
                     <VBox.margin>
-                        <Insets bottom="20.0" left="20.0" right="20.0"/>
+                        <Insets bottom="20.0" left="20.0" right="20.0" />
                     </VBox.margin>
                     <children>
-                        <fx:define>
-                            <Label fx:id="blankItem" alignment="CENTER" contentDisplay="CENTER"
-                                   prefHeight="68.0" prefWidth="89.5"
-                                   text="Evanescence" textAlignment="CENTER" wrapText="true">
-                                <font>
-                                    <Font size="11.0"/>
-                                </font>
-                                <opaqueInsets>
-                                    <Insets/>
-                                </opaqueInsets>
-                                <GridPane.margin>
-                                    <Insets top="1.0"/>
-                                </GridPane.margin>
-                            </Label>
-                        </fx:define>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="68.0" prefWidth="89.5" styleClass="blank-item" text="Bring me the horizon" textAlignment="CENTER" wrapText="true">
+                            <font>
+                                <Font size="11.0" />
+                            </font>
+                            <opaqueInsets>
+                                <Insets />
+                            </opaqueInsets>
+                            <GridPane.margin>
+                                <Insets top="1.0" />
+                            </GridPane.margin>
+                        </Label>
                     </children>
                 </GridPane>
             </children>
         </VBox>
     </children>
+    <padding>
+        <Insets bottom="55.0" left="55.0" right="55.0" />
+    </padding>
 </AnchorPane>

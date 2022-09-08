@@ -30,9 +30,7 @@ public class PlayController {
     @FXML
     private Label blankPreviewPlaceholder;
     @FXML
-    private AnchorPane blankPreview;
-    @FXML
-    private Label blankItem;
+    private AnchorPane blankPreviewContainer;
     @FXML
     private GridPane miniaturesProgressGrid;
     @FXML
@@ -87,9 +85,8 @@ public class PlayController {
                     miniaturesProgressGrid,
                     progressRowsConstraints,
                     blankMiniature,
-                    blankPreview,
-                    blankPreviewPlaceholder,
-                    blankItem);
+                    blankPreviewContainer,
+                    blankPreviewPlaceholder);
         }
     }
 

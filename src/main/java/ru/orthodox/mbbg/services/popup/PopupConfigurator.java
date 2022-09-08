@@ -7,7 +7,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.utils.hierarchy.ElementFinder;
 import ru.orthodox.mbbg.utils.screen.ScreenService;
 
 import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findElementByTypeAndStyleclass;
@@ -38,7 +37,7 @@ public class PopupConfigurator {
     }
 
     public Parent configure(Parent popupTemplate, String mainMessage) {
-        Label mainMessageLabel = ElementFinder.findElementById(popupTemplate, "headingLabel");
+        Label mainMessageLabel = findElementByTypeAndStyleclass(popupTemplate, "heading-label");
         mainMessageLabel.setText(mainMessage);
         return popupTemplate;
     }

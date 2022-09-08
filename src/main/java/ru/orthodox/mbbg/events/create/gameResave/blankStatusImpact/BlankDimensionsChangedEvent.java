@@ -1,9 +1,8 @@
-package ru.orthodox.mbbg.events;
+package ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact;
 
-import org.springframework.context.ApplicationEvent;
 import ru.orthodox.mbbg.model.proxy.create.RoundTab;
 
-public class BlankDimensionsChangedEvent extends ApplicationEvent {
+public class BlankDimensionsChangedEvent extends BlankOutdatedEvent {
 
     private final RoundTab tab;
 

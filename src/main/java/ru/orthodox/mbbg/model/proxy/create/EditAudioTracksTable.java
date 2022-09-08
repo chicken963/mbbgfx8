@@ -9,9 +9,9 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.orthodox.mbbg.enums.ButtonType;
 import ru.orthodox.mbbg.enums.EntityUpdateMode;
-import ru.orthodox.mbbg.events.ActiveRowChangedEvent;
-import ru.orthodox.mbbg.events.GameAudioTracksListChangedEvent;
-import ru.orthodox.mbbg.events.TextFieldChangeEvent;
+import ru.orthodox.mbbg.events.create.ActiveRowChangedEvent;
+import ru.orthodox.mbbg.events.create.TextFieldChangeEvent;
+import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.GameAudioTracksListChangedEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.services.common.EventPublisherService;
@@ -27,8 +27,6 @@ import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findElementByTypeAn
 
 public class EditAudioTracksTable implements AudioTracksTable {
 
-
-    private final HBox audioTracksTableRowTemplate;
     private final PlayMediaService playMediaService;
     private final EventPublisherService eventPublisherService;
     @Getter
@@ -49,7 +47,6 @@ public class EditAudioTracksTable implements AudioTracksTable {
                                 PlayMediaService playMediaService,
                                 EventPublisherService eventPublisherService,
                                 Round round) {
-        this.audioTracksTableRowTemplate = audioTracksTableRowTemplate;
         this.playMediaService = playMediaService;
         this.eventPublisherService = eventPublisherService;
         this.round = round;
@@ -159,7 +156,6 @@ public class EditAudioTracksTable implements AudioTracksTable {
             placeholder.setVisible(true);
         }
         eventPublisherService.publishEvent(new GameAudioTracksListChangedEvent(round, rowToDelete, EntityUpdateMode.DELETE));
-        eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
     }
 
     private AudioTrackEditUIView findRowByPlayButton(Button playButton) {

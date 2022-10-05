@@ -1,10 +1,14 @@
 package ru.orthodox.mbbg.services.viewGameBlanks;
 
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.*;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,7 @@ import ru.orthodox.mbbg.services.popup.PopupAlerter;
 import ru.orthodox.mbbg.utils.screen.ScreenService;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -27,6 +32,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static ru.orthodox.mbbg.utils.common.CustomFontDealer.setDefaultFont;
+import static ru.orthodox.mbbg.utils.common.ThreadUtils.runSingleTaskInSeparateThread;
 import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.*;
 import static ru.orthodox.mbbg.utils.hierarchy.NodeDeepCopyProvider.createDeepCopy;
 
@@ -49,7 +55,8 @@ public class ViewBlanksService {
     @Autowired
     private RegionToImageSaverService regionToImageSaverService;
     private Button realMiniatureExample;
-    private AnchorPane loaderScene;
+    private AnchorPane loaderContainer;
+    private File rootDirectory;
 
     @Autowired
     private BlankService blankService;
@@ -62,6 +69,7 @@ public class ViewBlanksService {
     @Autowired
     private EventPublisherService eventPublisherService;
     private File gameDirectory;
+
 
     public void fillTabPaneWithBlankMiniatures() {
         blanksMiniatureTabPane.getTabs().clear();
@@ -136,40 +144,47 @@ public class ViewBlanksService {
     }
 
     public void saveToPng() {
-
-        File rootDirectory = getRootDirectoryFromDialog();
-
+        rootDirectory = getRootDirectoryFromDialog();
         if (rootDirectory != null) {
-            blanksMiniatureTabPane.getScene().getRoot().setEffect(new GaussianBlur());
-            loaderScene.setVisible(true);
+            Window blanksViewWindow = blanksMiniatureTabPane.getScene().getWindow();
+            double windowWidth = blanksViewWindow.getWidth();
+            double windowHeight = blanksMiniatureTabPane.getHeight();
 
-            this.gameDirectory = new File(rootDirectory.getAbsolutePath() + "\\" + game.getName());
-            if (!gameDirectory.exists()) {
-                gameDirectory.mkdir();
-            }
+            AnchorPane.setTopAnchor(loaderContainer, (windowHeight - loaderContainer.getHeight()) / 2);
+            AnchorPane.setLeftAnchor(loaderContainer, (windowWidth - loaderContainer.getWidth()) / 2);
 
-            SingleSelectionModel<Tab> selectionModel = blanksMiniatureTabPane.getSelectionModel();
-            for (Tab tab : blanksMiniatureTabPane.getTabs()) {
-                selectionModel.select(tab);
-                File roundDirectory = new File(gameDirectory.getAbsolutePath() + "\\" + tab.getText());
-                if (!roundDirectory.exists()) {
-                    roundDirectory.mkdir();
-                }
-                List<Button> blankMiniatures = findElementsByTypeAndStyleclass(((Parent) tab.getContent()), "blank-miniature");
-                for (Button blankMiniature : blankMiniatures) {
-                    this.renderBlankByMiniature(blankMiniature);
-                    File pictureFile = new File(roundDirectory.getAbsolutePath() + "\\" + blankMiniature.getText() + ".png");
-                    regionToImageSaverService.saveToImage(blankPreview, pictureFile);
-                }
-            }
+            loaderContainer.setVisible(true);
+            blanksMiniatureTabPane.setEffect(new GaussianBlur());
 
-
-            blanksMiniatureTabPane.getScene().getRoot().setEffect(null);
-            loaderScene.setVisible(false);
-            popupAlerter.invoke(blanksMiniatureTabPane.getScene().getWindow(),
-                    "Blanks saved to png",
-                    "Blanks are successfully stored as png files to the folder " + gameDirectory.getAbsolutePath());
+            runSingleTaskInSeparateThread(this::generatePicturesFiles, "generate-pictures");
         }
+    }
+
+    private void generatePicturesFiles() {
+        File gameDirectory = new File(rootDirectory.getAbsolutePath() + "\\" + game.getName());
+        if (!gameDirectory.exists()) {
+            gameDirectory.mkdir();
+        }
+
+        SingleSelectionModel<Tab> selectionModel = blanksMiniatureTabPane.getSelectionModel();
+        for (Tab tab : blanksMiniatureTabPane.getTabs()) {
+            selectionModel.select(tab);
+            File roundDirectory = new File(gameDirectory.getAbsolutePath() + "\\" + tab.getText());
+            if (!roundDirectory.exists()) {
+                roundDirectory.mkdir();
+            }
+            List<Button> blankMiniatures = findElementsByTypeAndStyleclass(((Parent) tab.getContent()), "blank-miniature");
+            for (Button blankMiniature : blankMiniatures) {
+                renderBlankByMiniature(blankMiniature);
+                File pictureFile = new File(roundDirectory.getAbsolutePath() + "\\" + blankMiniature.getText() + ".png");
+                regionToImageSaverService.saveToImage(blankPreview, pictureFile);
+            }
+        }
+        loaderContainer.setVisible(false);
+        blanksMiniatureTabPane.setEffect(null);
+        popupAlerter.invoke(blanksMiniatureTabPane.getScene().getWindow(),
+                "Blanks saved to png",
+                "Blanks are successfully stored as png files to the folder " + gameDirectory.getAbsolutePath());
     }
 
     private File getRootDirectoryFromDialog() {
@@ -186,7 +201,7 @@ public class ViewBlanksService {
                                     ColumnConstraints miniatureGridColumnConstraints,
                                     Button blankMiniature,
                                     HBox blankTemplateContainer) {
-        this.loaderScene = loaderScene;
+        this.loaderContainer = loaderScene;
         loaderScene.managedProperty().bind(loaderScene.visibleProperty());
 
         this.blanksMiniatureTabPane = blanksMiniatureTabPane;

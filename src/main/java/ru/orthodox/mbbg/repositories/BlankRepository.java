@@ -25,7 +25,7 @@ public class BlankRepository {
 
     @PostConstruct
     private void init() {
-        this.blanksFile = new File(blanksInfoFilePath);
+        this.blanksFile = localFilesService.createOrUseLocalFile(blanksInfoFilePath);
     }
 
     public List<Blank> findAllBlanks() {

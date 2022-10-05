@@ -65,3 +65,7 @@
 .tab {
     -fx-cursor: hand;
 }
+
+.loader {
+    -fx-text-fill: -main-color
+}

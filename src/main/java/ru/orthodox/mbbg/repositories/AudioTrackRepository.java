@@ -29,7 +29,7 @@ public class AudioTrackRepository {
 
     @PostConstruct
     private void init() {
-        this.audioTracksFile = new File(audioTracksInfoFilePath);
+        this.audioTracksFile = localFilesService.createOrUseLocalFile(audioTracksInfoFilePath);
     }
 
     public List<AudioTrack> findAllAudioTracks() {

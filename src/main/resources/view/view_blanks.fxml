@@ -89,14 +89,14 @@
               AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0"
               fx:id="blankTemplateContainer"/>
 
-        <AnchorPane fx:id="loaderScene" AnchorPane.leftAnchor="270" AnchorPane.topAnchor="408" minWidth="65.0" minHeight="65.0" prefWidth="65.0" prefHeight="65.0" mouseTransparent="true"
+        <AnchorPane fx:id="loaderScene" minWidth="65.0" minHeight="40.0" prefWidth="65.0" prefHeight="40.0"
+                    mouseTransparent="true"
                     visible="false">
-            <ImageView fitHeight="45.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="/animations/loader.gif"/>
-                </image>
-            </ImageView>
-            <Label AnchorPane.topAnchor="50.0" text="Loading..."/>
+            <Label text="Loading..." styleClass="loader">
+                <font>
+                    <Font size="36.0"/>
+                </font>
+            </Label>
         </AnchorPane>
     </children>
 </AnchorPane>

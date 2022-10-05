@@ -11,6 +11,8 @@ import ru.orthodox.mbbg.services.model.AudioTrackService;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,10 +40,11 @@ public class FileChooserDealer {
     }
 
     public List<AudioTrack> mapFilesToAudioTracks(List<File> files) {
+        ExecutorService threadPoolToLoadMediaInfo = Executors.newCachedThreadPool();
         audioTrackService.setRound(round);
         return files.stream()
                 .map(File::getAbsolutePath)
-                .map(absPath -> audioTrackService.generateFromFile(absPath))
+                .map(absPath -> audioTrackService.generateFromFile(absPath, threadPoolToLoadMediaInfo))
                 .collect(Collectors.toList());
     }
 

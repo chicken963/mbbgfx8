@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 @Service
@@ -37,7 +39,7 @@ public class AudioTrackService {
         audioTrackRepository.save(audioTracks);
     }
 
-    public AudioTrack generateFromFile(String absolutePath) {
+    public AudioTrack generateFromFile(String absolutePath, ExecutorService threadPoolToLoadMediaInfo) {
         AudioTrack audioTrack = AudioTrack.builder()
                 .id(UUID.randomUUID())
                 .localPath(absolutePath)
@@ -46,7 +48,7 @@ public class AudioTrackService {
                 .startInSeconds(0)
                 .build();
         audioTrackAsyncDataUpdater.setRound(round);
-        audioTrackAsyncDataUpdater.setAudioTrackLength(audioTrack);
+        audioTrackAsyncDataUpdater.setAudioTrackLength(audioTrack, threadPoolToLoadMediaInfo);
         return audioTrack;
     }
 

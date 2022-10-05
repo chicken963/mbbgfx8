@@ -101,8 +101,8 @@ public class MiniaturesGridService implements ApplicationListener<NextTrackChang
             blank.setNextProgress(0.0);
             blank.setWinningSet(new HashSet<>());
         });
-        progressService.recalculateRoundProgress(round);
-        updateAnimations(round);
+        changeWinCondition.setDisable(true);
+        checkWinCondition();
     }
 
     public void checkWinCondition() {

@@ -1,5 +1,6 @@
 package ru.orthodox.mbbg.repositories;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +10,11 @@ import ru.orthodox.mbbg.services.common.LocalFilesService;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -30,7 +36,7 @@ public class RoundRepository {
 
     @PostConstruct
     private void init() {
-        this.roundsFile = new File(roundsInfoFilePath);
+        this.roundsFile = localFilesService.createOrUseLocalFile(roundsInfoFilePath);
     }
 
     public List<Round> findAllRounds() {

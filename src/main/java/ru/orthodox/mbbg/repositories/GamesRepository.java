@@ -28,7 +28,7 @@ public class GamesRepository {
 
     @PostConstruct
     private void init() {
-        this.gamesFile = new File(gamesInfoFilePath);
+        this.gamesFile = localFilesService.createOrUseLocalFile(gamesInfoFilePath);
     }
 
     public List<Game> findAllGames() {

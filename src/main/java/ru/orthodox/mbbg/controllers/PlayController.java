@@ -138,7 +138,6 @@ public class PlayController {
     @FXML
     private void increaseWinLevel() {
         playGameService.shiftCurrentTargetWinCondition();
-        changeWinCondition.setDisable(true);
     }
 
     @FXML

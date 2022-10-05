@@ -1,7 +1,7 @@
 package ru.orthodox.mbbg.enums;
 
 import lombok.Getter;
-import org.springframework.lang.Nullable;
+//import org.springframework.lang.Nullable;
 
 import java.util.Arrays;
 
@@ -20,7 +20,7 @@ public enum BlankSize {
     private final int mainSize;
 
     @Getter
-    @Nullable
+//    @Nullable
     private final Integer additionalSize;
 
     BlankSize(String label, Integer size) {

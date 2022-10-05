@@ -2,13 +2,18 @@ package ru.orthodox.mbbg.services.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.enums.EntityUpdateMode;
 import ru.orthodox.mbbg.model.basic.MarkedWithId;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -102,5 +107,23 @@ public class LocalFilesService {
         return availableEntities.stream()
                 .filter(existingEntity -> idsToEdit.contains(existingEntity.getId()))
                 .collect(Collectors.toList());
+    }
+
+    @SneakyThrows
+    public File createOrUseLocalFile(String fileName) {
+        Path appPath = Paths.get(System.getProperty("user.home"), ".mbbg");
+        if (!Files.exists(appPath)){
+            Files.createDirectory(appPath);
+            Files.setAttribute(appPath, "dos:hidden", true);
+        }
+        Path filePath = Paths.get(appPath.toString(), fileName);
+        if (!Files.exists(filePath)){
+            Files.createFile(filePath);
+            try (FileWriter fileWriter = new FileWriter(String.valueOf(filePath))) {
+                fileWriter.write("[]");
+            }
+            Files.setAttribute(filePath, "dos:hidden", true);
+        }
+        return filePath.toFile();
     }
 }

@@ -44,6 +44,21 @@ public class ThreadUtils {
         }
     }
 
+    public static void runSingleTaskInSeparateThread(Runnable r, String threadName) {
+        Optional<Thread> previousTrackingThread = Thread.getAllStackTraces().keySet()
+                .stream()
+                .filter(thread -> thread.getName().contains(threadName))
+                .findFirst();
+        Thread thread = previousTrackingThread.orElseGet(() -> new Thread(() -> Platform.runLater(r)));
+        thread.setName(threadName);
+        if (!thread.isDaemon()) {
+            thread.setDaemon(true);
+        }
+        if (!previousTrackingThread.isPresent()) {
+            thread.start();
+        }
+    }
+
     public static void runTaskInSeparateThread(Supplier<Boolean> booleanProvider, Runnable r) {
         Thread thread = new Thread(() -> {
             do {

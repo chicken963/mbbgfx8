@@ -14,10 +14,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.nio.file.attribute.FileAttribute;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -119,10 +119,10 @@ public class LocalFilesService {
         Path filePath = Paths.get(appPath.toString(), fileName);
         if (!Files.exists(filePath)){
             Files.createFile(filePath);
+            filePath.toFile().setWritable(true);
             try (FileWriter fileWriter = new FileWriter(String.valueOf(filePath))) {
                 fileWriter.write("[]");
             }
-            Files.setAttribute(filePath, "dos:hidden", true);
         }
         return filePath.toFile();
     }

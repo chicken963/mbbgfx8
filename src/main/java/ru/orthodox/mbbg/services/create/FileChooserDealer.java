@@ -21,18 +21,13 @@ public class FileChooserDealer {
     @Autowired
     private AudioTrackService audioTrackService;
 
-    @Value("${music.localpath.startfolder}")
-    private String localStartFolder;
-
     @Setter
     private Round round;
 
     public FileChooser provideFileChooser() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Please select audio files");
-        //TODO: uncomment and delete the subsequent line
-//        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-        fileChooser.setInitialDirectory(new File("C:\\Users\\Aleksei_Andreichuk\\Music"));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         fileChooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("Music files", "*.mp3", "*.aac", "*.wav", "*.flac")
         );

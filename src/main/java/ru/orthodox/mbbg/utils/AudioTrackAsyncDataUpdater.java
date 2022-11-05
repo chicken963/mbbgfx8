@@ -18,10 +18,7 @@ import ru.orthodox.mbbg.services.popup.PopupAlerter;
 import ru.orthodox.mbbg.utils.common.NormalizedPathString;
 
 import java.util.ConcurrentModificationException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 @Slf4j
 @Service
@@ -51,25 +48,33 @@ public class AudioTrackAsyncDataUpdater {
             int counter = 0;
             do {
                 counter++;
+                MediaPlayer mediaPlayer;
                 try {
-                    MediaPlayer mediaPlayer = new MediaPlayer(media);
+                    mediaPlayer = new MediaPlayer(media);
+                } catch (ConcurrentModificationException | NullPointerException e) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    continue;
+                }
+                try {
                     mediaPlayer.setOnReady(() -> {
                         audioTrack.setFinishInSeconds(media.getDuration().toSeconds());
                         audioTrack.setLengthInSeconds(media.getDuration().toSeconds());
                         eventPublisher.publishEvent(new AudioTrackLengthLoadedEvent(audioTrack, round));
                     });
-                } catch (NullPointerException | ConcurrentModificationException e) {
-                    log.warn(e.getMessage());
-                }
-                try {
+
                     Thread.sleep(1500);
-                } catch (InterruptedException e) {
+                    mediaPlayer.dispose();
+                } catch (ConcurrentModificationException | InterruptedException e) {
                     log.warn(e.getMessage());
                 }
                 if (counter > 1) {
                     log.info(audioTrack + " " + counter);
                 }
-            } while (audioTrack.getLengthInSeconds() == 0);
+            } while (audioTrack.getLengthInSeconds() == 0 && counter < 10);
 
         });
 

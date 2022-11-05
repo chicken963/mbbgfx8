@@ -3,6 +3,7 @@ package ru.orthodox.mbbg.model.proxy.create;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import lombok.Getter;
@@ -93,10 +94,29 @@ public class EditAudioTracksTable implements AudioTracksTable {
 
     private void addTrack(AudioTrack audioTrack) {
         AudioTrackEditUIView row = AudioTrackGridRow.of(audioTrack, playMediaService);
+        defineSpaceButtonBehaviour(row);
         populateRowWithButtons(row);
         audioTracksTable.getChildren().add(row.getRowContainer());
         gridRows.add(row);
         eventPublisherService.publishEvent(new GameAudioTracksListChangedEvent(round, row, EntityUpdateMode.ADD));
+    }
+
+    private void defineSpaceButtonBehaviour(AudioTrackEditUIView row) {
+        row.getRangeSliderContainer().setOnKeyReleased(keyEvent -> {
+            if (KeyCode.SPACE.equals(keyEvent.getCode())) {
+                if (playMediaService.getCurrentTrack() == row.getAudioTrack()) {
+                    if (playMediaService.isPaused() || playMediaService.isStopped()) {
+                        playMediaService.play(row.getAudioTrack());
+                    } else {
+                        playMediaService.pause(row.getAudioTrack());
+                    }
+                } else {
+                    playMediaService.play(row.getAudioTrack());
+                    eventPublisherService.publishEvent(new ActiveRowChangedEvent(this, row));
+                }
+            }
+
+        });
     }
 
     private void populateRowWithButtons(AudioTrackEditUIView row) {

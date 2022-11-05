@@ -4,11 +4,13 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.utils.common.NormalizedPathString;
 
-
+@Slf4j
 @Service
 public class PlayMediaService {
     @Getter
@@ -24,14 +26,16 @@ public class PlayMediaService {
     @Getter
     private boolean isStopped = true;
     private Media media;
-    @Getter
+
     private MediaPlayer mediaPlayer;
+    @Setter
+    private boolean upperBoundChanged = false;
 
     public void play(AudioTrack audioTrack) {
         if (thisTrackIsAlreadyBeingPlayed(audioTrack)) {
             return;
         }
-        if (switchingFromAnotherTrack(audioTrack)) {
+        if (switchingFromAnotherTrack(audioTrack) && mediaPlayer != null) {
             mediaPlayer.stop();
         }
         if (audioTrack != currentTrack) {
@@ -45,6 +49,12 @@ public class PlayMediaService {
         }
         if (isStopped) {
             generateMediaPlayer(audioTrack);
+        } else if (upperBoundChanged) {
+            double currentStop = mediaPlayer.getCurrentTime().toSeconds();
+            if (currentStop > 0) {
+                generateMediaPlayer(audioTrack);
+                mediaPlayer.setStartTime(Duration.seconds(currentStop));
+            }
         }
         mediaPlayer.play();
         isPaused = false;
@@ -52,7 +62,7 @@ public class PlayMediaService {
     }
 
     private boolean boundsWereChangedOutOfRange() {
-        return isPaused && !isCurrentStopInPlayableRange();
+        return isPaused && mediaPlayer != null && !isCurrentStopInPlayableRange();
     }
 
     private boolean thisTrackIsAlreadyBeingPlayed(AudioTrack audioTrack) {
@@ -64,7 +74,7 @@ public class PlayMediaService {
     }
 
     public void pause(AudioTrack audioTrack) {
-        if (audioTrack != null && audioTrack == currentTrack) {
+        if (audioTrack != null && mediaPlayer != null && audioTrack == currentTrack) {
             mediaPlayer.pause();
             isPaused = true;
         }
@@ -131,7 +141,12 @@ public class PlayMediaService {
 
     protected void generateMediaPlayer(AudioTrack audioTrack) {
         this.media = new Media(NormalizedPathString.of(audioTrack.getLocalPath()));
-        this.mediaPlayer = new MediaPlayer(media);
+        try {
+            this.mediaPlayer = new MediaPlayer(media);
+        } catch (NullPointerException e) {
+            log.error("Failed to generate media player for audiotrack {}", audioTrack);
+            return;
+        }
         mediaPlayer.setStartTime(Duration.seconds(audioTrack.getStartInSeconds()));
         mediaPlayer.setStopTime(Duration.seconds(audioTrack.getFinishInSeconds()));
         mediaPlayer.setVolume(volume);

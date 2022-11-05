@@ -4,6 +4,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -56,9 +57,9 @@ public class AudioTrackGridRow implements AudioTrackEditUIView {
         return (RangeSlider) getRangeSliderContainer().getChildren().get(0);
     }
 
-    public void defineLabelsLogic(){
+    public void defineLabelsLogic() {
         getArtistLabel().setOnMouseClicked(mouseEvent -> {
-            if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+            if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                 VBox tracksTable = (VBox) getArtistLabel().getParent().getParent();
                 List<TextField> allEditableFields = findAllEditableFields(tracksTable);
 
@@ -94,7 +95,7 @@ public class AudioTrackGridRow implements AudioTrackEditUIView {
         });
 
         getSongTitleLabel().setOnMouseClicked(mouseEvent -> {
-            if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+            if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                 VBox tracksTable = (VBox) getArtistLabel().getParent().getParent();
                 List<TextField> allEditableFields = findAllEditableFields(tracksTable);
                 if (mouseEvent.getClickCount() == 2) {
@@ -124,13 +125,14 @@ public class AudioTrackGridRow implements AudioTrackEditUIView {
     public void defineRangeSliderBoundListeners(PlayMediaService playMediaService) {
         getRangeSlider().highValueProperty().addListener((observable, oldValue, newValue) -> {
             playMediaService.pause(audioTrack);
+            playMediaService.setUpperBoundChanged(true);
             String currentTrackFinish = toStringFormat(newValue.doubleValue());
             this.getEndTimeLabel().setText(currentTrackFinish);
             audioTrack.setFinishInSeconds(newValue.doubleValue());
             this.getProgressLabel().setText("00:00/" + toStringFormat(audioTrack.getFinishInSeconds() - audioTrack.getStartInSeconds()));
         });
         getRangeSlider().lowValueProperty().addListener((observable, oldValue, newValue) -> {
-            playMediaService.pause(audioTrack);
+            playMediaService.stop(audioTrack);
             String currentTrackStart = toStringFormat(newValue.doubleValue());
             this.getStartTimeLabel().setText(currentTrackStart);
             audioTrack.setStartInSeconds(newValue.doubleValue());
@@ -141,7 +143,13 @@ public class AudioTrackGridRow implements AudioTrackEditUIView {
     public static AudioTrackGridRow of(AudioTrack audioTrack, PlayMediaService playMediaService) {
         HBox rowContainer = (HBox) createDeepCopy(rowContainerTemplate);
 
-        AudioTrackGridRow row =  AudioTrackGridRow.builder()
+        rowContainer.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.SPACE) {
+                event.consume();
+            }
+        });
+
+        AudioTrackGridRow row = AudioTrackGridRow.builder()
                 .audioTrack(audioTrack)
                 .rowContainer(rowContainer)
                 .build();

@@ -96,7 +96,6 @@
 .switchRound {
     -fx-background-color: -main-color;
     -fx-text-fill: black;
-    -fx-font-size: 14px;
     -fx-cursor: hand;
     -fx-pref-width: 100.0;
 }

@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.orthodox.mbbg.enums.ButtonType;
 import ru.orthodox.mbbg.enums.EntityUpdateMode;
+import ru.orthodox.mbbg.enums.TracksTableUpdateMode;
 import ru.orthodox.mbbg.events.create.ActiveRowChangedEvent;
 import ru.orthodox.mbbg.events.create.TextFieldChangeEvent;
 import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.GameAudioTracksListChangedEvent;
@@ -84,12 +85,14 @@ public class EditAudioTracksTable implements AudioTracksTable {
         );
     }
 
-    public void addAudioTracks(List<AudioTrack> audioTracks) {
+    public void addAudioTracks(List<AudioTrack> audioTracks, TracksTableUpdateMode mode) {
         if (!audioTracks.isEmpty()) {
             placeholder.setVisible(false);
         }
         audioTracks.forEach(this::addTrack);
-        eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
+        if (TracksTableUpdateMode.USER.equals(mode)) {
+            eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
+        }
     }
 
     private void addTrack(AudioTrack audioTrack) {
@@ -98,7 +101,7 @@ public class EditAudioTracksTable implements AudioTracksTable {
         populateRowWithButtons(row);
         audioTracksTable.getChildren().add(row.getRowContainer());
         gridRows.add(row);
-        eventPublisherService.publishEvent(new GameAudioTracksListChangedEvent(round, row, EntityUpdateMode.ADD));
+//        eventPublisherService.publishEvent(new GameAudioTracksListChangedEvent(round, row, EntityUpdateMode.ADD));
     }
 
     private void defineSpaceButtonBehaviour(AudioTrackEditUIView row) {

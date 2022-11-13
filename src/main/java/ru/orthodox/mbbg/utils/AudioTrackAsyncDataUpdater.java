@@ -68,7 +68,9 @@ public class AudioTrackAsyncDataUpdater {
 
                     Thread.sleep(1500);
                     mediaPlayer.dispose();
-                } catch (ConcurrentModificationException | InterruptedException e) {
+                } catch (InterruptedException e) {
+                    log.warn("Interrupted exception was caught for {}", audioTrack);
+                } catch (ConcurrentModificationException e) {
                     log.warn(e.getMessage());
                 }
                 if (counter > 1) {

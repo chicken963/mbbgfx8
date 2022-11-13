@@ -4,6 +4,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import lombok.AccessLevel;
 import lombok.Getter;
 import ru.orthodox.mbbg.services.common.PlayMediaService;
 
@@ -13,6 +14,7 @@ import static ru.orthodox.mbbg.utils.hierarchy.ElementFinder.findElementByTypeAn
 @Getter
 public class VolumeSlider {
     private final HBox root;
+    @Getter(AccessLevel.PRIVATE)
     private final Slider slider;
     private final HBox imageContainer;
     private final PlayMediaService playMediaService;
@@ -37,6 +39,12 @@ public class VolumeSlider {
 
         slider.setValue(playMediaService.getVolume());
         slider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (oldValue.doubleValue() == 0) {
+                playMediaService.unMute();
+            }
+            if (newValue.doubleValue() == 0) {
+                playMediaService.mute();
+            }
             playMediaService.setVolume(newValue.doubleValue());
             if (newValue.doubleValue() < 33.3) {
                 mediumVolumeButton.setVisible(false);
@@ -64,6 +72,10 @@ public class VolumeSlider {
                 configureVolumeSlider(playMediaService.getVolume());
             }
         }
+    }
+
+    public void actualizeValue() {
+        slider.setValue(playMediaService.getVolume());
     }
 
     private void configureVolumeSlider(int value) {

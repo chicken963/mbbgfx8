@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.orthodox.mbbg.exceptions.MediaPlayerNotGeneratedException;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.utils.common.NormalizedPathString;
 
@@ -19,7 +20,8 @@ public class PlayMediaService {
     private double volumeCache;
 
     private double volume = 1;
-
+    @Getter
+    @Setter
     private boolean muted = false;
     @Getter
     private boolean isPaused = false;
@@ -32,33 +34,43 @@ public class PlayMediaService {
     private boolean upperBoundChanged = false;
 
     public void play(AudioTrack audioTrack) {
-        if (thisTrackIsAlreadyBeingPlayed(audioTrack)) {
+        try {
+            if (thisTrackIsAlreadyBeingPlayed(audioTrack)) {
+                return;
+            }
+            if (switchingFromAnotherTrack(audioTrack) && mediaPlayer != null) {
+                mediaPlayer.stop();
+            }
+            if (audioTrack != currentTrack) {
+                currentTrack = audioTrack;
+                generateMediaPlayer(audioTrack);
+                isStopped = false;
+            } else if (boundsWereChangedOutOfRange()) {
+                mediaPlayer.stop();
+                generateMediaPlayer(audioTrack);
+                isStopped = false;
+            }
+            if (isStopped) {
+                generateMediaPlayer(audioTrack);
+            } else if (upperBoundChanged) {
+                double currentStop = 0;
+                if (mediaPlayer != null) {
+                    currentStop = mediaPlayer.getCurrentTime().toSeconds();
+                }
+                if (currentStop > 0) {
+                    generateMediaPlayer(audioTrack);
+                    mediaPlayer.setStartTime(Duration.seconds(currentStop));
+                }
+            }
+        } catch (MediaPlayerNotGeneratedException e) {
+            log.warn("Cannot generate media player: {}", e.getMessage());
             return;
         }
-        if (switchingFromAnotherTrack(audioTrack) && mediaPlayer != null) {
-            mediaPlayer.stop();
-        }
-        if (audioTrack != currentTrack) {
-            currentTrack = audioTrack;
-            generateMediaPlayer(audioTrack);
-            isStopped = false;
-        } else if (boundsWereChangedOutOfRange()) {
-            mediaPlayer.stop();
-            generateMediaPlayer(audioTrack);
+        if (mediaPlayer != null) {
+            mediaPlayer.play();
+            isPaused = false;
             isStopped = false;
         }
-        if (isStopped) {
-            generateMediaPlayer(audioTrack);
-        } else if (upperBoundChanged) {
-            double currentStop = mediaPlayer.getCurrentTime().toSeconds();
-            if (currentStop > 0) {
-                generateMediaPlayer(audioTrack);
-                mediaPlayer.setStartTime(Duration.seconds(currentStop));
-            }
-        }
-        mediaPlayer.play();
-        isPaused = false;
-        isStopped = false;
     }
 
     private boolean boundsWereChangedOutOfRange() {
@@ -96,13 +108,29 @@ public class PlayMediaService {
 
     public void switchMute() {
         if (this.muted) {
-            volume = volumeCache;
+            unMute();
         } else {
+            mute();
+        }
+    }
+
+    public void mute() {
+        if (!muted) {
             volumeCache = volume;
             volume = 0;
+            this.muted = true;
+            if (mediaPlayer != null) {
+                mediaPlayer.setVolume(volume);
+            }
         }
-        this.muted = !this.muted;
-        mediaPlayer.setVolume(volume);
+    }
+
+    public void unMute() {
+        if (muted) {
+            volume = volumeCache;
+            this.muted = false;
+            mediaPlayer.setVolume(volume);
+        }
     }
 
     public void setVolume(double newValue) {
@@ -139,13 +167,12 @@ public class PlayMediaService {
         return currentRate > currentTrack.getStartInSeconds() && currentRate < currentTrack.getFinishInSeconds();
     }
 
-    protected void generateMediaPlayer(AudioTrack audioTrack) {
+    protected void generateMediaPlayer(AudioTrack audioTrack) throws MediaPlayerNotGeneratedException {
         this.media = new Media(NormalizedPathString.of(audioTrack.getLocalPath()));
         try {
             this.mediaPlayer = new MediaPlayer(media);
         } catch (NullPointerException e) {
-            log.error("Failed to generate media player for audiotrack {}", audioTrack);
-            return;
+            throw new MediaPlayerNotGeneratedException("Failed to generate media player for audiotrack " + audioTrack);
         }
         mediaPlayer.setStartTime(Duration.seconds(audioTrack.getStartInSeconds()));
         mediaPlayer.setStopTime(Duration.seconds(audioTrack.getFinishInSeconds()));

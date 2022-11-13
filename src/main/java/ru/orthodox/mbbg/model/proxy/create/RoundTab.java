@@ -9,6 +9,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import lombok.Getter;
 import ru.orthodox.mbbg.enums.BlankSize;
+import ru.orthodox.mbbg.enums.TracksTableUpdateMode;
 import ru.orthodox.mbbg.enums.WinCondition;
 import ru.orthodox.mbbg.events.create.TextFieldChangeEvent;
 import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.RoundNameChangedEvent;
@@ -188,7 +189,7 @@ public class RoundTab {
         getTab().setText(round.getName());
         getNumberOfBlanks().setText(round.getNumberOfBlanks().toString());
         getNewRoundNameTextField().setText(round.getName());
-        getEditAudioTracksTable().addAudioTracks(round.getAudioTracks());
+        getEditAudioTracksTable().addAudioTracks(round.getAudioTracks(), TracksTableUpdateMode.RENDER);
         getFirstPrizeCondition().setValue(round.getFirstStrikeCondition());
         getSecondPrizeCondition().setValue(round.getSecondStrikeCondition());
         getThirdPrizeCondition().setValue(round.getThirdStrikeCondition());

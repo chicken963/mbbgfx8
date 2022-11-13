@@ -40,6 +40,8 @@ public class MediaPlayerService implements ApplicationListener<NextTrackChangeRe
     @Autowired
     private VolumeSliderService volumeSliderService;
 
+    private VolumeSlider volumeSlider;
+
     private List<AudioTrack> roundQueue;
     private List<AudioTrack> roundHistory;
 
@@ -64,7 +66,7 @@ public class MediaPlayerService implements ApplicationListener<NextTrackChangeRe
             Button nextButton) {
         this.songTitle = songTitle;
         this.songProgressInSeconds = songProgressInSeconds;
-        VolumeSlider volumeSlider = volumeSliderService.createNewSlider();
+        this.volumeSlider = volumeSliderService.createNewSlider();
         volumeSliderContainer.getChildren().setAll(volumeSlider.getRoot());
         this.previousTrackInPlayerButton = previousButton;
         this.nextTrackInPlayerButton = nextButton;
@@ -82,7 +84,8 @@ public class MediaPlayerService implements ApplicationListener<NextTrackChangeRe
 
         songTitle.setText("Round not started");
         songProgressInSeconds.setText("00:00/00:00");
-        previousTrackInPlayerButton.setDisable(activeRound.getPreviousTrack() == null);
+        volumeSlider.actualizeValue();
+//        previousTrackInPlayerButton.setDisable(activeRound.getPreviousTrack() == null);
         nextTrackInPlayerButton.setDisable(activeRound.getNextTrack() == null);
 
         runTasksInSeparateThreads();
@@ -120,7 +123,7 @@ public class MediaPlayerService implements ApplicationListener<NextTrackChangeRe
     }
 
     public void switchMute() {
-        playService.switchMute();
+        volumeSliderService.switchMute(volumeSlider);
     }
 
     public void play() {
@@ -195,7 +198,7 @@ public class MediaPlayerService implements ApplicationListener<NextTrackChangeRe
         activeRound.setCurrentTrack(audioTrack);
 
         songTitle.setText(audioTrack.getTitle());
-        previousTrackInPlayerButton.setDisable(activeRound.getPreviousTrack() == null);
+//        previousTrackInPlayerButton.setDisable(activeRound.getPreviousTrack() == null);
 
         eventPublisher.publishEvent(new CurrentTrackChangedEvent(this));
     }

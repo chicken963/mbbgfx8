@@ -27,7 +27,7 @@ public class Game implements MarkedWithId {
     private String name;
 
     @Column(name="blanksStatus")
-    private BlanksStatus blanksStatus;
+    private BlanksStatus blanksStatus = BlanksStatus.ABSENT;
 
     @Column(name = "roundIds")
     private List<UUID> roundIds;

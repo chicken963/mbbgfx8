@@ -20,7 +20,7 @@
                             <children>
                                 <HBox alignment="CENTER" prefHeight="200.0" prefWidth="830.0">
                                     <children>
-                                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="155.0">
+                                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="155.0" visible="false">
                                             <children>
                                                 <Button fx:id="prevRound" maxWidth="130.0" minWidth="130.0"
                                                         mnemonicParsing="false" onAction="#switchToPrevRound"
@@ -52,6 +52,9 @@
                                                         <String fx:value="switchRound"/>
                                                         <String fx:value="next"/>
                                                     </styleClass>
+                                                    <font>
+                                                        <Font size="16.0"/>
+                                                    </font>
                                                 </Button>
                                             </children>
                                         </HBox>
@@ -118,7 +121,7 @@
                             </VBox.margin>
                         </HBox>
                         <HBox alignment="CENTER" minWidth="905.0" prefHeight="75.0">
-                            <Button fx:id="previousButton" onAction="#switchToPreviousTrack" styleClass="playerButton">
+                            <Button fx:id="previousButton" onAction="#switchToPreviousTrack" styleClass="playerButton" visible="false">
                                 <graphic>
                                     <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true"
                                                preserveRatio="true"

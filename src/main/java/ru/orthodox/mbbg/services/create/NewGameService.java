@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
-import ru.orthodox.mbbg.enums.BlanksStatus;
+import ru.orthodox.mbbg.enums.TracksTableUpdateMode;
 import ru.orthodox.mbbg.events.create.BrokenAudiotrackEvent;
 import ru.orthodox.mbbg.exceptions.GameInputsValidationException;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
@@ -110,7 +110,7 @@ public class NewGameService {
 
         EditAudioTracksTable roundTable = currentTab.getEditAudioTracksTable();
         audioTracks.removeAll(brokenAudiotracks);
-        roundTable.addAudioTracks(audioTracks);
+        roundTable.addAudioTracks(audioTracks, TracksTableUpdateMode.USER);
         roundTable.getRound().getAudioTracks().addAll(audioTracks);
     }
 
@@ -127,9 +127,6 @@ public class NewGameService {
         game.setName(newGameName.getText());
         if (game.getId() == null) {
             game.setId(UUID.randomUUID());
-            game.setBlanksStatus(BlanksStatus.ABSENT);
-        } else {
-            game.setBlanksStatus(BlanksStatus.OUTDATED);
         }
         gameService.deepSave(game);
         game.setHavingUnsavedChanges(false);
@@ -143,7 +140,6 @@ public class NewGameService {
     }
 
     public void cancelCreation(Button cancelButton) {
-        playMediaService.stop(playMediaService.getCurrentTrack());
         if (roundsTabPane.getGame().isHavingUnsavedChanges()) {
             popupAlerter.invokeOkCancel(
                     cancelButton.getScene().getWindow(),
@@ -153,12 +149,14 @@ public class NewGameService {
                         StartMenuService startMenuService = applicationContext.getBean(StartMenuService.class);
                         startMenuService.fillGridWithAllGames();
                         ((Stage) ((Button) event.getSource()).getScene().getWindow()).close();
+                        playMediaService.stop();
                         screenService.activate("startMenu");
                     },
                     event -> ((Stage) ((Button) event.getSource()).getScene().getWindow()).close());
         } else {
             StartMenuService startMenuService = applicationContext.getBean(StartMenuService.class);
             startMenuService.fillGridWithAllGames();
+            playMediaService.stop();
             screenService.activate("startMenu");
         }
 
@@ -180,6 +178,7 @@ public class NewGameService {
         Scene currentScene = ((Button) event.getSource()).getScene();
         Stage currentStage = (Stage) currentScene.getWindow();
         currentStage.close();
+        playMediaService.stop();
         screenService.activate("startMenu");
     }
 

@@ -14,6 +14,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.controlsfx.control.RangeSlider;
 import ru.orthodox.mbbg.events.create.TextFieldChangeEvent;
+import ru.orthodox.mbbg.events.create.gameResave.AudioTrackBoundsWereChanged;
 import ru.orthodox.mbbg.events.create.gameResave.blankStatusImpact.AudioTrackTextFieldEditRequestedEvent;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.services.common.EventPublisherService;
@@ -130,6 +131,7 @@ public class AudioTrackGridRow implements AudioTrackEditUIView {
             this.getEndTimeLabel().setText(currentTrackFinish);
             audioTrack.setFinishInSeconds(newValue.doubleValue());
             this.getProgressLabel().setText("00:00/" + toStringFormat(audioTrack.getFinishInSeconds() - audioTrack.getStartInSeconds()));
+            eventPublisherService.publishEvent(new AudioTrackBoundsWereChanged(audioTrack));
         });
         getRangeSlider().lowValueProperty().addListener((observable, oldValue, newValue) -> {
             playMediaService.stop(audioTrack);
@@ -137,6 +139,7 @@ public class AudioTrackGridRow implements AudioTrackEditUIView {
             this.getStartTimeLabel().setText(currentTrackStart);
             audioTrack.setStartInSeconds(newValue.doubleValue());
             this.getProgressLabel().setText("00:00/" + toStringFormat(audioTrack.getFinishInSeconds() - audioTrack.getStartInSeconds()));
+            eventPublisherService.publishEvent(new AudioTrackBoundsWereChanged(audioTrack));
         });
     }
 

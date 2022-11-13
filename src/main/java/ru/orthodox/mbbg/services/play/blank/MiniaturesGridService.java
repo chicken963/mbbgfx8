@@ -9,8 +9,8 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
+import ru.orthodox.mbbg.enums.WinConditionChangeMode;
 import ru.orthodox.mbbg.events.play.NextTrackChangedEvent;
-import ru.orthodox.mbbg.model.basic.Blank;
 import ru.orthodox.mbbg.model.basic.Round;
 import ru.orthodox.mbbg.model.proxy.BlinkingColorPair;
 import ru.orthodox.mbbg.model.proxy.HorizontalGradient;
@@ -58,6 +58,7 @@ public class MiniaturesGridService implements ApplicationListener<NextTrackChang
 
     public void setActiveRound(Round round) {
         this.round = round;
+        changeCurrentTargetWinCondition(WinConditionChangeMode.RESET);
         replicateRowConstraints();
         replicateMiniatureButtons();
     }
@@ -86,23 +87,24 @@ public class MiniaturesGridService implements ApplicationListener<NextTrackChang
         miniaturesGrid.getChildren().setAll(blankMiniatures);
     }
 
-
-    public Button findBlankMiniature(Blank blank) {
-        return blankMiniatures.stream()
-                .filter(button -> button.getText().equals(blank.getNumber()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("There is no blank miniature with number " + blank.getNumber()));
+    public void changeCurrentTargetWinCondition(WinConditionChangeMode mode) {
+        resetProgress();
+        changeWinCondition.setDisable(true);
+        if (WinConditionChangeMode.SHIFT.equals(mode)) {
+            roundService.shiftCurrentTargetWinCondition(round);
+            checkWinCondition();
+        } else if (WinConditionChangeMode.RESET.equals(mode)) {
+            roundService.resetCurrentTargetWinCondition(round);
+        }
     }
 
-    public void shiftCurrentTargetWinCondition() {
-        roundService.shiftCurrentTargetWinCondition(round);
+    public void resetProgress() {
         round.getBlanks().forEach(blank -> {
             blank.setProgress(0.0);
             blank.setNextProgress(0.0);
             blank.setWinningSet(new HashSet<>());
         });
-        changeWinCondition.setDisable(true);
-        checkWinCondition();
+
     }
 
     public void checkWinCondition() {

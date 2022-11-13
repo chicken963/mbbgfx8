@@ -26,4 +26,15 @@ public class VolumeSliderService {
 
         return new VolumeSlider(volumeSliderContainer, slider, imageContainer, playMediaService);
     }
+
+    public void switchMute(VolumeSlider volumeSlider) {
+/*        if (playMediaService.isMuted()) {
+
+        } else {
+            playMediaService.mute();
+
+        }*/
+        playMediaService.switchMute();
+        volumeSlider.actualizeValue();
+    }
 }

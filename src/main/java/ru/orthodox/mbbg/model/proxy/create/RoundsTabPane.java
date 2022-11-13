@@ -51,6 +51,7 @@ public class RoundsTabPane {
 
     private AudioTracksTable playedTable;
     private AudioTrackEditUIView currentlyEditedRow;
+    private VolumeSlider volumeSlider;
 
     private List<RoundTab> roundTabs = new ArrayList<>();
     private final List<AudioTrackEditUIView> gameGridRows = new ArrayList<>();
@@ -141,7 +142,7 @@ public class RoundsTabPane {
         setDefaultFont(
                 ElementFinder.findAllLabelsRecursively((Parent) tabSample.getContent()).toArray(new Labeled[0])
         );
-        VolumeSlider volumeSlider = volumeSliderService.createNewSlider();
+        this.volumeSlider = volumeSliderService.createNewSlider();
         volumeSliderContainer.getChildren().setAll(volumeSlider.getRoot());
     }
 
@@ -163,7 +164,7 @@ public class RoundsTabPane {
         tabPane.getTabs().setAll(roundTabs.stream().map(RoundTab::getTab).collect(Collectors.toList()));
         eventPublisherService.publishEvent(new TabAddedEvent(this, firstTab));
         tabPane.getTabs().add(newTabButton(tabPane, tabSample));
-
+        volumeSlider.actualizeValue();
     }
 
     private RoundTab generateRoundTabBasedOnRound(Round round) {
@@ -184,6 +185,7 @@ public class RoundsTabPane {
                 .collect(Collectors.toList());
         tabPane.getTabs().setAll(roundTabs.stream().map(RoundTab::getTab).collect(Collectors.toList()));
         tabPane.getTabs().add(newTabButton(tabPane, tabSample));
+        volumeSlider.actualizeValue();
     }
 
     public Optional<RoundTab> findTabByChild(Node child) {

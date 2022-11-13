@@ -91,4 +91,8 @@ public class RoundService {
                 .collect(Collectors.toList()));
         roundRepository.save(round);
     }
+
+    public void resetCurrentTargetWinCondition(Round round) {
+        round.setCurrentTargetWinCondition(round.getFirstStrikeCondition());
+    }
 }

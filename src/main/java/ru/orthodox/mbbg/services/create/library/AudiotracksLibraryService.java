@@ -4,6 +4,7 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import ru.orthodox.mbbg.enums.TracksTableUpdateMode;
 import ru.orthodox.mbbg.model.basic.AudioTrack;
 import ru.orthodox.mbbg.model.proxy.create.AudioTracksLibraryTable;
 import ru.orthodox.mbbg.model.proxy.create.EditAudioTracksTable;
@@ -39,7 +40,7 @@ public class AudiotracksLibraryService {
 
     public void addSelectedTracksToRound(EditAudioTracksTable roundTableToSendTheSelectedAudiotracks, Stage stage) {
         List<AudioTrack> selectedAudioTracks = libraryTable.getSelectedAudiotracks();
-        roundTableToSendTheSelectedAudiotracks.addAudioTracks(selectedAudioTracks);
+        roundTableToSendTheSelectedAudiotracks.addAudioTracks(selectedAudioTracks, TracksTableUpdateMode.USER);
         roundTableToSendTheSelectedAudiotracks.getRound().getAudioTracks().addAll(selectedAudioTracks);
         libraryTable.clear();
         stage.close();

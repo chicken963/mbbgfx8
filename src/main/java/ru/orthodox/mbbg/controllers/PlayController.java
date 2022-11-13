@@ -1,5 +1,6 @@
 package ru.orthodox.mbbg.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -73,6 +74,8 @@ public class PlayController {
         if (playGameService != null) {
             playGameService.configureUIElements(
                     roundNameLabel,
+                    nextRound,
+                    prevRound,
                     songTitle,
                     songProgressInSeconds,
                     volumeSliderContainer,
@@ -125,9 +128,8 @@ public class PlayController {
     }
 
     @FXML
-    private void switchToNextRound() {
-        playGameService.switchToNextRound();
-
+    private void switchToNextRound(ActionEvent event) {
+        playGameService.switchToNextRound((Button) event.getSource());
     }
 
     @FXML

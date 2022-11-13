@@ -89,19 +89,21 @@ public class EditAudioTracksTable implements AudioTracksTable {
         if (!audioTracks.isEmpty()) {
             placeholder.setVisible(false);
         }
-        audioTracks.forEach(this::addTrack);
+        audioTracks.forEach(audioTrack -> this.addTrack(audioTrack, mode));
         if (TracksTableUpdateMode.USER.equals(mode)) {
             eventPublisherService.publishEvent(new TextFieldChangeEvent(this));
         }
     }
 
-    private void addTrack(AudioTrack audioTrack) {
+    private void addTrack(AudioTrack audioTrack, TracksTableUpdateMode mode) {
         AudioTrackEditUIView row = AudioTrackGridRow.of(audioTrack, playMediaService);
         defineSpaceButtonBehaviour(row);
         populateRowWithButtons(row);
         audioTracksTable.getChildren().add(row.getRowContainer());
         gridRows.add(row);
-//        eventPublisherService.publishEvent(new GameAudioTracksListChangedEvent(round, row, EntityUpdateMode.ADD));
+        if (TracksTableUpdateMode.USER.equals(mode)) {
+            eventPublisherService.publishEvent(new GameAudioTracksListChangedEvent(round, row, EntityUpdateMode.ADD));
+        }
     }
 
     private void defineSpaceButtonBehaviour(AudioTrackEditUIView row) {

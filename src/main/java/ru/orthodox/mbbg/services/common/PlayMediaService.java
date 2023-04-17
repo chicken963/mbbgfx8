@@ -168,6 +168,9 @@ public class PlayMediaService {
     }
 
     protected void generateMediaPlayer(AudioTrack audioTrack) throws MediaPlayerNotGeneratedException {
+        if (this.mediaPlayer != null) {
+            this.mediaPlayer.dispose();
+        }
         this.media = new Media(NormalizedPathString.of(audioTrack.getLocalPath()));
         try {
             this.mediaPlayer = new MediaPlayer(media);
@@ -177,6 +180,7 @@ public class PlayMediaService {
         mediaPlayer.setStartTime(Duration.seconds(audioTrack.getStartInSeconds()));
         mediaPlayer.setStopTime(Duration.seconds(audioTrack.getFinishInSeconds()));
         mediaPlayer.setVolume(volume);
+        mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.dispose());
     }
 
     public double getFinishInSeconds() {
